@@ -1,0 +1,18 @@
+@use 'styles/variables.scss' as *;
+@use 'styles/mixin.scss';
+
+.item {
+    border: 1px solid $black-50;
+    border-radius: 20px;
+    width: 178px;
+    height: 35px;
+    margin-bottom: 0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    display: flex;
+    align-items: center;
+
+    &__text {
+        padding-left: 0.5rem;
+    }
+}

@@ -15,7 +15,7 @@ const PrivateRoute: React.FC = () => {
     }
   }, [accessToken, user, dispatch]);
 
-  if (loading || !user) {
+  if (loading) {
     return <div>Loading...</div>;
   }
 

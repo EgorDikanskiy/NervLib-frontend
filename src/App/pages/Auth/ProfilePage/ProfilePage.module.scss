@@ -1,0 +1,83 @@
+@use 'styles/variables.scss' as *;
+@use 'styles/mixin.scss';
+
+
+.profile {
+    &__nav {
+        display: flex;
+        justify-content: space-between;
+        padding-top: 20px;
+        
+
+        &__item {
+            display: flex;
+
+            &__logout {
+                @extend .regular12;
+                color: $red;
+                padding-left: 4px;
+            }
+
+            &__edit {
+                @extend .regular12;
+                color: $purple-main;
+                padding-left: 4px;
+            }
+        }
+    }
+
+    &__info{
+        &__root{
+            text-align: center;
+            padding-top: 30px;
+
+            &__avatar {
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+            }
+
+            &__username {
+                @extend .medium20;
+                padding-top: 14px
+            }
+
+            &__createdAt {
+                @extend .regular12;
+                color: $black-50;
+                padding-top: 8px
+            }
+        }
+        
+        &__items{
+            padding-top: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        &__description {
+            padding-top: 10px;
+            &__title {
+                @extend .regular16;
+            }
+
+            &__subtitle {
+                @extend .regular12;
+                padding-top: 8px;
+            }
+        }
+
+        &__contacts {
+            padding-top: 10px;
+            &__title {
+                @extend .regular16;
+            }
+
+            &__subtitle {
+                @extend .regular12;
+                padding-top: 8px;
+            }
+        }
+    }
+}
