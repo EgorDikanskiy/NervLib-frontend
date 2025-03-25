@@ -19,24 +19,25 @@
         border: 1px solid variables.$black-20;
         margin-bottom: 1rem;
         padding-left: 0.5rem;
+        padding-right: 0.5rem;
         box-sizing: border-box;
     }
     &__input::placeholder {
         @extend .regular16;
     }
 
-    &__button{     
-        @extend .medium20;   
-        background-color: variables.$purple-main;
-        color: variables.$white;
-        border-radius: 16px;
-        height: 3rem;
-        width: 100%;
-        margin-bottom: 1rem;
-    }
-
     &__button:hover{     
         background-color: variables.$purple-tap;    
+    }
+
+    &__select{
+        border-radius: 12px;
+        height: 2.75rem;
+        border: 1px solid variables.$black-20;
+        margin-bottom: 1rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        box-sizing: border-box;
     }
 }
 

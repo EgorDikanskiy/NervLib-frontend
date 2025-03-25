@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { RootState } from 'store';
 
 const ProfilePage = () => {
   const { user } = useSelector((state: RootState) => state.auth);
+
   return (
     <div>
-      Профиль email: {user?.email}
-      is_admin: {user?.is_admin && 'Да'} {!user?.is_admin && 'Нет'}
+      <div>Профиль: {user?.username}</div>
     </div>
   );
 };

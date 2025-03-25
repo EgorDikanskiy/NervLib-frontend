@@ -1,11 +1,17 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { apiRoutes } from 'config/apiRoutes';
 
 export const registerUser = createAsyncThunk(
   'auth/registerUser',
-  async (userData: { email: string; password: string }, { rejectWithValue }) => {
+  async (
+    userData: { email: string; username: string; birthday: string; gender: string; password: string },
+    { rejectWithValue },
+  ) => {
     try {
+      const date = new Date(userData.birthday);
+      const isoBirthday = date.toISOString();
+      userData.birthday = isoBirthday;
       const response = await axios.post(apiRoutes.register, userData, {
         headers: {
           'Content-Type': 'application/json',
@@ -14,7 +20,8 @@ export const registerUser = createAsyncThunk(
       return response.data;
     } catch (error) {
       if (error.response && error.response.data) {
-        return rejectWithValue(error.response.data);
+        const messages = error.response.data.detail?.map((err: string) => err.msg) || [error.response.data.detail];
+        return rejectWithValue(messages);
       }
       return rejectWithValue(error.message);
     }
@@ -23,7 +30,7 @@ export const registerUser = createAsyncThunk(
 
 export const login = createAsyncThunk(
   'auth/login',
-  async (userData: { email: string; password: string }, { rejectWithValue }) => {
+  async (userData: { login: string; password: string }, { rejectWithValue }) => {
     try {
       const response = await axios.post(apiRoutes.login, userData, {
         headers: {
@@ -62,3 +69,5 @@ export const getCurrentUser = createAsyncThunk('auth/getCurrentUser', async (_, 
     return rejectWithValue(error.message);
   }
 });
+
+export const resetError = createAction('auth/resetError');

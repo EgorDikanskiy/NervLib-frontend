@@ -15,12 +15,16 @@ const PrivateRoute: React.FC = () => {
     }
   }, [accessToken, user, dispatch]);
 
-  if (!accessToken) {
-    return <Navigate to="/login" replace />;
-  }
-
   if (loading || !user) {
     return <div>Loading...</div>;
+  }
+
+  if (!accessToken) {
+    return <Navigate to="/login" />;
+  }
+
+  if (accessToken && !user) {
+    return <div>Недействительный токен</div>;
   }
 
   return <Outlet />;

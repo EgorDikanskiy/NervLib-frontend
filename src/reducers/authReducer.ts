@@ -1,11 +1,9 @@
 // src/reducers/authReducer.ts
 import { createSlice } from '@reduxjs/toolkit';
-import { registerUser, login, getCurrentUser } from '../actions/authActions';
+import { registerUser, login, getCurrentUser, resetError } from '../actions/authActions';
 
 interface User {
-  email: string;
-  id: number;
-  is_admin: boolean;
+  username: string;
 }
 
 interface AuthState {
@@ -80,6 +78,10 @@ const authSlice = createSlice({
       .addCase(getCurrentUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      })
+
+      .addCase(resetError, (state) => {
+        state.error = null;
       });
   },
 });

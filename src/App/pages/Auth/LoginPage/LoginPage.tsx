@@ -8,41 +8,53 @@ import { VkIcon } from 'components/ui/icons/VkIcon';
 import { YaIcon } from 'components/ui/icons/YaIcon';
 import { routerUrls } from 'config/routerUrls';
 import { AppDispatch, RootState } from 'store';
-import { login } from '../../../../actions/authActions';
+import { getCurrentUser, login, resetError } from '../../../../actions/authActions';
 import styles from './LoginPage.module.scss';
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const { loading, error } = useSelector((state: RootState) => state.auth);
+  const { loading, error, user } = useSelector((state: RootState) => state.auth);
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   useEffect(() => {
-    if (accessToken) {
-      navigate(routerUrls.profile.mask);
+    dispatch(getCurrentUser());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (error === 'Токен отсутствует') {
+      dispatch(resetError());
     }
-  }, [accessToken, navigate]);
+  }, [error, dispatch]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    dispatch(login({ email, password }));
+    dispatch(login({ login: email, password }));
   };
+
+  if (loading && !user) {
+    return <div>Загрузка...</div>;
+  }
+
+  if (accessToken || user) {
+    navigate(routerUrls.profile.mask);
+  }
 
   return (
     <div className={styles.login}>
       <h1 className={styles.bold28}>{'Вход'}</h1>
       <form className={styles.form} onSubmit={handleSubmit}>
         <label htmlFor="email" className={styles.regular16}>
-          E-mail
+          E-mail или никнейм
         </label>
         <input
           className={styles.form__input}
           type="text"
           id="email"
-          placeholder="Ваш E-mail"
+          placeholder="Ваш E-mail или никнейм"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required

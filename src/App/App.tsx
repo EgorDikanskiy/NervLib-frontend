@@ -4,6 +4,7 @@ import PrivateRoute from 'components/PrivateRoute';
 import RootLayout from 'components/RootLayout';
 import { routerUrls } from 'config/routerUrls';
 import Login from './pages/Auth/LoginPage';
+import MailConfirmation from './pages/Auth/MailConfirmation';
 import ProfilePage from './pages/Auth/ProfilePage';
 import Registration from './pages/Auth/RegistrationPage';
 import ResetPasswordPage from './pages/Auth/ResetPasswordPage';
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route path={routerUrls.register.mask} element={<Registration />} />
           <Route path={routerUrls.login.mask} element={<Login />} />
+          <Route path="/confirm_mail" element={<MailConfirmation />} />
 
           <Route element={<PrivateRoute />}>
             <Route path={routerUrls.profile.mask} element={<ProfilePage />} />
