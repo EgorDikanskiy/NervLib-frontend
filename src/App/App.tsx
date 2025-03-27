@@ -8,6 +8,7 @@ import MailConfirmation from './pages/Auth/MailConfirmation';
 import ProfilePage from './pages/Auth/ProfilePage';
 import Registration from './pages/Auth/RegistrationPage';
 import ResetPasswordPage from './pages/Auth/ResetPasswordPage';
+import CatalogPage from './pages/CatalogPage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path={routerUrls.register.mask} element={<Registration />} />
           <Route path={routerUrls.login.mask} element={<Login />} />
           <Route path="/confirm_mail" element={<MailConfirmation />} />
+          <Route path={routerUrls.catalog.mask} element={<CatalogPage />} />
 
           <Route element={<PrivateRoute />}>
             <Route path={routerUrls.profile.mask} element={<ProfilePage />} />
