@@ -40,7 +40,8 @@ export const login = createAsyncThunk(
       return response.data;
     } catch (error) {
       if (error.response && error.response.data) {
-        return rejectWithValue(error.response.data);
+        const messages = error.response.data.detail?.map((err: string) => err.msg) || [error.response.data.detail];
+        return rejectWithValue(messages);
       }
       return rejectWithValue(error.message);
     }
