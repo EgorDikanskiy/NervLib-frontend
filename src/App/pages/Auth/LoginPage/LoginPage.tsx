@@ -32,7 +32,7 @@ const LoginPage = () => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    dispatch(login({ login: email, password }));
+    dispatch(login({ password, login: email }));
   };
 
   if (loading && !user) {

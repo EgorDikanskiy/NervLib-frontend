@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, Outlet } from 'react-router-dom';
 import { AppDispatch, RootState } from 'store';
-import { getCurrentUser } from '../../actions/authActions';
+import { getCurrentUser, refresh } from '../../actions/authActions';
 
 const PrivateRoute: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -10,10 +10,21 @@ const PrivateRoute: React.FC = () => {
   const accessToken = useSelector((state: RootState) => state.auth.accessToken) || localStorage.getItem('access_token');
 
   useEffect(() => {
-    if (accessToken && !user) {
-      dispatch(getCurrentUser());
-    }
-  }, [accessToken, user, dispatch]);
+    const fetchUserData = async () => {
+      if (!accessToken) return;
+
+      // Получаем данные пользователя и проверяем статус
+      const result = await dispatch(getCurrentUser());
+      // result.meta.requestStatus будет "fulfilled" если запрос успешен
+      if (result.meta.requestStatus !== 'fulfilled' || !result.payload) {
+        // Если данные пользователя не получены, выполняем refresh и пробуем снова
+        await dispatch(refresh());
+        await dispatch(getCurrentUser());
+      }
+    };
+
+    fetchUserData();
+  }, [accessToken, dispatch]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -24,7 +35,7 @@ const PrivateRoute: React.FC = () => {
   }
 
   if (accessToken && !user) {
-    return <div>Недействительный токен</div>;
+    return <div>токену пизда</div>;
   }
 
   return <Outlet />;

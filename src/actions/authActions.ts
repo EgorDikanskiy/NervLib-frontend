@@ -30,7 +30,7 @@ export const registerUser = createAsyncThunk(
 
 export const login = createAsyncThunk(
   'auth/login',
-  async (userData: { login: string; password: string }, { rejectWithValue }) => {
+  async (userData: { password: string; login: string }, { rejectWithValue }) => {
     try {
       const response = await axios.post(apiRoutes.login, userData, {
         headers: {
@@ -61,6 +61,18 @@ export const getCurrentUser = createAsyncThunk('auth/getCurrentUser', async (_, 
         Authorization: `Bearer ${accessToken}`,
       },
     });
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return rejectWithValue(error.response.data.detail || error.response.data);
+    }
+    return rejectWithValue(error.message);
+  }
+});
+
+export const refresh = createAsyncThunk('auth/refresh', async (_, { rejectWithValue }) => {
+  try {
+    const response = await axios.post(apiRoutes.refresh, null, { withCredentials: true });
     return response.data;
   } catch (error) {
     if (error.response && error.response.data) {

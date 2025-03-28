@@ -10,18 +10,32 @@
         
 
         &__item {
-            display: flex;
-
-            &__logout {
+            &__back {
+                display: flex;
+                flex: 0 0 33.33%;
+                align-self: center;
                 @extend .regular12;
-                color: $red;
-                padding-left: 4px;
+                gap: 4px;
             }
 
-            &__edit {
+            &__subscribe {
+                display: flex;
+                flex: 0 0 33.33%;
+                align-self: center;
+                justify-content: end;
                 @extend .regular12;
                 color: $purple-main;
-                padding-left: 4px;
+                gap: 4px;
+            }
+
+            &__follow {
+                display: flex;
+                flex: 0 0 33.33%;
+                align-self: center;
+                justify-content: center;
+                @extend .regular12;
+                color: $yellow;
+                gap: 4px;
             }
         }
     }

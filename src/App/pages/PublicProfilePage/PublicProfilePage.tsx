@@ -1,15 +1,14 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import HorizontalScroll from 'components/HorizontalScroll';
 import Card from 'components/ui/Card';
 import { routerUrls } from 'config/routerUrls';
 import { AppDispatch, RootState } from 'store';
 import { filterUrlImage } from 'utils/filterUrlImage';
-import { getProfile } from '../../../../actions/profileActions';
-import { logout } from '../../../../reducers/authReducer';
-import ProfileInfoItem from '../components/ProfileInfoItem/ProfileInfoItem';
-import styles from './ProfilePage.module.scss';
+import { getProfile } from '../../../actions/profileActions';
+import ProfileInfoItem from '../Auth/components/ProfileInfoItem/ProfileInfoItem';
+import styles from './PublicProfilePage.module.scss';
 
 const cards = [
   {
@@ -99,27 +98,23 @@ const cards = [
   },
 ];
 
-const ProfilePage = () => {
-  const navigate = useNavigate();
+const PublicProfilePage = () => {
+  const { username } = useParams();
+  console.log(username);
   const dispatch = useDispatch<AppDispatch>();
   const { profile, loading, error } = useSelector((state: RootState) => state.profile);
-  const { user } = useSelector((state: RootState) => state.auth);
   let gender = 'Не указан';
 
   useEffect(() => {
-    if (user) {
-      dispatch(getProfile({ username: user.username, with_token: true }));
+    if (username) {
+      dispatch(getProfile({ username: username, with_token: false }));
     }
-  }, [dispatch, user]);
-
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate(routerUrls.login.mask);
-  };
+  }, [dispatch, username]);
 
   if (loading) return <div>Загрузка профиля...</div>;
-  if (error) return <div>Ошибка: {error}</div>;
   if (!profile) return <div>Профиль не найден</div>;
+  if (!profile.is_public_profile) return <div>Профиль не публичный, соре</div>;
+  if (error) return <div>Ошибка: {error}</div>;
 
   switch (profile.gender) {
     case 'male':
@@ -136,41 +131,53 @@ const ProfilePage = () => {
   return (
     <div className={styles.profile}>
       <section className={styles.profile__nav}>
-        <span className={styles.profile__nav__item}>
-          <svg width="13" height="12" viewBox="0 0 13 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clipPath="url(#clip0_148_731)">
+        <span className={styles.profile__nav__item__back}>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clipPath="url(#clip0_137_888)">
               <path
-                d="M7.18018 2.0005H2.18018V9.0005C2.18018 9.26572 2.28553 9.52007 2.47307 9.70761C2.66061 9.89515 2.91496 10.0005 3.18018 10.0005H7.18018M7.68018 7.5005L9.18018 6.0005M9.18018 6.0005L7.68018 4.5005M9.18018 6.0005H4.18018"
-                stroke="#E18080"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+                d="M1.80002 5L1.44652 5.3535L1.09302 5L1.44652 4.6465L1.80002 5ZM10.3 9C10.3 9.13261 10.2473 9.25979 10.1536 9.35355C10.0598 9.44732 9.93263 9.5 9.80002 9.5C9.66741 9.5 9.54023 9.44732 9.44646 9.35355C9.3527 9.25979 9.30002 9.13261 9.30002 9H10.3ZM3.94652 7.8535L1.44652 5.3535L2.15352 4.6465L4.65352 7.1465L3.94652 7.8535ZM1.44652 4.6465L3.94652 2.1465L4.65352 2.8535L2.15352 5.3535L1.44652 4.6465ZM1.80002 4.5H6.80002V5.5H1.80002V4.5ZM10.3 8V9H9.30002V8H10.3ZM6.80002 4.5C7.72828 4.5 8.61851 4.86875 9.27489 5.52513C9.93127 6.1815 10.3 7.07174 10.3 8H9.30002C9.30002 7.33696 9.03663 6.70107 8.56778 6.23223C8.09894 5.76339 7.46306 5.5 6.80002 5.5V4.5Z"
+                fill="#303030"
               />
             </g>
             <defs>
-              <clipPath id="clip0_148_731">
-                <rect width="12.12" height="12" fill="white" />
+              <clipPath id="clip0_137_888">
+                <rect width="12" height="12" fill="white" />
               </clipPath>
             </defs>
           </svg>
-          <a onClick={handleLogout} className={styles.profile__nav__item__logout}>
-            Выйти
-          </a>
+          <p>Назад</p>
         </span>
-        <span className={styles.profile__nav__item}>
+        <span className={styles.profile__nav__item__follow}>
           <svg width="13" height="12" viewBox="0 0 13 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clipPath="url(#clip0_148_734)">
+            <g clipPath="url(#clip0_148_718)">
               <path
-                d="M6.58001 9.0805L10.278 5.3825C9.65591 5.12261 9.09089 4.7431 8.61501 4.2655C8.13718 3.78952 7.75749 3.22432 7.49751 2.602L3.79951 6.3C3.51101 6.5885 3.36651 6.733 3.24251 6.892C3.09621 7.07974 2.97065 7.28275 2.86801 7.4975C2.78151 7.6795 2.71701 7.8735 2.58801 8.2605L1.90701 10.302C1.87567 10.3955 1.87102 10.4958 1.89359 10.5918C1.91615 10.6878 1.96504 10.7755 2.03475 10.8453C2.10446 10.915 2.19224 10.9639 2.28821 10.9864C2.38418 11.009 2.48454 11.0043 2.57801 10.973L4.61951 10.292C5.00701 10.163 5.20051 10.0985 5.38251 10.012C5.59818 9.90933 5.80001 9.7845 5.98801 9.6375C6.14701 9.5135 6.29151 9.369 6.58001 9.0805ZM11.304 4.3565C11.6727 3.98778 11.8799 3.48769 11.8799 2.96625C11.8799 2.4448 11.6727 1.94471 11.304 1.576C10.9353 1.20728 10.4352 1.00014 9.91376 1.00014C9.39232 1.00014 8.89223 1.20728 8.52351 1.576L8.08001 2.0195L8.09901 2.075C8.31751 2.70039 8.67517 3.26799 9.14501 3.735C9.62598 4.21891 10.2135 4.58362 10.8605 4.8L11.304 4.3565Z"
+                d="M6.49992 8.63751L4.42492 9.88751C4.33325 9.94584 4.23742 9.97084 4.13742 9.96251C4.03742 9.95417 3.94992 9.92084 3.87492 9.86251C3.79992 9.80417 3.74159 9.73134 3.69992 9.64401C3.65825 9.55667 3.64992 9.45867 3.67492 9.35001L4.22492 6.98751L2.38742 5.40001C2.30409 5.32501 2.25209 5.23951 2.23142 5.14351C2.21075 5.04751 2.21692 4.95384 2.24992 4.86251C2.28292 4.77117 2.33292 4.69617 2.39992 4.63751C2.46692 4.57884 2.55859 4.54134 2.67492 4.52501L5.09992 4.31251L6.03742 2.08751C6.07909 1.98751 6.14375 1.91251 6.23142 1.86251C6.31909 1.81251 6.40859 1.78751 6.49992 1.78751C6.59125 1.78751 6.68075 1.81251 6.76842 1.86251C6.85609 1.91251 6.92075 1.98751 6.96242 2.08751L7.89992 4.31251L10.3249 4.52501C10.4416 4.54167 10.5333 4.57917 10.5999 4.63751C10.6666 4.69584 10.7166 4.77084 10.7499 4.86251C10.7833 4.95417 10.7896 5.04801 10.7689 5.14401C10.7483 5.24001 10.6961 5.32534 10.6124 5.40001L8.77492 6.98751L9.32492 9.35001C9.34992 9.45834 9.34159 9.55634 9.29992 9.64401C9.25825 9.73167 9.19992 9.80451 9.12492 9.86251C9.04992 9.92051 8.96242 9.95384 8.86242 9.96251C8.76242 9.97117 8.66659 9.94617 8.57492 9.88751L6.49992 8.63751Z"
+                fill="#FFC446"
+              />
+            </g>
+            <defs>
+              <clipPath id="clip0_148_718">
+                <rect width="12" height="12" fill="white" transform="translate(0.5)" />
+              </clipPath>
+            </defs>
+          </svg>
+          <p>Стать фанатом</p>
+        </span>
+        <span className={styles.profile__nav__item__subscribe}>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clipPath="url(#clip0_137_723)">
+              <path
+                d="M8.29779 6.11764C9.24429 6.11764 10.0586 5.2725 10.0586 4.17193C10.0586 3.08464 9.24 2.27914 8.29779 2.27914C7.35579 2.27914 6.537 3.10222 6.537 4.18072C6.537 5.2725 7.35129 6.11764 8.29779 6.11764ZM3.231 6.219C4.04979 6.219 4.76314 5.47929 4.76314 4.524C4.76314 3.57772 4.04529 2.87764 3.231 2.87764C2.41243 2.87764 1.69029 3.59529 1.69479 4.533C1.69479 5.47929 2.40793 6.219 3.23121 6.219M0.774857 10.194H4.12029C3.66257 9.52929 4.22164 8.19107 5.16814 7.46036C4.67957 7.13464 4.04979 6.8925 3.22671 6.8925C1.24136 6.89229 0 8.358 0 9.5775C0 9.97393 0.220071 10.194 0.774857 10.194ZM5.529 10.194H11.0623C11.7534 10.194 12 9.99579 12 9.60836C12 8.47264 10.578 6.90557 8.2935 6.90557C6.01329 6.90557 4.59129 8.47264 4.59129 9.60857C4.59129 9.99579 4.83771 10.194 5.529 10.194Z"
                 fill="#A891FF"
               />
             </g>
             <defs>
-              <clipPath id="clip0_148_734">
-                <rect width="12.12" height="12" fill="white" transform="translate(0.880005)" />
+              <clipPath id="clip0_137_723">
+                <rect width="12" height="12" fill="white" />
               </clipPath>
             </defs>
           </svg>
-          <p className={styles.profile__nav__item__edit}>Изменить</p>
+          <p>Подписаться</p>
         </span>
       </section>
       <section className={styles.profile__info__root}>
@@ -288,4 +295,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default PublicProfilePage;
