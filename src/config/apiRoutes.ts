@@ -5,4 +5,5 @@ export const apiRoutes = {
   login: createApiRoute('/auth/signin'),
   register: createApiRoute('/auth/signup'),
   curentUser: createApiRoute('/auth/current'),
+  books: createApiRoute('/books'),
 };
