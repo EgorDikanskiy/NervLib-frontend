@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, BrowserRouter } from 'react-router-dom';
+import { Routes, Route, BrowserRouter, HashRouter, Navigate } from 'react-router-dom';
 import PrivateRoute from 'components/PrivateRoute';
 import RootLayout from 'components/RootLayout';
 import { routerUrls } from 'config/routerUrls';
@@ -13,8 +13,9 @@ import PublicProfilePage from './pages/PublicProfilePage';
 function App() {
   return (
     <RootLayout>
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
+          <Route path="/" element={<Navigate to="/register" replace />} />
           <Route path={routerUrls.register.mask} element={<Registration />} />
           <Route path={routerUrls.login.mask} element={<Login />} />
           <Route path="/confirm_mail" element={<MailConfirmation />} />
@@ -25,7 +26,7 @@ function App() {
             <Route path={routerUrls.reset_password.mask} element={<ResetPasswordPage />} />
           </Route>
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </RootLayout>
   );
 }
