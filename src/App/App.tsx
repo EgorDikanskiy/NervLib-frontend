@@ -13,7 +13,7 @@ import PublicProfilePage from './pages/PublicProfilePage';
 function App() {
   return (
     <RootLayout>
-      <HashRouter>
+      <BrowserRouter>
         <Routes>
           <Route path="/" element={<Navigate to="/register" replace />} />
           <Route path={routerUrls.register.mask} element={<Registration />} />
@@ -26,7 +26,7 @@ function App() {
             <Route path={routerUrls.reset_password.mask} element={<ResetPasswordPage />} />
           </Route>
         </Routes>
-      </HashRouter>
+      </BrowserRouter>
     </RootLayout>
   );
 }
