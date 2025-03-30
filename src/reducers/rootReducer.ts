@@ -1,13 +1,12 @@
 import { combineReducers } from 'redux';
-import { catalogApi } from '../actions/catalogActions';
 import authReducer from './authReducer';
+import booksReducer from './booksReducer';
 import catalogReducer from './catalogReducer';
 
 const rootReducer = combineReducers({
   auth: authReducer,
   catalog: catalogReducer,
-
-  [catalogApi.reducerPath]: catalogApi.reducer,
+  books: booksReducer,
 });
 
 export default rootReducer;
