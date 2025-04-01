@@ -2,6 +2,11 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import { apiRoutes } from 'config/apiRoutes';
 
+export const togglePopup = (bookId: number) => ({
+  type: 'TOGGLE_POPUP',
+  payload: bookId,
+});
+
 export const getBooks = createAsyncThunk(
   'books/',
   async (params: { authorId?: string; bookName?: string }, { rejectWithValue }) => {
