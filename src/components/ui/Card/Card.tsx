@@ -6,11 +6,12 @@ interface CardProps {
   title: string;
   rate: number;
   imgSrc: string;
+  onClick: () => void;
 }
 
-const Card: React.FC<CardProps> = ({ title, rate, imgSrc }) => {
+const Card: React.FC<CardProps> = ({ title, rate, imgSrc, onClick }) => {
   return (
-    <div className={style.card}>
+    <div className={style.card} onClick={onClick}>
       <a href="#">
         <div className={style.card__img} style={{ backgroundImage: `url(${imgSrc})` }}></div>
         <div>

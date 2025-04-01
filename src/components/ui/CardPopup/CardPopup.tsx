@@ -1,32 +1,16 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from 'store';
-import { togglePopup } from '../../../reducers/booksReducer'; // Импортируем из slice, а не из actions
 
 interface CardPopupProps {
-  id: number;
+  onClick: () => void;
   title: string;
   text: string;
 }
 
-const CardPopup: React.FC<CardPopupProps> = ({ id, title, text }) => {
-  const dispatch = useDispatch<AppDispatch>();
-  const book = useSelector((state: RootState) => state.books.books.find((book) => book.id === id));
-
-  const handleTogglePopup = () => {
-    dispatch(togglePopup(id));
-  };
-
-  if (!book) return null; // Если книга не найдена, ничего не рендерим
-
+const CardPopup: React.FC<CardPopupProps> = ({ onClick, title, text }) => {
   return (
-    <div onClick={handleTogglePopup}>
-      {book.popupShow && (
-        <div>
-          <p>{title}</p>
-          <p>{text}</p>
-        </div>
-      )}
+    <div onClick={onClick}>
+      <p>{title}</p>
+      <p>{text}</p>
     </div>
   );
 };

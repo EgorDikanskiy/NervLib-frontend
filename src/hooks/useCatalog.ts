@@ -5,11 +5,13 @@ import { getBooks } from '../actions/bookActions';
 const useCatalog = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { books, loading, error } = useSelector((state: RootState) => state.books);
+  const { cardOpen } = useSelector((state: RootState) => state.catalog);
+
   useEffect(() => {
     dispatch(getBooks({}));
   }, [dispatch]);
 
-  return { books, loading, error };
+  return { books, loading, error, cardOpen };
 };
 
 export default useCatalog;

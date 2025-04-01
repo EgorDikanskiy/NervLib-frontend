@@ -13,7 +13,6 @@ interface Book {
   chapter_count: number;
   favourites_count: number;
   published_date: string;
-  popupShow: boolean;
 }
 
 interface BooksState {
@@ -31,15 +30,7 @@ const initialState: BooksState = {
 const booksSlice = createSlice({
   name: 'books',
   initialState,
-  reducers: {
-    togglePopup: (state, action) => {
-      const bookId = action.payload;
-      const book = state.books.find((book) => book.id === bookId);
-      if (book) {
-        book.popupShow = !book.popupShow;
-      }
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(getBooks.pending, (state) => {
@@ -48,10 +39,7 @@ const booksSlice = createSlice({
       })
       .addCase(getBooks.fulfilled, (state, action) => {
         state.loading = false;
-        state.books = action.payload.map((book: Book) => ({
-          ...book,
-          popupShow: false,
-        }));
+        state.books = action.payload;
       })
 
       .addCase(getBooks.rejected, (state, action) => {
@@ -61,5 +49,4 @@ const booksSlice = createSlice({
   },
 });
 
-export const { togglePopup } = booksSlice.actions;
 export default booksSlice.reducer;

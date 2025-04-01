@@ -1,21 +1,16 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { togglePopup } from 'actions/bookActions';
-
+import { useDispatch } from 'react-redux';
+import { openPopup, closePopup } from 'reducers/catalogReducer';
 import Card from 'components/ui/Card';
 import CardPopup from 'components/ui/CardPopup';
 import useCatalog from 'hooks/useCatalog';
-import { AppDispatch, RootState } from 'store';
+import { AppDispatch } from 'store';
 import style from './Catalog.module.scss';
 
 const Catalog = () => {
-  const { books, loading } = useCatalog();
+  const { books, loading, cardOpen } = useCatalog();
 
   const dispatch = useDispatch<AppDispatch>();
-
-  const handleTogglePopup = (bookId: number) => {
-    dispatch(togglePopup(bookId));
-  };
 
   const booksTest = [
     {
@@ -58,10 +53,18 @@ const Catalog = () => {
       {books.map(
         (book: { title: string; favourites_count: number; description: string; poster_url: string; id: number }) => (
           <>
-            <Card title={book.title} rate={book.favourites_count} imgSrc={book.poster_url} key={book.id} />
-            <CardPopup id={book.id} title={book.title} text={book.description} />
+            <Card
+              title={book.title}
+              rate={book.favourites_count}
+              imgSrc={book.poster_url}
+              key={book.id}
+              onClick={() => dispatch(openPopup(book))}
+            />
           </>
         ),
+      )}
+      {cardOpen && (
+        <CardPopup onClick={() => dispatch(closePopup())} title={cardOpen.title} text={cardOpen.description} />
       )}
     </div>
   );
