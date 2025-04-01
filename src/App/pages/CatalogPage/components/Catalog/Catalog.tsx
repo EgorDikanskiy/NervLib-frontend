@@ -9,6 +9,7 @@ import { AppDispatch } from 'store';
 import { openPopup, closePopup } from '../../../../../reducers/catalogReducer';
 import Filters from '../Filters';
 import style from './Catalog.module.scss';
+
 interface Book {
   id: number;
   author_id: number;
