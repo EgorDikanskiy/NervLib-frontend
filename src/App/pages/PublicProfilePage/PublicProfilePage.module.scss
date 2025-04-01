@@ -1,0 +1,125 @@
+@use 'styles/variables.scss' as *;
+@use 'styles/mixin.scss';
+
+
+.profile {
+    &__nav {
+        display: flex;
+        justify-content: space-between;
+        padding-top: 20px;
+        
+
+        &__item {
+            &__back {
+                display: flex;
+                flex: 0 0 33.33%;
+                align-self: center;
+                @extend .regular12;
+                gap: 4px;
+            }
+
+            &__subscribe {
+                display: flex;
+                flex: 0 0 33.33%;
+                align-self: center;
+                justify-content: end;
+                @extend .regular12;
+                color: $purple-main;
+                gap: 4px;
+            }
+
+            &__follow {
+                display: flex;
+                flex: 0 0 33.33%;
+                align-self: center;
+                justify-content: center;
+                @extend .regular12;
+                color: $yellow;
+                gap: 4px;
+            }
+        }
+    }
+
+    &__info{
+        &__root{
+            text-align: center;
+            padding-top: 30px;
+
+            &__usernameBlock {
+                padding-top: 14px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            &__avatar {
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+            }
+
+            &__username {
+                @extend .medium20;
+                padding-right: 4px
+            }
+
+            &__createdAt {
+                @extend .regular12;
+                color: $black-50;
+                padding-top: 8px
+            }
+        }
+        
+        &__items{
+            padding-top: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        &__description {
+            padding-top: 10px;
+            &__title {
+                @extend .regular16;
+            }
+
+            &__subtitle {
+                @extend .regular12;
+                padding-top: 8px;
+            }
+        }
+
+        &__contacts {
+            padding-top: 10px;
+            &__title {
+                @extend .regular16;
+            }
+
+            &__subtitle {
+                @extend .regular12;
+                padding-top: 8px;
+            }
+        }
+    }
+}
+
+.comicsBlock {
+    padding-top: 20px;
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 8px;
+        @extend .regular16;
+
+        &__all{
+            @extend .regular12;
+            color: $purple-main;
+        }
+    }
+
+    &__content {
+        display: flex;
+    }
+}

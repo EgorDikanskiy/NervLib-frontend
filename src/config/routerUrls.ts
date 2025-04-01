@@ -20,4 +20,16 @@ export const routerUrls = {
     mask: '/catalog',
     create: () => `/catalog`,
   },
+  confirm_mail: {
+    mask: '/confirm_mail',
+    create: () => `/confirm_mail`,
+  },
+  public_profile: {
+    mask: '/profile/:username',
+    create: (username: string) => `/profile/${username}`,
+  },
+  edit_profile: {
+    mask: '/edit_profile',
+    create: () => `/edit_profile`,
+  },
 };
