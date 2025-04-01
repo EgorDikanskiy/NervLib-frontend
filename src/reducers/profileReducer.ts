@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getProfile } from '../actions/profileActions';
+import { getProfile, updateProfile } from '../actions/profileActions';
 
 interface Profile {
   username: string;
@@ -48,6 +48,22 @@ const profileSlice = createSlice({
         state.profile = action.payload;
       })
       .addCase(getProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // Обновление профиля
+      .addCase(updateProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        if (state.profile) {
+          state.profile = { ...state.profile, ...action.payload };
+        }
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

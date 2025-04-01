@@ -170,7 +170,9 @@ const ProfilePage = () => {
               </clipPath>
             </defs>
           </svg>
-          <p className={styles.profile__nav__item__edit}>Изменить</p>
+          <a href={routerUrls.edit_profile.mask} className={styles.profile__nav__item__edit}>
+            Изменить
+          </a>
         </span>
       </section>
       <section className={styles.profile__info__root}>
@@ -219,19 +221,21 @@ const ProfilePage = () => {
         <p className={styles.profile__info__contacts__title}>Контакты:</p>
         <p className={styles.profile__info__contacts__subtitle}>E-mail: pochta99@mail.ru</p>
       </section>
-      <section className={styles.comicsBlock}>
-        <div className={styles.comicsBlock__header}>
-          <p>Мои книги:</p>
-          <a className={styles.comicsBlock__header__all}>Смотреть всё</a>
-        </div>
-        <HorizontalScroll>
-          <div className={styles.comicsBlock__content}>
-            {cards.map((item, i) => (
-              <Card {...item} key={i} />
-            ))}
+      {profile.is_author && (
+        <section className={styles.comicsBlock}>
+          <div className={styles.comicsBlock__header}>
+            <p>Мои книги:</p>
+            <a className={styles.comicsBlock__header__all}>Смотреть всё</a>
           </div>
-        </HorizontalScroll>
-      </section>
+          <HorizontalScroll>
+            <div className={styles.comicsBlock__content}>
+              {cards.map((item, i) => (
+                <Card {...item} key={i} />
+              ))}
+            </div>
+          </HorizontalScroll>
+        </section>
+      )}
       <section className={styles.comicsBlock}>
         <div className={styles.comicsBlock__header}>
           <p>Чиитаю сейчас:</p>

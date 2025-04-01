@@ -226,61 +226,24 @@ const PublicProfilePage = () => {
         <p className={styles.profile__info__contacts__title}>Контакты:</p>
         <p className={styles.profile__info__contacts__subtitle}>E-mail: pochta99@mail.ru</p>
       </section>
-      <section className={styles.comicsBlock}>
-        <div className={styles.comicsBlock__header}>
-          <p>Мои книги:</p>
-          <a className={styles.comicsBlock__header__all}>Смотреть всё</a>
-        </div>
-        <HorizontalScroll>
-          <div className={styles.comicsBlock__content}>
-            {cards.map((item, i) => (
-              <Card {...item} key={i} />
-            ))}
+      {profile.is_author && (
+        <section className={styles.comicsBlock}>
+          <div className={styles.comicsBlock__header}>
+            <p>Мои книги:</p>
+            <a className={styles.comicsBlock__header__all}>Смотреть всё</a>
           </div>
-        </HorizontalScroll>
-      </section>
-      <section className={styles.comicsBlock}>
-        <div className={styles.comicsBlock__header}>
-          <p>Чиитаю сейчас:</p>
-          <a className={styles.comicsBlock__header__all}>Смотреть всё</a>
-        </div>
-        <HorizontalScroll>
-          <div className={styles.comicsBlock__content}>
-            {cards.map((item, i) => (
-              <Card {...item} key={i} />
-            ))}
-          </div>
-        </HorizontalScroll>
-      </section>
+          <HorizontalScroll>
+            <div className={styles.comicsBlock__content}>
+              {cards.map((item, i) => (
+                <Card {...item} key={i} />
+              ))}
+            </div>
+          </HorizontalScroll>
+        </section>
+      )}
       <section className={styles.comicsBlock}>
         <div className={styles.comicsBlock__header}>
           <p>Рекомендую: </p>
-          <a className={styles.comicsBlock__header__all}>Смотреть всё</a>
-        </div>
-        <HorizontalScroll>
-          <div className={styles.comicsBlock__content}>
-            {cards.map((item, i) => (
-              <Card {...item} key={i} />
-            ))}
-          </div>
-        </HorizontalScroll>
-      </section>
-      <section className={styles.comicsBlock}>
-        <div className={styles.comicsBlock__header}>
-          <p>Закладки: </p>
-          <a className={styles.comicsBlock__header__all}>Смотреть всё</a>
-        </div>
-        <HorizontalScroll>
-          <div className={styles.comicsBlock__content}>
-            {cards.map((item, i) => (
-              <Card {...item} key={i} />
-            ))}
-          </div>
-        </HorizontalScroll>
-      </section>
-      <section className={styles.comicsBlock}>
-        <div className={styles.comicsBlock__header}>
-          <p>Прочитал: </p>
           <a className={styles.comicsBlock__header__all}>Смотреть всё</a>
         </div>
         <HorizontalScroll>
