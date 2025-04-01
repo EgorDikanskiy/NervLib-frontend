@@ -4,7 +4,28 @@ import useCatalog from 'hooks/useCatalog';
 import style from './Catalog.module.scss';
 
 const Catalog = () => {
-  const { books, loading } = useCatalog();
+  const { loading } = useCatalog();
+
+  const books = [
+    {
+      title: 'Война и мир',
+      favourites_count: 4.7,
+      poster_url: '',
+      id: '1',
+    },
+    {
+      title: 'Война и мир',
+      favourites_count: 3.9,
+      poster_url: '',
+      id: '2',
+    },
+    {
+      title: 'Война и мир',
+      favourites_count: 2.1,
+      poster_url: '',
+      id: '3',
+    },
+  ];
 
   if (loading) {
     return <div>Loading...</div>;

@@ -8,3 +8,15 @@
   width: fit-content;
   padding: 4px;
 }
+
+.high {
+  background-color: variables.$green;
+}
+
+.mid {
+  background-color: variables.$yellow;
+}
+
+.low {
+  background-color: variables.$red;
+}
