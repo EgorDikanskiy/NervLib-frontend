@@ -19,17 +19,11 @@ export const registerUser = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        if (error.response) {
-          return rejectWithValue(error.response.data);
-        }
-        return rejectWithValue(error.message);
+      if (error.response && error.response.data) {
+        const messages = error.response.data.detail?.map((err: string) => err.msg) || [error.response.data.detail];
+        return rejectWithValue(messages);
       }
-
-      if (error instanceof Error) {
-        return rejectWithValue(error.message);
-      }
-      return rejectWithValue('An unknown error occurred');
+      return rejectWithValue(error.message);
     }
   },
 );
@@ -70,17 +64,10 @@ export const getCurrentUser = createAsyncThunk('auth/getCurrentUser', async (_, 
     });
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      if (error.response) {
-        return rejectWithValue(error.response.data);
-      }
-      return rejectWithValue(error.message);
+    if (error.response && error.response.data) {
+      return rejectWithValue(error.response.data.detail || error.response.data);
     }
-
-    if (error instanceof Error) {
-      return rejectWithValue(error.message);
-    }
-    return rejectWithValue('An unknown error occurred');
+    return rejectWithValue(error.message);
   }
 });
 

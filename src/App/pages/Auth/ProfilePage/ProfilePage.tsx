@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import HorizontalScroll from 'components/HorizontalScroll';
-import Card from 'components/ui/Card';
+import MiniCard from 'components/ui/MiniCard';
 import { routerUrls } from 'config/routerUrls';
 import { AppDispatch, RootState } from 'store';
 import { filterUrlImage } from 'utils/filterUrlImage';
@@ -230,7 +230,7 @@ const ProfilePage = () => {
           <HorizontalScroll>
             <div className={styles.comicsBlock__content}>
               {cards.map((item, i) => (
-                <Card {...item} key={i} />
+                <MiniCard {...item} key={i} />
               ))}
             </div>
           </HorizontalScroll>
@@ -244,7 +244,7 @@ const ProfilePage = () => {
         <HorizontalScroll>
           <div className={styles.comicsBlock__content}>
             {cards.map((item, i) => (
-              <Card {...item} key={i} />
+              <MiniCard {...item} key={i} />
             ))}
           </div>
         </HorizontalScroll>
@@ -257,7 +257,7 @@ const ProfilePage = () => {
         <HorizontalScroll>
           <div className={styles.comicsBlock__content}>
             {cards.map((item, i) => (
-              <Card {...item} key={i} />
+              <MiniCard {...item} key={i} />
             ))}
           </div>
         </HorizontalScroll>
@@ -270,7 +270,7 @@ const ProfilePage = () => {
         <HorizontalScroll>
           <div className={styles.comicsBlock__content}>
             {cards.map((item, i) => (
-              <Card {...item} key={i} />
+              <MiniCard {...item} key={i} />
             ))}
           </div>
         </HorizontalScroll>
@@ -283,7 +283,7 @@ const ProfilePage = () => {
         <HorizontalScroll>
           <div className={styles.comicsBlock__content}>
             {cards.map((item, i) => (
-              <Card {...item} key={i} />
+              <MiniCard {...item} key={i} />
             ))}
           </div>
         </HorizontalScroll>

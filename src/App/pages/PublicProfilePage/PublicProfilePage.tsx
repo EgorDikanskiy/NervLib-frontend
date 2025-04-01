@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import HorizontalScroll from 'components/HorizontalScroll';
-import Card from 'components/ui/Card';
+import MiniCard from 'components/ui/MiniCard';
 import { routerUrls } from 'config/routerUrls';
 import { AppDispatch, RootState } from 'store';
 import { filterUrlImage } from 'utils/filterUrlImage';
@@ -235,7 +235,7 @@ const PublicProfilePage = () => {
           <HorizontalScroll>
             <div className={styles.comicsBlock__content}>
               {cards.map((item, i) => (
-                <Card {...item} key={i} />
+                <MiniCard {...item} key={i} />
               ))}
             </div>
           </HorizontalScroll>
@@ -249,7 +249,7 @@ const PublicProfilePage = () => {
         <HorizontalScroll>
           <div className={styles.comicsBlock__content}>
             {cards.map((item, i) => (
-              <Card {...item} key={i} />
+              <MiniCard {...item} key={i} />
             ))}
           </div>
         </HorizontalScroll>
