@@ -1,11 +1,12 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { openPopup, closePopup } from 'reducers/catalogReducer';
 import Card from 'components/ui/Card';
 import CardPopup from 'components/ui/CardPopup';
 import useCatalog from 'hooks/useCatalog';
 import { AppDispatch } from 'store';
+import { openPopup, closePopup } from '../../../../../reducers/catalogReducer';
 import style from './Catalog.module.scss';
+
 interface Book {
   id: number;
   author_id: number;

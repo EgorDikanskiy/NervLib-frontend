@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from 'store';
 import { toggleFilters, setGenreFilter, setSortFilter, resetFilters } from 'reducers/catalogReducer';
+import { AppDispatch, RootState } from 'store';
 
 const FiltersDropdown = () => {
   const dispatch = useDispatch();
