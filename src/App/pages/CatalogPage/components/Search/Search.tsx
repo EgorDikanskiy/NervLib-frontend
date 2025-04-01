@@ -1,7 +1,12 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from 'store';
+import { toggleFilters } from '../../../../../reducers/catalogReducer';
 import styles from './Search.module.scss';
 
 const Search = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
   return (
     <div className={styles.search}>
       <input className={styles.search__input} placeholder="Найти" />
@@ -14,7 +19,7 @@ const Search = () => {
           />
         </svg>
       </div>
-      <div className={styles.search__filters}>
+      <div className={styles.search__filters} onClick={() => dispatch(toggleFilters())}>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect width="24" height="24" rx="8" fill="#303030" fillOpacity="0.2" />
           <path

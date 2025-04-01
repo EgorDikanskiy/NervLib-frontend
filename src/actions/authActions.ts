@@ -96,16 +96,4 @@ export const refresh = createAsyncThunk('auth/refresh', async (_, { rejectWithVa
   }
 });
 
-export const refresh = createAsyncThunk('auth/refresh', async (_, { rejectWithValue }) => {
-  try {
-    const response = await axios.post(apiRoutes.refresh, null, { withCredentials: true });
-    return response.data;
-  } catch (error) {
-    if (error.response && error.response.data) {
-      return rejectWithValue(error.response.data.detail || error.response.data);
-    }
-    return rejectWithValue(error.message);
-  }
-});
-
 export const resetError = createAction('auth/resetError');

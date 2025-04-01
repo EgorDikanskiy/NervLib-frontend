@@ -1,10 +1,13 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { openPopup, closePopup } from 'reducers/catalogReducer';
+
 import Card from 'components/ui/Card';
 import CardPopup from 'components/ui/CardPopup';
 import useCatalog from 'hooks/useCatalog';
+
 import { AppDispatch } from 'store';
+import { openPopup, closePopup } from '../../../../../reducers/catalogReducer';
+import Filters from '../Filters';
 import style from './Catalog.module.scss';
 interface Book {
   id: number;
@@ -20,7 +23,7 @@ interface Book {
   published_date: string;
 }
 const Catalog = () => {
-  const { books, loading, cardOpen } = useCatalog();
+  const { books, loading, cardOpen, isFiltersOpen } = useCatalog();
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -76,6 +79,7 @@ const Catalog = () => {
       {cardOpen && (
         <CardPopup onClick={() => dispatch(closePopup())} title={cardOpen.title} text={cardOpen.description} />
       )}
+      {isFiltersOpen && <Filters />}
     </div>
   );
 };
