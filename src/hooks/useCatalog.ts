@@ -9,7 +9,7 @@ const useCatalog = () => {
     dispatch(getBooks({}));
   }, [dispatch]);
 
-  return { books };
+  return { books, loading, error };
 };
 
 export default useCatalog;

@@ -12,7 +12,7 @@ const Card: React.FC<CardProps> = ({ title, rate, imgSrc }) => {
   return (
     <div className={style.card}>
       <a href="#">
-        <div className={style.card__img} style={{ backgroundColor: '#C1C1C1' }}></div>
+        <div className={style.card__img} style={{ backgroundImage: `url(${imgSrc})` }}></div>
         <div>
           <div>{title}</div>
           <Rating rating={rate} />

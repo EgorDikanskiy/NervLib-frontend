@@ -1,14 +1,22 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
 import Card from 'components/ui/Card';
-import useCatalog from '../../../../../hooks/useCatalog';
-import type { RootState, AppDispatch } from '../../../../../store';
+import useCatalog from 'hooks/useCatalog';
 import style from './Catalog.module.scss';
 
 const Catalog = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const { filters, sort } = useSelector((state: RootState) => state.catalog);
-  const { books } = useCatalog();
+  const { books, loading } = useCatalog();
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (books.length === 0) {
+    return (
+      <div>
+        <p>Sorry, there are no books available at the moment</p>
+      </div>
+    );
+  }
 
   return (
     <div className={style.catalog}>

@@ -1,30 +1,43 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { apiRoutes } from 'config/apiRoutes';
 
-export const getBooks = createAsyncThunk('books/', async (params: { authorId?: string }, { rejectWithValue }) => {
-  try {
-    if (params.authorId) {
-      const response = await axios.get(`${apiRoutes.books}?author_id=${params.authorId}`, {
+export const getBooks = createAsyncThunk(
+  'books/',
+  async (params: { authorId?: string; bookName?: string }, { rejectWithValue }) => {
+    try {
+      let url = apiRoutes.books;
+
+      if (params.bookName) {
+        url += `/${params.bookName}`;
+      } else if (params.authorId) {
+        url += `/?author_id=${params.authorId}`;
+      } else {
+        url += '/';
+      }
+
+      const response = await axios.get(url, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
+
       return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          return rejectWithValue(error.response.data);
+        }
+        return rejectWithValue(error.message);
+      }
+
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue('An unknown error occurred');
     }
-    const response = await axios.get(apiRoutes.books, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    return response.data;
-  } catch (error) {
-    if (error.response && error.response.data) {
-      return rejectWithValue(error.response.data);
-    }
-    return rejectWithValue(error.message);
-  }
-});
+  },
+);
 
 // export const login = createAsyncThunk(
 //   'auth/login',

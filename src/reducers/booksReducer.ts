@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getBooks } from '../actions/bookActions'; // Импортируйте ваш thunk
+import { getBooks } from '../actions/bookActions';
 
 interface Book {
   id: number;
@@ -16,7 +16,7 @@ interface Book {
 }
 
 interface BooksState {
-  books: Book[]; // Уточните тип данных
+  books: Book[];
   loading: boolean;
   error: string | null;
 }
