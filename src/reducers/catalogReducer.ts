@@ -1,15 +1,16 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-// interface Filters {
-//   genres?: string[];
-//   tags?: string[];
-//   status?: 'ongoing' | 'completed';
-//   year?: number;
-//   chapters?: {
-//     min?: number;
-//     max?: number;
-//   };
-// }
+interface FiltersState {
+  sort: string;
+  genres: string[];
+  // tags: string[];
+  // status: 'all' | 'ongoing' | 'completed';
+  // year: number | null;
+  // chapters: {
+  //   min: number | null;
+  //   max: number | null;
+  // };
+}
 
 interface Book {
   id: number;
@@ -26,39 +27,61 @@ interface Book {
 }
 
 interface CatalogState {
-  // page: number;
-  // sort: string;
-  // filters: string;
   cardOpen: Book | null;
+  filters: FiltersState;
+  isFiltersOpen: boolean;
 }
 
 const initialState: CatalogState = {
-  // page: 1,
-  // sort: '',
-  // filters: '',
   cardOpen: null,
+  isFiltersOpen: false,
+  filters: {
+    genres: [],
+    sort: '',
+    // tags: [],
+    // status: 'all',
+    // year: null,
+    // chapters: {
+    //   min: null,
+    //   max: null,
+    // },
+  },
 };
 
 export const catalogSlice = createSlice({
   name: 'catalog',
   initialState: initialState,
   reducers: {
-    // setPage: (state, action) => {
-    //   state.page = action.payload;
+    // ФИЛЬТРЫ
+    toggleFilters: (state) => {
+      state.isFiltersOpen = !state.isFiltersOpen;
+    },
+    setGenreFilter: (state, action: PayloadAction<string[]>) => {
+      state.filters.genres = action.payload;
+    },
+    setSortFilter: (state, action: PayloadAction<string>) => {
+      state.filters.sort = action.payload;
+    },
+    // setTagFilter: (state, action: PayloadAction<string[]>) => {
+    //   state.filters.tags = action.payload;
     // },
-    // setSort: (state, action) => {
-    //   state.sort = action.payload;
+    // setStatusFilter: (state, action: PayloadAction<'all' | 'ongoing' | 'completed'>) => {
+    //   state.filters.status = action.payload;
     // },
-    // setGenreFilter: (state, action) => {
-    //   state.filters = action.payload;
+    // setYearFilter: (state, action: PayloadAction<number | null>) => {
+    //   state.filters.year = action.payload;
     // },
-    // setStatusFilter: (state, action) => {
-    //   state.filters = action.payload;
+    // setChaptersFilter: (state, action: PayloadAction<{ min?: number | null; max?: number | null }>) => {
+    //   state.filters.chapters = {
+    //     ...state.filters.chapters,
+    //     ...action.payload,
+    //   };
     // },
-    // resetFilters: (state) => {
-    //   state.filters = initialState.filters;
-    // },
-    openPopup: (state, action) => {
+    resetFilters: (state) => {
+      state.filters = initialState.filters;
+    },
+    // ПОПАП КАРТОЧКИ
+    openPopup: (state, action: PayloadAction<Book | null>) => {
       state.cardOpen = action.payload;
     },
     closePopup: (state) => {
@@ -68,6 +91,7 @@ export const catalogSlice = createSlice({
 });
 
 // Экспортируем все actions сразу
-export const { openPopup, closePopup } = catalogSlice.actions;
+export const { openPopup, closePopup, toggleFilters, setGenreFilter, setSortFilter, resetFilters } =
+  catalogSlice.actions;
 
 export default catalogSlice.reducer;

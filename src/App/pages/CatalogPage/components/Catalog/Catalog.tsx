@@ -6,7 +6,19 @@ import CardPopup from 'components/ui/CardPopup';
 import useCatalog from 'hooks/useCatalog';
 import { AppDispatch } from 'store';
 import style from './Catalog.module.scss';
-
+interface Book {
+  id: number;
+  author_id: number;
+  name: string;
+  title: string;
+  description: string;
+  poster_url: string;
+  age_rating: string;
+  views_count: number;
+  chapter_count: number;
+  favourites_count: number;
+  published_date: string;
+}
 const Catalog = () => {
   const { books, loading, cardOpen } = useCatalog();
 
@@ -50,19 +62,17 @@ const Catalog = () => {
 
   return (
     <div className={style.catalog}>
-      {books.map(
-        (book: { title: string; favourites_count: number; description: string; poster_url: string; id: number }) => (
-          <>
-            <Card
-              title={book.title}
-              rate={book.favourites_count}
-              imgSrc={book.poster_url}
-              key={book.id}
-              onClick={() => dispatch(openPopup(book))}
-            />
-          </>
-        ),
-      )}
+      {books.map((book: Book) => (
+        <>
+          <Card
+            title={book.title}
+            rate={book.favourites_count}
+            imgSrc={book.poster_url}
+            key={book.id}
+            onClick={() => dispatch(openPopup(book))}
+          />
+        </>
+      ))}
       {cardOpen && (
         <CardPopup onClick={() => dispatch(closePopup())} title={cardOpen.title} text={cardOpen.description} />
       )}
