@@ -9,6 +9,7 @@ import MailConfirmation from './pages/Auth/MailConfirmation';
 import ProfilePage from './pages/Auth/ProfilePage';
 import Registration from './pages/Auth/RegistrationPage';
 import ResetPasswordPage from './pages/Auth/ResetPasswordPage';
+import CatalogPage from './pages/CatalogPage';
 import PublicProfilePage from './pages/PublicProfilePage';
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
           <Route path="/" element={<Navigate to={routerUrls.register.mask} replace />} />
           <Route path={routerUrls.register.mask} element={<Registration />} />
           <Route path={routerUrls.login.mask} element={<Login />} />
+          <Route path={routerUrls.catalog.mask} element={<CatalogPage />} />
           <Route path={routerUrls.confirm_mail.mask} element={<MailConfirmation />} />
           <Route path={routerUrls.public_profile.mask} element={<PublicProfilePage />} />
 

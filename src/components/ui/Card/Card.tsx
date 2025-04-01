@@ -1,21 +1,21 @@
 import React from 'react';
-import Rating from './components/Rating';
-import img from './test.png';
+import Rating from 'components/ui/Rating';
 import style from './Card.module.scss';
 
 interface CardProps {
   title: string;
-  rate: string;
+  rate: number;
   imgSrc: string;
+  onClick: () => void;
 }
 
-const Card: React.FC<CardProps> = ({ title, rate, imgSrc }) => {
+const Card: React.FC<CardProps> = ({ title, rate, imgSrc, onClick }) => {
   return (
-    <div className={style.card}>
+    <div className={style.card} onClick={onClick}>
       <a href="#">
-        <div className={style.card__img} style={{ backgroundImage: `url(${img})` }}></div>
+        <div className={style.card__img} style={{ backgroundImage: `url(${imgSrc})` }}></div>
         <div>
-          <p className={style.card__title}>{title}</p>
+          <div>{title}</div>
           <Rating rating={rate} />
         </div>
       </a>

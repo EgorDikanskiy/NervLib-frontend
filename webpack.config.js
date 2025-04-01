@@ -60,6 +60,8 @@ module.exports = {
       api: path.resolve(__dirname, 'src/api'),
       stores: path.resolve(__dirname, 'src/stores'),
       assets: path.resolve(__dirname, 'src/assets'),
+      hooks: path.resolve(__dirname, 'src/hooks'),
+      actions: path.resolve(__dirname, 'src/actions'),
     },
   },
   module: {

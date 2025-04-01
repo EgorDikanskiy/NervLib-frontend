@@ -16,6 +16,10 @@ export const routerUrls = {
     mask: '/reset_password',
     create: () => `/reset_password`,
   },
+  catalog: {
+    mask: '/catalog',
+    create: () => `/catalog`,
+  },
   confirm_mail: {
     mask: '/confirm_mail',
     create: () => `/confirm_mail`,
