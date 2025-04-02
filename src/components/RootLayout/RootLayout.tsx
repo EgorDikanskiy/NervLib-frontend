@@ -1,5 +1,6 @@
 import React from 'react';
 import '../../index.scss';
+import TabBar from 'components/TabBar';
 
 type RootLayoutProps = {
   children?: React.ReactNode;

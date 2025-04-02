@@ -32,4 +32,8 @@ export const routerUrls = {
     mask: '/edit_profile',
     create: () => `/edit_profile`,
   },
+  bookmarks: {
+    mask: '/bookmarks',
+    create: () => `/bookmarks`,
+  },
 };
