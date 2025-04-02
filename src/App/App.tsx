@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, BrowserRouter, HashRouter, Navigate, useLocation } from 'react-router-dom';
+import { Routes, Route, BrowserRouter, HashRouter, Navigate, useLocation, matchPath } from 'react-router-dom';
 import PrivateRoute from 'components/PrivateRoute';
 import RootLayout from 'components/RootLayout';
 import TabBar from 'components/TabBar';
@@ -16,18 +16,19 @@ import ViewComicsPage from './pages/ViewComicsPage';
 
 function AppContent() {
   const location = useLocation();
+  const isViewComicsPage = matchPath(routerUrls.viewComics.mask, location.pathname);
 
   return (
     <RootLayout>
       <Routes>
-        <Route path="/" element={<div>Тут будет главная</div>} />
+        <Route path={routerUrls.root} element={<div>Тут будет главная</div>} />
         <Route path={routerUrls.register.mask} element={<Registration />} />
         <Route path={routerUrls.login.mask} element={<Login />} />
         <Route path={routerUrls.catalog.mask} element={<CatalogPage />} />
         <Route path={routerUrls.confirm_mail.mask} element={<MailConfirmation />} />
         <Route path={routerUrls.public_profile.mask} element={<PublicProfilePage />} />
         <Route path={routerUrls.bookmarks.mask} element={<div>Избранное</div>} />
-        <Route path="/view" element={<ViewComicsPage />} />
+        <Route path={routerUrls.viewComics.mask} element={<ViewComicsPage />} />
 
         <Route element={<PrivateRoute />}>
           <Route path={routerUrls.profile.mask} element={<ProfilePage />} />
@@ -36,7 +37,7 @@ function AppContent() {
         </Route>
       </Routes>
 
-      {location.pathname !== '/view' && <TabBar />}
+      {!isViewComicsPage && <TabBar />}
     </RootLayout>
   );
 }

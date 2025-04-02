@@ -1,0 +1,36 @@
+@use 'styles/variables.scss' as *;
+@use 'styles/mixin.scss';
+
+
+.nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    padding: 0 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    gap: 4px;
+    @extend .regular12;
+}
+
+.viewBox {
+    padding-top: 50px;
+}
+
+.nav {
+    transition: transform 0.3s ease-in-out;
+  }
+  
+.hidden {
+    transform: translateY(-100%);
+    box-shadow: none;
+}
+  
+.visible {
+    transform: translateY(0);
+}

@@ -1,3 +1,5 @@
+import ViewComicsPage from 'App/pages/ViewComicsPage';
+
 export const routerUrls = {
   root: '/',
   login: {
@@ -35,5 +37,9 @@ export const routerUrls = {
   bookmarks: {
     mask: '/bookmarks',
     create: () => `/bookmarks`,
+  },
+  viewComics: {
+    mask: '/view/:comicsName/:chapter',
+    create: (comicsName: string, chapter: number) => `/view/${comicsName}/${chapter}`,
   },
 };
