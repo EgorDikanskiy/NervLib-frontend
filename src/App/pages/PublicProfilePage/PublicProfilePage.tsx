@@ -100,7 +100,6 @@ const cards = [
 
 const PublicProfilePage = () => {
   const { username } = useParams();
-  console.log(username);
   const dispatch = useDispatch<AppDispatch>();
   const { profile, loading, error } = useSelector((state: RootState) => state.profile);
   let gender = 'Не указан';

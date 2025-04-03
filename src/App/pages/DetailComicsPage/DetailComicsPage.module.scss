@@ -1,0 +1,52 @@
+@use 'styles/variables.scss' as *;
+@use 'styles/mixin.scss';
+
+.detailComicsPage {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+    font-family: Arial, sans-serif;
+  }
+  
+  .title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .poster {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    display: block;
+    margin-bottom: 1rem;
+  }
+  
+  .description {
+    font-size: 1.2rem;
+    line-height: 1.4;
+    margin-bottom: 1.5rem;
+  }
+  
+  .infoBlock {
+    margin-top: 1rem;
+    background: #f9f9f9;
+    padding: 1rem;
+    border-radius: 4px;
+  }
+  
+  .infoItem {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+  }
+  
+  .nav {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    padding: 0 16px;
+    gap: 4px;
+    @extend .regular12;
+}
+
+  

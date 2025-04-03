@@ -42,4 +42,8 @@ export const routerUrls = {
     mask: '/view/:comicsName/:chapter',
     create: (comicsName: string, chapter: number) => `/view/${comicsName}/${chapter}`,
   },
+  book_detail: {
+    mask: '/comics/:slug',
+    create: (slug: string) => `/comics/${slug}`,
+  },
 };

@@ -8,4 +8,5 @@ export const apiRoutes = {
   books: createApiRoute('/books'),
   refresh: createApiRoute('/auth/refresh'),
   profile: createApiRoute('/profile'),
+  bookOnSlug: (slug: string) => createApiRoute(`/books/${slug}`),
 };
