@@ -10,6 +10,7 @@ import ProfilePage from './pages/Auth/ProfilePage';
 import Registration from './pages/Auth/RegistrationPage';
 import ResetPasswordPage from './pages/Auth/ResetPasswordPage';
 import CatalogPage from './pages/CatalogPage';
+import DetailComicsPage from './pages/DetailComicsPage';
 import PublicProfilePage from './pages/PublicProfilePage';
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           <Route path={routerUrls.catalog.mask} element={<CatalogPage />} />
           <Route path={routerUrls.confirm_mail.mask} element={<MailConfirmation />} />
           <Route path={routerUrls.public_profile.mask} element={<PublicProfilePage />} />
+          <Route path={routerUrls.book_detail.mask} element={<DetailComicsPage />} />
 
           <Route element={<PrivateRoute />}>
             <Route path={routerUrls.profile.mask} element={<ProfilePage />} />

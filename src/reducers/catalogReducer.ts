@@ -24,6 +24,7 @@ interface Book {
   chapter_count: number;
   favourites_count: number;
   published_date: string;
+  slug: string;
 }
 
 interface CatalogState {

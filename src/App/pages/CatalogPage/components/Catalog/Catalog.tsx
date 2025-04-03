@@ -1,7 +1,9 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import Card from 'components/ui/Card';
 import CardPopup from 'components/ui/CardPopup';
+import { routerUrls } from 'config/routerUrls';
 import useCatalog from 'hooks/useCatalog';
 import { AppDispatch } from 'store';
 import { openPopup, closePopup } from '../../../../../reducers/catalogReducer';
@@ -19,35 +21,12 @@ interface Book {
   chapter_count: number;
   favourites_count: number;
   published_date: string;
+  slug: string;
 }
 const Catalog = () => {
   const { books, loading, cardOpen } = useCatalog();
 
   const dispatch = useDispatch<AppDispatch>();
-
-  const booksTest = [
-    {
-      title: 'Война и мир',
-      favourites_count: 4.7,
-      description: 'Невероятная история',
-      poster_url: '',
-      id: 1,
-    },
-    {
-      title: 'Война и мир',
-      favourites_count: 3.9,
-      description: 'Невероятная история',
-      poster_url: '',
-      id: 2,
-    },
-    {
-      title: 'Война и мир',
-      favourites_count: 2.1,
-      description: 'Невероятная история',
-      poster_url: '',
-      id: 3,
-    },
-  ];
 
   if (loading) {
     return <div>Loading...</div>;
@@ -65,18 +44,17 @@ const Catalog = () => {
     <div className={style.catalog}>
       {books.map((book: Book) => (
         <>
-          <Card
-            title={book.title}
-            rate={book.favourites_count}
-            imgSrc={book.poster_url}
-            key={book.id}
-            onClick={() => dispatch(openPopup(book))}
-          />
+          <Link to={routerUrls.book_detail.create(book.slug)}>
+            <Card
+              title={book.title}
+              rate={book.favourites_count}
+              imgSrc={book.poster_url}
+              key={book.id}
+              onClick={() => dispatch(openPopup(book))}
+            />
+          </Link>
         </>
       ))}
-      {cardOpen && (
-        <CardPopup onClick={() => dispatch(closePopup())} title={cardOpen.title} text={cardOpen.description} />
-      )}
     </div>
   );
 };

@@ -32,4 +32,8 @@ export const routerUrls = {
     mask: '/edit_profile',
     create: () => `/edit_profile`,
   },
+  book_detail: {
+    mask: '/comics/:slug',
+    create: (slug: string) => `/comics/${slug}`,
+  },
 };
