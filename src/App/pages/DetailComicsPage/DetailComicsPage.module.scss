@@ -1,3 +1,6 @@
+@use 'styles/variables.scss' as *;
+@use 'styles/mixin.scss';
+
 .detailComicsPage {
     max-width: 800px;
     margin: 0 auto;
@@ -36,16 +39,14 @@
     font-size: 1rem;
   }
   
-  .loading {
-    text-align: center;
-    font-size: 1.5rem;
-    margin-top: 2rem;
-  }
-  
-  .error {
-    color: red;
-    text-align: center;
-    font-size: 1.2rem;
-    margin-top: 2rem;
-  }
+  .nav {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    padding: 0 16px;
+    gap: 4px;
+    @extend .regular12;
+}
+
   
