@@ -1,64 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import { AppDispatch, RootState } from 'store';
+import { getImagesByChapterId } from '../../../actions/chapterImagesActions';
 import styles from './ViewComicsPage.module.scss';
-
-const images = [
-  {
-    id: 1,
-    chapter_id: 1,
-    url: 'https://imgur.com/dGLDuEK.png',
-  },
-  {
-    id: 2,
-    chapter_id: 1,
-    url: 'https://imgur.com/dGLDuEK.png',
-  },
-  {
-    id: 3,
-    chapter_id: 1,
-    url: 'https://imgur.com/dGLDuEK.png',
-  },
-  {
-    id: 4,
-    chapter_id: 1,
-    url: 'https://imgur.com/dGLDuEK.png',
-  },
-  {
-    id: 5,
-    chapter_id: 1,
-    url: 'https://imgur.com/dGLDuEK.png',
-  },
-  {
-    id: 6,
-    chapter_id: 1,
-    url: 'https://imgur.com/dGLDuEK.png',
-  },
-  {
-    id: 7,
-    chapter_id: 1,
-    url: 'https://imgur.com/dGLDuEK.png',
-  },
-  {
-    id: 8,
-    chapter_id: 1,
-    url: 'https://imgur.com/dGLDuEK.png',
-  },
-  {
-    id: 9,
-    chapter_id: 1,
-    url: 'https://imgur.com/dGLDuEK.png',
-  },
-  {
-    id: 10,
-    chapter_id: 1,
-    url: 'https://imgur.com/dGLDuEK.png',
-  },
-];
 
 const ViewComicsPage = () => {
   const navigate = useNavigate();
+  const { chapter } = useParams<{ chapter: string }>();
+  console.log(chapter);
   const [showNav, setShowNav] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const dispatch = useDispatch<AppDispatch>();
+  const { images, loading, error } = useSelector((state: RootState) => state.chapterImages);
+
+  useEffect(() => {
+    if (chapter) {
+      dispatch(getImagesByChapterId({ chapter_id: Number(chapter) }));
+    }
+  }, [dispatch, chapter]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -73,6 +33,8 @@ const ViewComicsPage = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
+
+  console.log(images);
 
   return (
     <div>

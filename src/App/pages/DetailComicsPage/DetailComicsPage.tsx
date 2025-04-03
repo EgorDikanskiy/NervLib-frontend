@@ -1,23 +1,28 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Button } from 'components/ui/Button';
 import { routerUrls } from 'config/routerUrls';
 import { AppDispatch, RootState } from 'store';
-import { getBookOnSlug } from '../../../actions/detailBookAction';
+import { getBookOnSlug, getChaptersByBookId } from '../../../actions/detailBookAction';
 import styles from './DetailComicsPage.module.scss';
 
 const DetailComicsPage: React.FC = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { slug } = useParams<{ slug: string }>();
-  const { book, loading, error } = useSelector((state: RootState) => state.detailBook);
+  const { book, chapters, loading, error } = useSelector((state: RootState) => state.detailBook);
 
   useEffect(() => {
     if (slug) {
       dispatch(getBookOnSlug({ slug }));
     }
   }, [dispatch, slug]);
+
+  useEffect(() => {
+    if (book && book.id) {
+      dispatch(getChaptersByBookId({ book_id: book.id }));
+    }
+  }, [dispatch, book]);
 
   if (loading) {
     return <div className={styles.loading}>Загрузка...</div>;
@@ -58,7 +63,22 @@ const DetailComicsPage: React.FC = () => {
             <strong>Дата публикации:</strong> {new Date(book.published_date).toLocaleDateString()}
           </p>
         </div>
-        <Link to={routerUrls.viewComics.create(book.slug, 1)}>
+        <div className={styles.chaptersList}>
+          <h2 className={styles.chaptersTitle}>Главы</h2>
+          {chapters.length ? (
+            <ul className={styles.chapterItems}>
+              {chapters.map((chapter) => (
+                <li key={chapter.id} className={styles.chapterItem}>
+                  <span className={styles.chapterName}>{chapter.title}</span>
+                  <span className={styles.chapterDate}>{new Date(chapter.published_date).toLocaleDateString()}</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className={styles.noChapters}>Главы не найдены</p>
+          )}
+        </div>
+        <Link to={routerUrls.viewComics.create(book.slug, chapters.length ? chapters[0].id : 1)}>
           <Button>Начать читать</Button>
         </Link>
       </div>
