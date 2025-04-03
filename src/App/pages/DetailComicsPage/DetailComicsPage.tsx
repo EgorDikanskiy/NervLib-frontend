@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
+import Loader from 'components/Loader';
 import { Button } from 'components/ui/Button';
 import { routerUrls } from 'config/routerUrls';
 import { AppDispatch, RootState } from 'store';
@@ -25,7 +26,7 @@ const DetailComicsPage: React.FC = () => {
   }, [dispatch, book]);
 
   if (loading) {
-    return <div className={styles.loading}>Загрузка...</div>;
+    return <Loader />;
   }
 
   if (error) {

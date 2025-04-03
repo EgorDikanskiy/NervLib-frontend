@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import Loader from 'components/Loader';
 import Card from 'components/ui/Card';
 import CardPopup from 'components/ui/CardPopup';
 import { routerUrls } from 'config/routerUrls';
@@ -29,7 +30,7 @@ const Catalog = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   if (books.length === 0) {

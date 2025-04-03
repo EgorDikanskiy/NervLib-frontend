@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, Outlet } from 'react-router-dom';
+import Loader from 'components/Loader';
 import { AppDispatch, RootState } from 'store';
 import { getCurrentUser, refresh } from '../../actions/authActions';
 
@@ -27,7 +28,7 @@ const PrivateRoute: React.FC = () => {
   }, [accessToken, dispatch]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   if (!accessToken) {

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import HorizontalScroll from 'components/HorizontalScroll';
+import Loader from 'components/Loader';
 import MiniCard from 'components/ui/MiniCard';
 import { routerUrls } from 'config/routerUrls';
 import { AppDispatch, RootState } from 'store';
@@ -117,7 +118,7 @@ const ProfilePage = () => {
     navigate(routerUrls.login.mask);
   };
 
-  if (loading) return <div>Загрузка профиля...</div>;
+  if (loading) return <Loader />;
   if (error) return <div>Ошибка: {error}</div>;
   if (!profile) return <div>Профиль не найден</div>;
 

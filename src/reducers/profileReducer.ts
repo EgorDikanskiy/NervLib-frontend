@@ -1,5 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getProfile, updateProfile } from '../actions/profileActions';
+import {
+  checkSubscription,
+  subscribeToAuthor,
+  unsubscribeFromAuthor,
+  getProfile,
+  updateProfile,
+  checkFans,
+  fansToAuthor,
+  unfansFromAuthor,
+} from '../actions/profileActions';
 
 interface Profile {
   username: string;
@@ -12,6 +21,8 @@ interface Profile {
   created_at: string;
   subscribers?: number;
   fans?: number;
+  is_subscribed?: boolean;
+  is_fans?: boolean;
 }
 
 interface ProfileState {
@@ -64,6 +75,104 @@ const profileSlice = createSlice({
         }
       })
       .addCase(updateProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // Проверка подписки
+      .addCase(checkSubscription.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(checkSubscription.fulfilled, (state, action) => {
+        state.loading = false;
+        if (state.profile) {
+          // Предполагается, что API возвращает { status: boolean, timestamp: string }
+          state.profile.is_subscribed = action.payload.status;
+        }
+      })
+      .addCase(checkSubscription.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // Оформление подписки
+      .addCase(subscribeToAuthor.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(subscribeToAuthor.fulfilled, (state, action) => {
+        state.loading = false;
+        if (state.profile) {
+          state.profile.is_subscribed = true;
+        }
+      })
+      .addCase(subscribeToAuthor.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // Отмена подписки
+      .addCase(unsubscribeFromAuthor.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(unsubscribeFromAuthor.fulfilled, (state, action) => {
+        state.loading = false;
+        if (state.profile) {
+          state.profile.is_subscribed = false;
+        }
+      })
+      .addCase(unsubscribeFromAuthor.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // Проверка фанатсва
+      .addCase(checkFans.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(checkFans.fulfilled, (state, action) => {
+        state.loading = false;
+        if (state.profile) {
+          // Предполагается, что API возвращает { status: boolean, timestamp: string }
+          state.profile.is_fans = action.payload.status;
+        }
+      })
+      .addCase(checkFans.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // Оформление фанатсва
+      .addCase(fansToAuthor.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fansToAuthor.fulfilled, (state, action) => {
+        state.loading = false;
+        if (state.profile) {
+          state.profile.is_fans = true;
+        }
+      })
+      .addCase(fansToAuthor.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // Отмена фанатсва
+      .addCase(unfansFromAuthor.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(unfansFromAuthor.fulfilled, (state, action) => {
+        state.loading = false;
+        if (state.profile) {
+          state.profile.is_fans = false;
+        }
+      })
+      .addCase(unfansFromAuthor.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

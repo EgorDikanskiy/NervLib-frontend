@@ -1,6 +1,7 @@
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import Loader from 'components/Loader';
 import { Button } from 'components/ui/Button';
 import { GoogleIcon } from 'components/ui/icons/GoogleIcon';
 import { LockIcon } from 'components/ui/icons/LockIcon';
@@ -36,7 +37,7 @@ const LoginPage = () => {
   };
 
   if (loading && !user) {
-    return <div>Загрузка...</div>;
+    return <Loader />;
   }
 
   if (accessToken || user) {

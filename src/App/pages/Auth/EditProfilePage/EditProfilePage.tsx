@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import Loader from 'components/Loader';
 import { Button } from 'components/ui/Button';
 import { routerUrls } from 'config/routerUrls';
 import { AppDispatch, RootState } from 'store';
@@ -81,7 +82,7 @@ const EditProfilePage: React.FC = () => {
   return (
     <div>
       <h1 className={styles.bold28}>Редактирование профиля</h1>
-      {loading && <p>Загрузка...</p>}
+      {loading && <Loader />}
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <form className={styles.form} onSubmit={handleSubmit}>
         <label htmlFor="username">Никнейм</label>
