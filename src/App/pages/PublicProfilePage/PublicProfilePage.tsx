@@ -132,27 +132,39 @@ const PublicProfilePage = () => {
     }
   }, [dispatch, username]);
 
-  const handleSubscribe = () => {
+  const handleSubscribe = async () => {
     if (username) {
-      dispatch(subscribeToAuthor(username));
+      await dispatch(subscribeToAuthor(username));
+      dispatch(getProfile({ username, with_token: false }));
+      dispatch(checkSubscription(username));
+      dispatch(checkFans(username));
     }
   };
 
-  const handleUnsubscribe = () => {
+  const handleUnsubscribe = async () => {
     if (username) {
-      dispatch(unsubscribeFromAuthor(username));
+      await dispatch(unsubscribeFromAuthor(username));
+      dispatch(getProfile({ username, with_token: false }));
+      dispatch(checkSubscription(username));
+      dispatch(checkFans(username));
     }
   };
 
-  const handleFans = () => {
+  const handleFans = async () => {
     if (username) {
-      dispatch(fansToAuthor(username));
+      await dispatch(fansToAuthor(username));
+      dispatch(getProfile({ username, with_token: false }));
+      dispatch(checkFans(username));
+      dispatch(checkSubscription(username));
     }
   };
 
-  const handleUnfans = () => {
+  const handleUnfans = async () => {
     if (username) {
-      dispatch(unfansFromAuthor(username));
+      await dispatch(unfansFromAuthor(username));
+      dispatch(getProfile({ username, with_token: false }));
+      dispatch(checkFans(username));
+      dispatch(checkSubscription(username));
     }
   };
 

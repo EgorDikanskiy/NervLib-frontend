@@ -49,7 +49,8 @@ const DetailComicsPage: React.FC = () => {
             <strong>Возрастное ограничение:</strong> {book.age_rating}
           </p>
           <p className={styles.infoItem}>
-            <strong>Автор (ID):</strong> {book.author_id}
+            <strong>Автор :</strong>{' '}
+            <Link to={routerUrls.public_profile.create(book.author_name)}>{book.author_name}</Link>
           </p>
           <p className={styles.infoItem}>
             <strong>Главы:</strong> {book.chapter_count}
