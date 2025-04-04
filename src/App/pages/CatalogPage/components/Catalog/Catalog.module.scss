@@ -5,12 +5,14 @@
   gap: 16px;
   justify-content: center;
 }
+.catalog a {
+  text-decoration: none;
+  color: inherit;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
 
-// display: grid;
-// grid-auto-flow: dense;
-// grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-// grid-auto-rows: auto;
-// gap: 16px;
-// container-type: inline-size;
-// padding: 0 10px;
-// margin-top: 0;
+.catalog a:focus,
+.catalog a:active {
+  outline: none;
+}
