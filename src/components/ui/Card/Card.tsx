@@ -12,7 +12,9 @@ interface CardProps {
 const Card: React.FC<CardProps> = ({ title, rate, imgSrc, onClick }) => {
   return (
     <div className={style.card} onClick={onClick}>
-      <div className={style.card__img} style={{ backgroundImage: `url(${imgSrc})` }}></div>
+      <div className={style.card__img_container}>
+        <img className={style.card__img} src={imgSrc} alt="" />
+      </div>
       <div>
         <div>{title}</div>
         <Rating rating={rate} />

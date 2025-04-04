@@ -27,30 +27,6 @@ const Catalog = () => {
 
   const dispatch = useDispatch<AppDispatch>();
 
-  const booksTest = [
-    {
-      title: 'Война и мир',
-      favourites_count: 4.7,
-      description: 'Невероятная история',
-      poster_url: '',
-      id: 1,
-    },
-    {
-      title: 'Война и мир',
-      favourites_count: 3.9,
-      description: 'Невероятная история',
-      poster_url: '',
-      id: 2,
-    },
-    {
-      title: 'Война и мир',
-      favourites_count: 2.1,
-      description: 'Невероятная история',
-      poster_url: '',
-      id: 3,
-    },
-  ];
-
   if (loading) {
     return <div>Loading...</div>;
   }
