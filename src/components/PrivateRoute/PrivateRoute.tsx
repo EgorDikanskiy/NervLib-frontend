@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, Outlet } from 'react-router-dom';
 import Loader from 'components/Loader';
+import { routerUrls } from 'config/routerUrls';
 import { AppDispatch, RootState } from 'store';
 import { getCurrentUser, refresh } from '../../actions/authActions';
 
@@ -36,7 +37,12 @@ const PrivateRoute: React.FC = () => {
   }
 
   if (accessToken && !user) {
-    return <div>Токену авторизации малёха плохо :(</div>;
+    return (
+      <div>
+        <p>Токену авторизации малёха плохо :(</p>
+        <a href={routerUrls.login.mask}>Войдите снова</a>
+      </div>
+    );
   }
 
   return <Outlet />;
