@@ -36,7 +36,7 @@ const PrivateRoute: React.FC = () => {
   }
 
   if (accessToken && !user) {
-    return <div>токену пизда</div>;
+    return <div>Токену авторизации малёха плохо :(</div>;
   }
 
   return <Outlet />;
