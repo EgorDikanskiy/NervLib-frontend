@@ -27,7 +27,6 @@ interface Book {
 }
 
 interface CatalogState {
-  cardOpen: Book | null;
   filters: FiltersState;
   isFiltersOpen: boolean;
   loading: boolean;
@@ -39,7 +38,6 @@ interface CatalogState {
 }
 
 const initialState: CatalogState = {
-  cardOpen: null,
   isFiltersOpen: false,
   filters: {
     genres: null,
@@ -90,13 +88,6 @@ export const catalogSlice = createSlice({
     resetFilters: (state) => {
       state.filters = initialState.filters;
     },
-    // ПОПАП КАРТОЧКИ
-    openPopup: (state, action: PayloadAction<Book | null>) => {
-      state.cardOpen = action.payload;
-    },
-    closePopup: (state) => {
-      state.cardOpen = null;
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -116,7 +107,6 @@ export const catalogSlice = createSlice({
   },
 });
 
-export const { openPopup, closePopup, toggleFilters, setGenreFilter, setSortFilter, resetFilters } =
-  catalogSlice.actions;
+export const { toggleFilters, setGenreFilter, setSortFilter, resetFilters } = catalogSlice.actions;
 
 export default catalogSlice.reducer;

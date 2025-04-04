@@ -2,11 +2,9 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 
 import Card from 'components/ui/Card';
-import CardPopup from 'components/ui/CardPopup';
 import useCatalog from 'hooks/useCatalog';
 
 import { AppDispatch } from 'store';
-import { openPopup, closePopup } from '../../../../../reducers/catalogReducer';
 import style from './Catalog.module.scss';
 
 interface Book {
@@ -44,18 +42,9 @@ const Catalog = () => {
       <div className={style.catalog}>
         {books.map((book: Book) => (
           <>
-            <Card
-              title={book.title}
-              rate={book.favourites_count}
-              imgSrc={book.poster_url}
-              key={book.id}
-              onClick={() => dispatch(openPopup(book))}
-            />
+            <Card title={book.title} rate={book.favourites_count} imgSrc={book.poster_url} key={book.id} />
           </>
         ))}
-        {cardOpen && (
-          <CardPopup onClick={() => dispatch(closePopup())} title={cardOpen.title} text={cardOpen.description} />
-        )}
       </div>
     </>
   );
