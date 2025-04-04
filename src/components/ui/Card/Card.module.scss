@@ -1,4 +1,4 @@
-@use "styles/variables.scss";
+@use "styles/variables.scss" as *;
 @use "styles/mixin.scss";
 
 .card {
@@ -15,7 +15,7 @@
   }
 
   a {
-    color: variables.$black;
+    color: $black;
   }
 
   &__img {

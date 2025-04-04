@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
+import { getGenres } from 'actions/catalogActions';
 interface FiltersState {
-  sort: string;
-  genres: string[];
+  sort: 'popularity' | 'created_at' | 'rating' | '' | string;
+  genres: number | null;
   // tags: string[];
   // status: 'all' | 'ongoing' | 'completed';
   // year: number | null;
@@ -30,13 +30,19 @@ interface CatalogState {
   cardOpen: Book | null;
   filters: FiltersState;
   isFiltersOpen: boolean;
+  loading: boolean;
+  error: string | null;
+  allGenres: {
+    id: number;
+    name: string;
+  }[];
 }
 
 const initialState: CatalogState = {
   cardOpen: null,
   isFiltersOpen: false,
   filters: {
-    genres: [],
+    genres: null,
     sort: '',
     // tags: [],
     // status: 'all',
@@ -46,6 +52,9 @@ const initialState: CatalogState = {
     //   max: null,
     // },
   },
+  loading: false,
+  allGenres: [],
+  error: null,
 };
 
 export const catalogSlice = createSlice({
@@ -53,13 +62,14 @@ export const catalogSlice = createSlice({
   initialState: initialState,
   reducers: {
     // ФИЛЬТРЫ
-    toggleFilters: (state) => {
-      state.isFiltersOpen = !state.isFiltersOpen;
+    toggleFilters: (state, action: PayloadAction<boolean>) => {
+      console.log('toggleFilters', action.payload);
+      state.isFiltersOpen = action.payload;
     },
-    setGenreFilter: (state, action: PayloadAction<string[]>) => {
+    setGenreFilter: (state, action: PayloadAction<number | null>) => {
       state.filters.genres = action.payload;
     },
-    setSortFilter: (state, action: PayloadAction<string>) => {
+    setSortFilter: (state, action: PayloadAction<'popularity' | 'created_at' | 'rating' | '' | string>) => {
       state.filters.sort = action.payload;
     },
     // setTagFilter: (state, action: PayloadAction<string[]>) => {
@@ -88,9 +98,24 @@ export const catalogSlice = createSlice({
       state.cardOpen = null;
     },
   },
+  extraReducers: (builder) => {
+    builder
+      // Регистрация пользователя
+      .addCase(getGenres.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getGenres.fulfilled, (state, action) => {
+        state.loading = false;
+        state.allGenres = action.payload;
+      })
+      .addCase(getGenres.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
+  },
 });
 
-// Экспортируем все actions сразу
 export const { openPopup, closePopup, toggleFilters, setGenreFilter, setSortFilter, resetFilters } =
   catalogSlice.actions;
 

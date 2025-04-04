@@ -1,0 +1,30 @@
+@use "styles/variables.scss" as *;
+@use "styles/mixin.scss";
+
+.filters {
+  background-color: $white;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 0 10px;
+  overflow-y: scroll;
+
+  &__menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+
+    &__back {
+    }
+    &__header {
+      @extend .medium20;
+    }
+    &__reset {
+      color: $red;
+    }
+  }
+}

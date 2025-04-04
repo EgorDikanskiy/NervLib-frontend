@@ -1,4 +1,5 @@
 import React from 'react';
+import style from './CardPopup.module.scss';
 
 interface CardPopupProps {
   onClick: () => void;
@@ -8,7 +9,7 @@ interface CardPopupProps {
 
 const CardPopup: React.FC<CardPopupProps> = ({ onClick, title, text }) => {
   return (
-    <div onClick={onClick}>
+    <div className={style.popup} onClick={onClick}>
       <p>{title}</p>
       <p>{text}</p>
     </div>

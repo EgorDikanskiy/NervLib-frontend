@@ -7,7 +7,6 @@ import useCatalog from 'hooks/useCatalog';
 
 import { AppDispatch } from 'store';
 import { openPopup, closePopup } from '../../../../../reducers/catalogReducer';
-import Filters from '../Filters';
 import style from './Catalog.module.scss';
 
 interface Book {
@@ -65,23 +64,24 @@ const Catalog = () => {
   }
 
   return (
-    <div className={style.catalog}>
-      {books.map((book: Book) => (
-        <>
-          <Card
-            title={book.title}
-            rate={book.favourites_count}
-            imgSrc={book.poster_url}
-            key={book.id}
-            onClick={() => dispatch(openPopup(book))}
-          />
-        </>
-      ))}
-      {cardOpen && (
-        <CardPopup onClick={() => dispatch(closePopup())} title={cardOpen.title} text={cardOpen.description} />
-      )}
-      {isFiltersOpen && <Filters />}
-    </div>
+    <>
+      <div className={style.catalog}>
+        {books.map((book: Book) => (
+          <>
+            <Card
+              title={book.title}
+              rate={book.favourites_count}
+              imgSrc={book.poster_url}
+              key={book.id}
+              onClick={() => dispatch(openPopup(book))}
+            />
+          </>
+        ))}
+        {cardOpen && (
+          <CardPopup onClick={() => dispatch(closePopup())} title={cardOpen.title} text={cardOpen.description} />
+        )}
+      </div>
+    </>
   );
 };
 
