@@ -22,7 +22,7 @@ function AppContent() {
   return (
     <RootLayout>
       <Routes>
-        <Route path={routerUrls.root} element={<Navigate to={routerUrls.register.mask} replace={true} />} />
+        <Route path={routerUrls.root} element={<CatalogPage />} />
         <Route path={routerUrls.register.mask} element={<Registration />} />
         <Route path={routerUrls.login.mask} element={<Login />} />
         <Route path={routerUrls.catalog.mask} element={<CatalogPage />} />
