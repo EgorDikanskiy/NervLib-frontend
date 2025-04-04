@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getGenres } from 'actions//catalogActions';
+import { getBooks } from 'actions/bookActions';
+import { getGenres } from 'actions/catalogActions';
 import { AppDispatch, RootState } from 'store';
 import { toggleFilters } from '../../../../../reducers/catalogReducer';
 import styles from './Search.module.scss';
@@ -8,6 +9,12 @@ import styles from './Search.module.scss';
 const Search = () => {
   const dispatch = useDispatch<AppDispatch>();
   const allGenres = useSelector((state: RootState) => state.catalog.allGenres);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
+
+  const handleSearch = (term: string) => {
+    dispatch(getBooks({ title: term }));
+  };
 
   const handleIsFiltersOpen = () => {
     if (allGenres.length === 0) {
@@ -15,9 +22,29 @@ const Search = () => {
     }
     dispatch(toggleFilters(true));
   };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+
+    if (typingTimeout) clearTimeout(typingTimeout);
+
+    const timeout = setTimeout(() => {
+      handleSearch(value);
+    }, 500);
+
+    setTypingTimeout(timeout);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (typingTimeout) clearTimeout(typingTimeout);
+    };
+  }, [typingTimeout]);
+
   return (
     <div className={styles.search}>
-      <input className={styles.search__input} placeholder="Найти" />
+      <input className={styles.search__input} placeholder="Найти" value={searchTerm} onChange={handleInputChange} />
       <div className={styles.search__lupa}>
         <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
