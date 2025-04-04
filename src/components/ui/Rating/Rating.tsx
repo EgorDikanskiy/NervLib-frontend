@@ -7,9 +7,10 @@ interface RatingProps {
 }
 
 const Rating: React.FC<RatingProps> = ({ rating }) => {
+  rating = 5.0;
   const level = rating >= 4.5 ? 'high' : rating >= 3.5 ? 'mid' : 'low';
   const className = classNames(style.rating, style[level]);
-  return <div className={className}>{rating}/5.0</div>;
+  return <div className={className}>{rating.toFixed(1)}/5.0</div>;
 };
 
 export default Rating;

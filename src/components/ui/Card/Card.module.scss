@@ -1,4 +1,4 @@
-@use "styles/variables.scss";
+@use "styles/variables.scss" as *;
 @use "styles/mixin.scss";
 
 .card {
@@ -15,12 +15,29 @@
   }
 
   a {
-    color: variables.$black;
+    color: $black;
+    display: block;
+    height: 100%;
   }
 
   &__img {
     width: 100%;
     height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
     border-radius: 8px;
+
+    &_container {
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    &:hover {
+      transform: scale(1.05);
+    }
   }
 }

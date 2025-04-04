@@ -4,19 +4,36 @@ import { apiRoutes } from 'config/apiRoutes';
 
 export const getBooks = createAsyncThunk(
   'books/',
-  async (params: { authorId?: string; bookName?: string }, { rejectWithValue }) => {
+  async (
+    params: {
+      orderBy?: 'popularity' | 'created_at' | 'rating' | '' | string;
+      order?: 'asc' | 'desc';
+      genreId?: number;
+      title?: string;
+      authorId?: string;
+      slug?: string;
+    },
+    { rejectWithValue },
+  ) => {
     try {
-      let url = apiRoutes.books;
+      const url = new URL(apiRoutes.books);
+      const searchParams = new URLSearchParams();
 
-      if (params.bookName) {
-        url += `/${params.bookName}`;
-      } else if (params.authorId) {
-        url += `/?author_id=${params.authorId}`;
+      if (params.slug) {
+        url.pathname += `/${params.slug}`;
       } else {
-        url += '/';
+        if (params.orderBy) searchParams.append('order_by', params.orderBy);
+        if (params.order) searchParams.append('order', params.order);
+        if (params.genreId) searchParams.append('genre_id', params.genreId.toString());
+        if (params.title) searchParams.append('title', params.title);
+        if (params.authorId) searchParams.append('author_id', params.authorId);
+
+        if (Array.from(searchParams).length > 0) {
+          url.search = searchParams.toString();
+        }
       }
 
-      const response = await axios.get(url, {
+      const response = await axios.get(url.toString(), {
         headers: {
           'Content-Type': 'application/json',
         },
