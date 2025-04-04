@@ -22,7 +22,7 @@ function AppContent() {
   return (
     <RootLayout>
       <Routes>
-        <Route path={routerUrls.root} element={<div>Тут будет главная</div>} />
+        <Route path={routerUrls.root} element={<Navigate to={routerUrls.register.mask} replace={true} />} />
         <Route path={routerUrls.register.mask} element={<Registration />} />
         <Route path={routerUrls.login.mask} element={<Login />} />
         <Route path={routerUrls.catalog.mask} element={<CatalogPage />} />
@@ -31,6 +31,7 @@ function AppContent() {
         <Route path={routerUrls.bookmarks.mask} element={<div>Избранное</div>} />
         <Route path={routerUrls.viewComics.mask} element={<ViewComicsPage />} />
         <Route path={routerUrls.book_detail.mask} element={<DetailComicsPage />} />
+        <Route path="*" element={<Navigate to={routerUrls.catalog.mask} replace={true} />} />
 
         <Route element={<PrivateRoute />}>
           <Route path={routerUrls.profile.mask} element={<ProfilePage />} />
