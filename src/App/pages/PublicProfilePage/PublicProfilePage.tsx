@@ -152,6 +152,8 @@ const PublicProfilePage = () => {
     }
   }, [dispatch, username, user]);
 
+  const is_self = username == user?.username;
+
   const handleSubscribe = async () => {
     if (username) {
       await dispatch(subscribeToAuthor(username));
@@ -224,7 +226,7 @@ const PublicProfilePage = () => {
           </svg>
           <p>Назад</p>
         </span>
-        {profile.is_author && user && (
+        {profile.is_author && user && !is_self && (
           <span
             className={styles.profile__nav__item__follow}
             onClick={() => (profile.is_fans ? handleUnfans() : handleFans())}
@@ -247,7 +249,7 @@ const PublicProfilePage = () => {
             </p>
           </span>
         )}
-        {profile.is_author && user && (
+        {profile.is_author && user && !is_self && (
           <span
             className={styles.profile__nav__item__subscribe}
             onClick={() => (profile.is_subscribed ? handleUnsubscribe() : handleSubscribe())}
