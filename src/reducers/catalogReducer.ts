@@ -61,7 +61,6 @@ export const catalogSlice = createSlice({
   reducers: {
     // ФИЛЬТРЫ
     toggleFilters: (state, action: PayloadAction<boolean>) => {
-      console.log('toggleFilters', action.payload);
       state.isFiltersOpen = action.payload;
     },
     setGenreFilter: (state, action: PayloadAction<number | null>) => {

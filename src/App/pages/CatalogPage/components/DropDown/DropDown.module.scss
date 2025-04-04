@@ -28,6 +28,18 @@
     align-items: center;
     cursor: pointer;
     transition: all 0.2s ease;
+    position: relative;
+
+    &__sort {
+      position: absolute;
+      left: 10px;
+
+      &_desc {
+        transform: scaleY(-1);
+        position: absolute;
+        left: 10px;
+      }
+    }
   }
   &__item_active {
     background-color: $purple-main;
