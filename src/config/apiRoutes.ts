@@ -11,4 +11,5 @@ export const apiRoutes = {
   bookOnSlug: (slug: string) => createApiRoute(`/books/${slug}`),
   chapters: createApiRoute('/chapters'),
   images: createApiRoute('/images'),
+  genres: createApiRoute('/genres'),
 };

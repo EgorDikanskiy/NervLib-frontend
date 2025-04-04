@@ -1,13 +1,9 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Loader from 'components/Loader';
 import Card from 'components/ui/Card';
-import CardPopup from 'components/ui/CardPopup';
 import { routerUrls } from 'config/routerUrls';
 import useCatalog from 'hooks/useCatalog';
-import { AppDispatch } from 'store';
-import { openPopup, closePopup } from '../../../../../reducers/catalogReducer';
 import style from './Catalog.module.scss';
 
 interface Book {
@@ -25,9 +21,7 @@ interface Book {
   slug: string;
 }
 const Catalog = () => {
-  const { books, loading, cardOpen } = useCatalog();
-
-  const dispatch = useDispatch<AppDispatch>();
+  const { books, loading } = useCatalog();
 
   if (loading) {
     return <Loader />;
@@ -36,7 +30,7 @@ const Catalog = () => {
   if (books.length === 0) {
     return (
       <div>
-        <p>Sorry, there are no books available at the moment</p>
+        <p>Книг ещё нет :(</p>
       </div>
     );
   }
@@ -44,17 +38,11 @@ const Catalog = () => {
   return (
     <div className={style.catalog}>
       {books.map((book: Book) => (
-        <>
+        <div key={book.id}>
           <Link to={routerUrls.book_detail.create(book.slug)}>
-            <Card
-              title={book.title}
-              rate={book.favourites_count}
-              imgSrc={book.poster_url}
-              key={book.id}
-              onClick={() => dispatch(openPopup(book))}
-            />
+            <Card title={book.title} rate={book.favourites_count} imgSrc={book.poster_url} />
           </Link>
-        </>
+        </div>
       ))}
     </div>
   );

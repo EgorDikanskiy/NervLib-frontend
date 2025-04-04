@@ -7,6 +7,7 @@ import MiniCard from 'components/ui/MiniCard';
 import { routerUrls } from 'config/routerUrls';
 import { AppDispatch, RootState } from 'store';
 import { filterUrlImage } from 'utils/filterUrlImage';
+import { getCurrentUser, refresh } from '../../../actions/authActions';
 import {
   getProfile,
   checkSubscription,
@@ -113,6 +114,25 @@ const PublicProfilePage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { profile, loading, error } = useSelector((state: RootState) => state.profile);
   let gender = 'Не указан';
+  const { user } = useSelector((state: RootState) => state.auth);
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken) || localStorage.getItem('access_token');
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!accessToken) return;
+
+      // Получаем данные пользователя и проверяем статус
+      const result = await dispatch(getCurrentUser());
+      // result.meta.requestStatus будет "fulfilled" если запрос успешен
+      if (result.meta.requestStatus !== 'fulfilled' || !result.payload) {
+        // Если данные пользователя не получены, выполняем refresh и пробуем снова
+        await dispatch(refresh());
+        await dispatch(getCurrentUser());
+      }
+    };
+
+    fetchUserData();
+  }, [accessToken, dispatch]);
 
   useEffect(() => {
     if (username) {
@@ -121,38 +141,52 @@ const PublicProfilePage = () => {
   }, [dispatch, username]);
 
   useEffect(() => {
-    if (username) {
+    if (username && user) {
       dispatch(checkSubscription(username));
     }
-  }, [dispatch, username]);
+  }, [dispatch, username, user]);
 
   useEffect(() => {
-    if (username) {
+    if (username && user) {
       dispatch(checkFans(username));
     }
-  }, [dispatch, username]);
+  }, [dispatch, username, user]);
 
-  const handleSubscribe = () => {
+  const is_self = username == user?.username;
+
+  const handleSubscribe = async () => {
     if (username) {
-      dispatch(subscribeToAuthor(username));
+      await dispatch(subscribeToAuthor(username));
+      dispatch(getProfile({ username, with_token: false }));
+      dispatch(checkSubscription(username));
+      dispatch(checkFans(username));
     }
   };
 
-  const handleUnsubscribe = () => {
+  const handleUnsubscribe = async () => {
     if (username) {
-      dispatch(unsubscribeFromAuthor(username));
+      await dispatch(unsubscribeFromAuthor(username));
+      dispatch(getProfile({ username, with_token: false }));
+      dispatch(checkSubscription(username));
+      dispatch(checkFans(username));
     }
   };
 
-  const handleFans = () => {
+  const handleFans = async () => {
     if (username) {
-      dispatch(fansToAuthor(username));
+      await dispatch(fansToAuthor(username));
+      dispatch(getProfile({ username, with_token: false }));
+      dispatch(checkFans(username));
+      dispatch(checkSubscription(username));
     }
   };
 
-  const handleUnfans = () => {
+  const handleUnfans = async () => {
     if (username) {
-      dispatch(unfansFromAuthor(username));
+      await dispatch(unfansFromAuthor(username));
+      dispatch(getProfile({ username, with_token: false }));
+      dispatch(checkFans(username));
+      dispatch(checkSubscription(username));
     }
   };
 
@@ -192,7 +226,7 @@ const PublicProfilePage = () => {
           </svg>
           <p>Назад</p>
         </span>
-        {profile.is_author && (
+        {profile.is_author && user && !is_self && (
           <span
             className={styles.profile__nav__item__follow}
             onClick={() => (profile.is_fans ? handleUnfans() : handleFans())}
@@ -215,7 +249,7 @@ const PublicProfilePage = () => {
             </p>
           </span>
         )}
-        {profile.is_author && (
+        {profile.is_author && user && !is_self && (
           <span
             className={styles.profile__nav__item__subscribe}
             onClick={() => (profile.is_subscribed ? handleUnsubscribe() : handleSubscribe())}

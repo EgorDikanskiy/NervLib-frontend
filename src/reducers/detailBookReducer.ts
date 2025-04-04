@@ -7,7 +7,7 @@ interface Book {
   age_rating: string;
   poster_url: string;
   id: number;
-  author_id: number;
+  author_name: string;
   chapter_count: number;
   views_count: number;
   favourites_count: number;
