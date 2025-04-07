@@ -37,13 +37,15 @@ const Catalog = () => {
 
   return (
     <div className={style.catalog}>
-      {books.map((book: Book) => (
-        <div key={book.id}>
-          <Link to={routerUrls.book_detail.create(book.slug)}>
-            <Card title={book.title} rate={book.favourites_count} imgSrc={book.poster_url} />
-          </Link>
-        </div>
-      ))}
+      <div className={style.catalog__cards}>
+        {books.map((book: Book) => (
+          <div key={book.id}>
+            <Link to={routerUrls.book_detail.create(book.slug)}>
+              <Card title={book.title} rate={book.favourites_count} imgSrc={book.poster_url} />
+            </Link>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

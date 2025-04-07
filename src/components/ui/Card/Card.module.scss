@@ -10,10 +10,6 @@
   min-width: 125px;
   margin-bottom: 32px;
 
-  @media (max-width: 400px) {
-    width: 100px;
-  }
-
   a {
     color: $black;
     display: block;
