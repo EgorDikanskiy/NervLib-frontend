@@ -1,5 +1,6 @@
 import React from 'react';
-import useCatalog from 'hooks/useCatalog';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store';
 import Catalog from './components/Catalog';
 import Filters from './components/Filters';
 import Search from './components/Search';
@@ -7,7 +8,7 @@ import Search from './components/Search';
 import styles from './CatalogPage.module.scss';
 
 const CatalogPage = () => {
-  const { isFiltersOpen } = useCatalog();
+  const { isFiltersOpen } = useSelector((state: RootState) => state.catalog);
   return (
     <section>
       <Search />
