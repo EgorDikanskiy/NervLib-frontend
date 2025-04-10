@@ -37,7 +37,7 @@ const Catalog = () => {
 
   return (
     <div className={style.catalog}>
-      <div className={style.catalog__cards}>
+      <div className={style.books}>
         {books.map((book: Book) => (
           <div key={book.id}>
             <Link to={routerUrls.book_detail.create(book.slug)}>

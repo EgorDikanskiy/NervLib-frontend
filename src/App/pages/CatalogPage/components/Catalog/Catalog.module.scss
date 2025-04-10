@@ -1,22 +1,32 @@
 .catalog {
-  &__cards {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin: 0 auto;
-    width: 320px;
+  display: flex;
+  justify-content: center;
+}
 
-    a {
-      text-decoration: none;
-      color: inherit;
-      outline: none;
-      -webkit-tap-highlight-color: transparent;
-    }
+.books {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
 
-    a:focus,
-    a:active {
-      outline: none;
-    }
+  @media (min-width: 600px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (min-width: 800px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  @media (min-width: 1000px) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  a:focus,
+  a:active {
+    outline: none;
   }
 }
