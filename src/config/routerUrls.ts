@@ -1,5 +1,3 @@
-import ViewComicsPage from 'App/pages/ViewComicsPage';
-
 export const routerUrls = {
   root: '/',
   login: {
@@ -45,5 +43,9 @@ export const routerUrls = {
   book_detail: {
     mask: '/comics/:slug',
     create: (slug: string) => `/comics/${slug}`,
+  },
+  book_add: {
+    mask: '/comics/add',
+    create: () => `/comics/add`,
   },
 };
