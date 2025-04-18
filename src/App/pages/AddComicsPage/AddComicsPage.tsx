@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import BackButton from 'components/ui/BackButton';
+import Input from 'components/ui/Input';
 import { routerUrls } from 'config/routerUrls';
 import { AppDispatch, RootState } from 'store';
 import style from './AddComicsPage.module.scss';
@@ -81,40 +82,47 @@ const AddComicsPage = () => {
   };
 
   return (
-    <section>
+    <section className={style.container}>
       <div className={style.menu}>
         <BackButton className={style.menu__back} onClick={() => navigate(routerUrls.profile.mask)} />
         <div className={style.menu__header}>
           <h2>Добавить комикс</h2>
         </div>
       </div>
-      <form onSubmit={handleSubmit} className={style.comic_form}>
-        <div className={style.comic_form__group}>
-          <label>Title*</label>
+
+      <form onSubmit={handleSubmit} className={style.comicForm}>
+        <div className={style.comicForm__group}>
+          <Input id="title" label="Title" type="text" value={formData.title} onChange={handleInputChange} />
+          {/* <label className={style.comicForm__label}>Title*</label>
           <input
             type="text"
             name="title"
             value={formData.title}
             onChange={handleInputChange}
-            className={errors.title ? 'error' : ''}
-          />
-          {errors.title && <span className="error-message">{errors.title}</span>}
+            className={`${style.comicForm__input} ${errors.title ? style.error : ''}`}
+          /> */}
+          {errors.title && <span className={style.comicForm__errorMessage}>{errors.title}</span>}
         </div>
 
-        <div className="form-group">
-          <label>Description*</label>
+        <div className={style.comicForm__group}>
+          <label className={style.comicForm__label}>Description*</label>
           <textarea
             name="description"
             value={formData.description}
             onChange={handleInputChange}
-            className={errors.description ? 'error' : ''}
+            className={`${style.comicForm__textarea} ${errors.description ? style.error : ''}`}
           />
-          {errors.description && <span className="error-message">{errors.description}</span>}
+          {errors.description && <span className={style.comicForm__errorMessage}>{errors.description}</span>}
         </div>
 
-        <div className="form-group">
-          <label>Age Rating*</label>
-          <select name="age_rating" value={formData.age_rating} onChange={handleInputChange}>
+        <div className={style.comicForm__group}>
+          <label className={style.comicForm__label}>Age Rating*</label>
+          <select
+            name="age_rating"
+            value={formData.age_rating}
+            onChange={handleInputChange}
+            className={style.comicForm__select}
+          >
             {ageRatings.map((rating) => (
               <option key={rating} value={rating}>
                 {rating}
@@ -123,41 +131,43 @@ const AddComicsPage = () => {
           </select>
         </div>
 
-        <div className="form-group">
-          <label>Poster URL*</label>
+        <div className={style.comicForm__group}>
+          <label className={style.comicForm__label}>Poster URL*</label>
           <input
             type="text"
             name="poster_url"
             value={formData.poster_url}
             onChange={handleInputChange}
-            className={errors.poster_url ? 'error' : ''}
+            className={`${style.comicForm__input} ${errors.poster_url ? style.error : ''}`}
           />
-          {errors.poster_url && <span className="error-message">{errors.poster_url}</span>}
+          {errors.poster_url && <span className={style.comicForm__errorMessage}>{errors.poster_url}</span>}
         </div>
 
-        <div className="form-group">
-          <label>Chapter Count</label>
+        <div className={style.comicForm__group}>
+          <label className={style.comicForm__label}>Chapter Count</label>
           <input
             type="number"
             name="chapter_count"
             value={formData.chapter_count}
             onChange={handleInputChange}
             min="0"
+            className={style.comicForm__input}
           />
         </div>
 
-        <div className="form-group">
-          <label>Slug</label>
+        <div className={style.comicForm__group}>
+          <label className={style.comicForm__label}>Slug</label>
           <input
             type="text"
             name="slug"
             value={formData.slug}
             onChange={handleInputChange}
-            readOnly // Можно сделать редактируемым при необходимости
+            readOnly
+            className={style.comicForm__input}
           />
         </div>
 
-        <button type="submit" className="submit-button">
+        <button type="submit" className={style.comicForm__submitButton}>
           Create Comic
         </button>
       </form>
