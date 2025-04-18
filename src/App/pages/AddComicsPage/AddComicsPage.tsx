@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import BackButton from 'components/ui/BackButton';
 import Input from 'components/ui/Input';
+import Textarea from 'components/ui/Textarea';
 import { routerUrls } from 'config/routerUrls';
 import { AppDispatch, RootState } from 'store';
 import style from './AddComicsPage.module.scss';
@@ -91,29 +92,8 @@ const AddComicsPage = () => {
       </div>
 
       <form onSubmit={handleSubmit} className={style.comicForm}>
-        <div className={style.comicForm__group}>
-          <Input id="title" label="Title" type="text" value={formData.title} onChange={handleInputChange} />
-          {/* <label className={style.comicForm__label}>Title*</label>
-          <input
-            type="text"
-            name="title"
-            value={formData.title}
-            onChange={handleInputChange}
-            className={`${style.comicForm__input} ${errors.title ? style.error : ''}`}
-          /> */}
-          {errors.title && <span className={style.comicForm__errorMessage}>{errors.title}</span>}
-        </div>
-
-        <div className={style.comicForm__group}>
-          <label className={style.comicForm__label}>Description*</label>
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleInputChange}
-            className={`${style.comicForm__textarea} ${errors.description ? style.error : ''}`}
-          />
-          {errors.description && <span className={style.comicForm__errorMessage}>{errors.description}</span>}
-        </div>
+        <Input id="title" label="Название" type="text" value={formData.title} onChange={handleInputChange} />
+        <Textarea id="description" label="Описание" value={formData.description} onChange={handleInputChange} />
 
         <div className={style.comicForm__group}>
           <label className={style.comicForm__label}>Age Rating*</label>
