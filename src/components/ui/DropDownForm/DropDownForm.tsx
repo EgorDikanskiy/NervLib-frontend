@@ -11,8 +11,8 @@ interface DropDownFormProps {
 
 const DropDownForm: React.FC<DropDownFormProps> = ({ title, options, value, onChange }) => {
   return (
-    <select className={style.select} value={value} onChange={onChange}>
-      <option selected disabled hidden>
+    <select className={style.select} value={value} onChange={onChange} defaultValue="">
+      <option value="" selected disabled hidden>
         {title}
       </option>
       {options.map(({ id, name }) => {
