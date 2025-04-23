@@ -1,10 +1,11 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import BackButton from 'components/ui/BackButton';
+import DropDown from 'components/ui/DropDown';
 import { AppDispatch, RootState } from 'store';
 
 import { toggleFilters, setGenreFilter, setSortFilter, resetFilters } from '../../../../../reducers/catalogReducer';
-import DropDown from '../DropDown';
+
 import style from './Filters.module.scss';
 
 interface SortOption {

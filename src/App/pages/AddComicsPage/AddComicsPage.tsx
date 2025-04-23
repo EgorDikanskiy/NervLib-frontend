@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import BackButton from 'components/ui/BackButton';
+import { Button } from 'components/ui/Button';
+import DropDown from 'components/ui/DropDown';
+import DropDownForm from 'components/ui/DropDownForm';
 import Input from 'components/ui/Input';
 import Textarea from 'components/ui/Textarea';
 import { routerUrls } from 'config/routerUrls';
@@ -10,77 +13,84 @@ import style from './AddComicsPage.module.scss';
 
 // import { createComic } from '../store/comicsSlice';
 
-interface ComicFormData {
+type FormData = {
   title: string;
   description: string;
-  age_rating: string;
-  poster_url: string;
-  chapter_count: number;
+  ageRating: string;
+  posterUrl: string;
+  chapterCount: number;
   slug: string;
-}
+};
+
+const initialFormState: FormData = {
+  title: '',
+  description: '',
+  ageRating: '',
+  posterUrl: '',
+  chapterCount: 0,
+  slug: '',
+};
 
 const AddComicsPage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState<ComicFormData>({
-    title: '',
-    description: '',
-    age_rating: '0+',
-    poster_url: '',
-    chapter_count: 0,
-    slug: '',
-  });
+  const [selectedGenre, setSelectedGenre] = useState<string>('');
+  const { allGenres } = useSelector((state: RootState) => state.catalog);
+  const genreNames = allGenres.map((genre) => genre.name);
+  const [userFormData, setUserFormData] = useState<Partial<FormData>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const ageRatings = ['0+', '6+', '12+', '16+', '18+'];
+  const formData = {
+    ...initialFormState,
+    //server
+    ...userFormData,
+  };
+
+  // const ageRatings = ['0+', '6+', '12+', '16+', '18+'];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const validationErrors = validateForm();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
-
-    try {
-      // await dispatch(createComic(formData)).unwrap();
-      // Reset form or redirect
-      setFormData({
-        title: '',
-        description: '',
-        age_rating: '0+',
-        poster_url: '',
-        chapter_count: 0,
-        slug: '',
-      });
-    } catch (error) {
-      console.error('Failed to create comic:', error);
-    }
+    // const validationErrors = validateForm();
+    // if (Object.keys(validationErrors).length > 0) {
+    //   setErrors(validationErrors);
+    //   return;
+    // }
   };
 
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-    if (!formData.title.trim()) newErrors.title = 'Title is required';
-    if (!formData.description.trim()) newErrors.description = 'Description is required';
-    if (!formData.poster_url.trim()) newErrors.poster_url = 'Poster is required';
-    return newErrors;
-  };
+  // const validateForm = () => {
+  //   const newErrors: Record<string, string> = {};
+  //   if (!formData.title.trim()) newErrors.title = 'Title is required';
+  //   if (!formData.description.trim()) newErrors.description = 'Description is required';
+  //   if (!formData.poster_url.trim()) newErrors.poster_url = 'Poster is required';
+  //   return newErrors;
+  // };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: name === 'chapter_count' ? Number(value) : value,
-    }));
-
-    if (name === 'title') {
-      const slug = value
-        .toLowerCase()
-        .replace(/\s+/g, '-')
-        .replace(/[^\w-]+/g, '');
-      setFormData((prev) => ({ ...prev, slug }));
-    }
-  };
+  const gen = [
+    {
+      id: 1,
+      name: 'Экшен',
+    },
+    {
+      id: 2,
+      name: 'Фантастика',
+    },
+    {
+      id: 3,
+      name: 'Комедия',
+    },
+    {
+      id: 4,
+      name: 'Приключения',
+    },
+    {
+      id: 5,
+      name: 'Фэнтези',
+    },
+    {
+      id: 6,
+      name: 'Хоррор',
+    },
+  ];
 
   return (
     <section className={style.container}>
@@ -92,64 +102,28 @@ const AddComicsPage = () => {
       </div>
 
       <form onSubmit={handleSubmit} className={style.comicForm}>
-        <Input id="title" label="Название" type="text" value={formData.title} onChange={handleInputChange} />
-        <Textarea id="description" label="Описание" value={formData.description} onChange={handleInputChange} />
+        <Input
+          id="title"
+          label="Название"
+          type="text"
+          value={formData.title}
+          onChange={(e) => setUserFormData((data) => ({ ...data, title: e.target.value }))}
+        />
+        <Textarea
+          id="description"
+          label="Описание"
+          value={formData.description}
+          onChange={(e) => setUserFormData((data) => ({ ...data, description: e.target.value }))}
+        />
+        <DropDown
+          header="Жанр"
+          items={genreNames}
+          selectedItems={selectedGenre}
+          onItemClick={() => setSelectedGenre('')}
+        />
+        <DropDownForm options={gen} />
 
-        <div className={style.comicForm__group}>
-          <label className={style.comicForm__label}>Age Rating*</label>
-          <select
-            name="age_rating"
-            value={formData.age_rating}
-            onChange={handleInputChange}
-            className={style.comicForm__select}
-          >
-            {ageRatings.map((rating) => (
-              <option key={rating} value={rating}>
-                {rating}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className={style.comicForm__group}>
-          <label className={style.comicForm__label}>Poster URL*</label>
-          <input
-            type="text"
-            name="poster_url"
-            value={formData.poster_url}
-            onChange={handleInputChange}
-            className={`${style.comicForm__input} ${errors.poster_url ? style.error : ''}`}
-          />
-          {errors.poster_url && <span className={style.comicForm__errorMessage}>{errors.poster_url}</span>}
-        </div>
-
-        <div className={style.comicForm__group}>
-          <label className={style.comicForm__label}>Chapter Count</label>
-          <input
-            type="number"
-            name="chapter_count"
-            value={formData.chapter_count}
-            onChange={handleInputChange}
-            min="0"
-            className={style.comicForm__input}
-          />
-        </div>
-
-        <div className={style.comicForm__group}>
-          <label className={style.comicForm__label}>Slug</label>
-          <input
-            type="text"
-            name="slug"
-            value={formData.slug}
-            onChange={handleInputChange}
-            readOnly
-            className={style.comicForm__input}
-          />
-        </div>
-
-        <button type="submit" className={style.comicForm__submitButton}>
-          Create Comic
-        </button>
+        <Button type="submit">Добавить комикс</Button>
       </form>
     </section>
   );

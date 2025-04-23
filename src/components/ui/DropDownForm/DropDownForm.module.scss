@@ -1,0 +1,16 @@
+@use "styles/variables.scss" as *;
+@use "styles/mixin.scss";
+.select {
+  height: 40px;
+  padding: 5px;
+  font-size: 16px;
+  color: #333;
+  background-color: #fff;
+  border-radius: 16px;
+  border: solid 1px $black-50;
+}
+
+.option {
+  //   color: #333;
+  //   background-color: #fff;
+}
