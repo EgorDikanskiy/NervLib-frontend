@@ -1,7 +1,7 @@
 import React from 'react';
 import style from './DropDownForm.module.scss';
 
-type options = { id: number; name: string };
+type options = { id: number | string; name: string };
 interface DropDownFormProps {
   title: string;
   options: options[];
@@ -11,7 +11,7 @@ interface DropDownFormProps {
 
 const DropDownForm: React.FC<DropDownFormProps> = ({ title, options, value, onChange }) => {
   return (
-    <select className={style.select} value={value} onChange={onChange} defaultValue="">
+    <select className={style.select} onChange={onChange} defaultValue="">
       <option value="" selected disabled hidden>
         {title}
       </option>

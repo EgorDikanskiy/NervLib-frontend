@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
+import { postBook } from 'actions/bookActions';
 import { getGenres } from 'actions/catalogActions';
 import BackButton from 'components/ui/BackButton';
 import { Button } from 'components/ui/Button';
@@ -17,9 +18,11 @@ import style from './AddComicsPage.module.scss';
 const formDataSchema = z.object({
   title: z.string().nonempty(),
   description: z.string().nonempty(),
-  genre: z.string().nonempty(),
-  ageRating: z.string().nonempty(),
-  // tags: z.array(z.string()).min(1),
+  age_rating: z.string().nonempty(),
+  poster_url: z.string().nonempty(),
+  genre: z.object({
+    id: z.number(),
+  }),
 });
 
 type FormData = z.infer<typeof formDataSchema>;
@@ -27,9 +30,11 @@ type FormData = z.infer<typeof formDataSchema>;
 const initialFormState: FormData = {
   title: '',
   description: '',
-  genre: '',
-  ageRating: '',
-  // tags: [],
+  age_rating: '',
+  poster_url: 'https://i.pinimg.com/736x/f8/be/52/f8be529c660904a72fa9410600e35c2f.jpg',
+  genre: {
+    id: 0,
+  },
 };
 
 const AddComicsPage = () => {
@@ -49,13 +54,14 @@ const AddComicsPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(999);
     const errors = validate();
     if (errors) {
       setIsError(true);
       return;
     }
-
     console.log(formData);
+    await dispatch(postBook(formData));
   };
 
   const validate = () => {
@@ -99,22 +105,27 @@ const AddComicsPage = () => {
 
   const ageRatings = [
     {
-      id: 1,
-      name: 'Все',
+      id: '0+',
+      name: '0+',
     },
     {
-      id: 2,
-      name: '7+',
+      id: '6+',
+      name: '6+',
     },
     {
-      id: 3,
+      id: '12+',
+      name: '12+',
+    },
+    {
+      id: '16+',
       name: '16+',
     },
     {
-      id: 4,
+      id: '18+',
       name: '18+',
     },
   ];
+
   return (
     <section className={style.container}>
       <div className={style.menu}>
@@ -149,8 +160,8 @@ const AddComicsPage = () => {
           <DropDownForm
             title="Жанр"
             options={gen}
-            value={formData.genre}
-            onChange={(e) => setUserFormData((data) => ({ ...data, genre: e.target.value }))}
+            value={formData.genre.id.toString()}
+            onChange={(e) => setUserFormData((data) => ({ ...data, genre: { id: Number(e.target.value) } }))}
           />
           <span className={style.comicForm__error}>{errors?.genre?._errors.join(', ')}</span>
         </div>
@@ -159,10 +170,10 @@ const AddComicsPage = () => {
           <DropDownForm
             title="Возрастное ограничение"
             options={ageRatings}
-            value={formData.ageRating}
-            onChange={(e) => setUserFormData((data) => ({ ...data, ageRating: e.target.value }))}
+            value={formData.age_rating}
+            onChange={(e) => setUserFormData((data) => ({ ...data, age_rating: e.target.value }))}
           />
-          <span className={style.comicForm__error}>{errors?.ageRating?._errors.join(', ')}</span>
+          <span className={style.comicForm__error}>{errors?.age_rating?._errors.join(', ')}</span>
         </div>
 
         <Button type="submit" disabled={!!errors}>
