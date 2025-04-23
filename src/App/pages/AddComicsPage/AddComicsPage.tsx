@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { z } from 'zod';
+import { getGenres } from 'actions/catalogActions';
 import BackButton from 'components/ui/BackButton';
 import { Button } from 'components/ui/Button';
-import DropDown from 'components/ui/DropDown';
 import DropDownForm from 'components/ui/DropDownForm';
 import Input from 'components/ui/Input';
 import Textarea from 'components/ui/Textarea';
@@ -13,22 +14,22 @@ import style from './AddComicsPage.module.scss';
 
 // import { createComic } from '../store/comicsSlice';
 
-type FormData = {
-  title: string;
-  description: string;
-  ageRating: string;
-  posterUrl: string;
-  chapterCount: number;
-  slug: string;
-};
+const formDataSchema = z.object({
+  title: z.string().nonempty(),
+  description: z.string().nonempty(),
+  genre: z.string().nonempty(),
+  ageRating: z.string().nonempty(),
+  // tags: z.array(z.string()).min(1),
+});
+
+type FormData = z.infer<typeof formDataSchema>;
 
 const initialFormState: FormData = {
   title: '',
   description: '',
+  genre: '',
   ageRating: '',
-  posterUrl: '',
-  chapterCount: 0,
-  slug: '',
+  // tags: [],
 };
 
 const AddComicsPage = () => {
@@ -38,7 +39,7 @@ const AddComicsPage = () => {
   const { allGenres } = useSelector((state: RootState) => state.catalog);
   const genreNames = allGenres.map((genre) => genre.name);
   const [userFormData, setUserFormData] = useState<Partial<FormData>>({});
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isError, setIsError] = useState<boolean>(false);
 
   const formData = {
     ...initialFormState,
@@ -46,24 +47,28 @@ const AddComicsPage = () => {
     ...userFormData,
   };
 
-  // const ageRatings = ['0+', '6+', '12+', '16+', '18+'];
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // const validationErrors = validateForm();
-    // if (Object.keys(validationErrors).length > 0) {
-    //   setErrors(validationErrors);
-    //   return;
-    // }
+    const errors = validate();
+    if (errors) {
+      setIsError(true);
+      return;
+    }
+
+    console.log(formData);
   };
 
-  // const validateForm = () => {
-  //   const newErrors: Record<string, string> = {};
-  //   if (!formData.title.trim()) newErrors.title = 'Title is required';
-  //   if (!formData.description.trim()) newErrors.description = 'Description is required';
-  //   if (!formData.poster_url.trim()) newErrors.poster_url = 'Poster is required';
-  //   return newErrors;
-  // };
+  const validate = () => {
+    const res = formDataSchema.safeParse(formData);
+
+    if (res.success) {
+      return undefined;
+    }
+
+    return res.error.format();
+  };
+
+  const errors = isError ? validate() : undefined;
 
   const gen = [
     {
@@ -92,6 +97,24 @@ const AddComicsPage = () => {
     },
   ];
 
+  const ageRatings = [
+    {
+      id: 1,
+      name: 'Все',
+    },
+    {
+      id: 2,
+      name: '7+',
+    },
+    {
+      id: 3,
+      name: '16+',
+    },
+    {
+      id: 4,
+      name: '18+',
+    },
+  ];
   return (
     <section className={style.container}>
       <div className={style.menu}>
@@ -102,28 +125,49 @@ const AddComicsPage = () => {
       </div>
 
       <form onSubmit={handleSubmit} className={style.comicForm}>
-        <Input
-          id="title"
-          label="Название"
-          type="text"
-          value={formData.title}
-          onChange={(e) => setUserFormData((data) => ({ ...data, title: e.target.value }))}
-        />
-        <Textarea
-          id="description"
-          label="Описание"
-          value={formData.description}
-          onChange={(e) => setUserFormData((data) => ({ ...data, description: e.target.value }))}
-        />
-        <DropDown
-          header="Жанр"
-          items={genreNames}
-          selectedItems={selectedGenre}
-          onItemClick={() => setSelectedGenre('')}
-        />
-        <DropDownForm options={gen} />
+        <div>
+          <Input
+            id="title"
+            label="Название"
+            type="text"
+            value={formData.title}
+            onChange={(e) => setUserFormData((data) => ({ ...data, title: e.target.value }))}
+          />
+          <span className={style.comicForm__error}>{errors?.title?._errors.join(', ')}</span>
+        </div>
+        <div>
+          <Textarea
+            id="description"
+            label="Описание"
+            value={formData.description}
+            onChange={(e) => setUserFormData((data) => ({ ...data, description: e.target.value }))}
+          />
+          <p className={style.comicForm__error}>{errors?.description?._errors.join(', ')}</p>
+        </div>
 
-        <Button type="submit">Добавить комикс</Button>
+        <div>
+          <DropDownForm
+            title="Жанр"
+            options={gen}
+            value={formData.genre}
+            onChange={(e) => setUserFormData((data) => ({ ...data, genre: e.target.value }))}
+          />
+          <span className={style.comicForm__error}>{errors?.genre?._errors.join(', ')}</span>
+        </div>
+
+        <div>
+          <DropDownForm
+            title="Возрастное ограничение"
+            options={ageRatings}
+            value={formData.ageRating}
+            onChange={(e) => setUserFormData((data) => ({ ...data, ageRating: e.target.value }))}
+          />
+          <span className={style.comicForm__error}>{errors?.ageRating?._errors.join(', ')}</span>
+        </div>
+
+        <Button type="submit" disabled={!!errors}>
+          Добавить комикс
+        </Button>
       </form>
     </section>
   );

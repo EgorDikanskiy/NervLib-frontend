@@ -3,18 +3,21 @@ import style from './DropDownForm.module.scss';
 
 type options = { id: number; name: string };
 interface DropDownFormProps {
+  title: string;
   options: options[];
+  value: string;
+  onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
-const DropDownForm: React.FC<DropDownFormProps> = ({ options }) => {
+const DropDownForm: React.FC<DropDownFormProps> = ({ title, options, value, onChange }) => {
   return (
-    <select className={style.select}>
-      <option value="" selected disabled hidden>
-        Choose here
+    <select className={style.select} value={value} onChange={onChange}>
+      <option selected disabled hidden>
+        {title}
       </option>
       {options.map(({ id, name }) => {
         return (
-          <option key={id} value={name} className={style.option}>
+          <option key={id} value={id} className={style.option}>
             {name}
           </option>
         );
