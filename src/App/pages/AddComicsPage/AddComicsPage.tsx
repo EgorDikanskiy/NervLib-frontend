@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
@@ -12,8 +12,6 @@ import Textarea from 'components/ui/Textarea';
 import { routerUrls } from 'config/routerUrls';
 import { AppDispatch, RootState } from 'store';
 import style from './AddComicsPage.module.scss';
-
-// import { createComic } from '../store/comicsSlice';
 
 const formDataSchema = z.object({
   title: z.string().nonempty(),
@@ -40,15 +38,16 @@ const initialFormState: FormData = {
 const AddComicsPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const [selectedGenre, setSelectedGenre] = useState<string>('');
   const { allGenres } = useSelector((state: RootState) => state.catalog);
-  const genreNames = allGenres.map((genre) => genre.name);
   const [userFormData, setUserFormData] = useState<Partial<FormData>>({});
   const [isError, setIsError] = useState<boolean>(false);
 
+  useLayoutEffect(() => {
+    dispatch(getGenres());
+  }, [dispatch]);
+
   const formData = {
     ...initialFormState,
-    //server
     ...userFormData,
   };
 
@@ -75,33 +74,6 @@ const AddComicsPage = () => {
   };
 
   const errors = isError ? validate() : undefined;
-
-  const gen = [
-    {
-      id: 1,
-      name: 'Экшен',
-    },
-    {
-      id: 2,
-      name: 'Фантастика',
-    },
-    {
-      id: 3,
-      name: 'Комедия',
-    },
-    {
-      id: 4,
-      name: 'Приключения',
-    },
-    {
-      id: 5,
-      name: 'Фэнтези',
-    },
-    {
-      id: 6,
-      name: 'Хоррор',
-    },
-  ];
 
   const ageRatings = [
     {
@@ -159,7 +131,7 @@ const AddComicsPage = () => {
         <div>
           <DropDownForm
             title="Жанр"
-            options={gen}
+            options={allGenres}
             value={formData.genre.id.toString()}
             onChange={(e) => setUserFormData((data) => ({ ...data, genre: { id: Number(e.target.value) } }))}
           />
