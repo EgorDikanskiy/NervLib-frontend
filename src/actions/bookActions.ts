@@ -65,7 +65,7 @@ export const postBook = createAsyncThunk(
       age_rating: string;
       poster_url: string;
       genre: {
-        id: number;
+        id: number | string;
       };
     },
     { rejectWithValue },

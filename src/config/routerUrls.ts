@@ -48,4 +48,8 @@ export const routerUrls = {
     mask: '/comics/add',
     create: () => `/comics/add`,
   },
+  book_edit: {
+    mask: '/comics/edit/:slug',
+    create: (slug: string) => `/comics/edit/${slug}`,
+  },
 };

@@ -1,8 +1,8 @@
 import React, { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { z } from 'zod';
-import { postBook } from 'actions/bookActions';
+import { postBook, getBooks } from 'actions/bookActions';
 import { getGenres } from 'actions/catalogActions';
 import BackButton from 'components/ui/BackButton';
 import { Button } from 'components/ui/Button';
@@ -11,7 +11,7 @@ import Input from 'components/ui/Input';
 import Textarea from 'components/ui/Textarea';
 import { routerUrls } from 'config/routerUrls';
 import { AppDispatch, RootState } from 'store';
-import style from './AddComicsPage.module.scss';
+import style from './EditComicsPage.module.scss';
 
 const formDataSchema = z.object({
   title: z.string().nonempty(),
@@ -19,7 +19,7 @@ const formDataSchema = z.object({
   age_rating: z.string().nonempty(),
   poster_url: z.string().nonempty(),
   genre: z.object({
-    id: z.number(),
+    id: z.union([z.number(), z.string()]),
   }),
 });
 
@@ -31,23 +31,28 @@ const initialFormState: FormData = {
   age_rating: '',
   poster_url: 'https://i.pinimg.com/originals/ed/11/bf/ed11bfb41b88654ad95f0f95d8faed48.jpg',
   genre: {
-    id: 0,
+    id: '',
   },
 };
 
-const AddComicsPage = () => {
+const EditComicsPage = () => {
+  const { slug } = useParams<{ slug: string }>();
+
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { allGenres } = useSelector((state: RootState) => state.catalog);
+  const serverFormState = useSelector((state: RootState) => state.books.books);
   const [userFormData, setUserFormData] = useState<Partial<FormData>>({});
   const [isError, setIsError] = useState<boolean>(false);
 
   useLayoutEffect(() => {
+    dispatch(getBooks({ slug: slug }));
     dispatch(getGenres());
-  }, [dispatch]);
+  }, [dispatch, slug]);
 
   const formData = {
     ...initialFormState,
+    ...serverFormState,
     ...userFormData,
   };
 
@@ -130,7 +135,7 @@ const AddComicsPage = () => {
           <DropDownForm
             title="Жанр"
             options={allGenres}
-            value={formData.genre.id === 0 ? '' : formData.genre.id.toString()}
+            value={formData.genre.id.toString()}
             onChange={(e) => setUserFormData((data) => ({ ...data, genre: { id: Number(e.target.value) } }))}
           />
           <span className={style.comicForm__error}>{errors?.genre?._errors.join(', ')}</span>
@@ -154,4 +159,4 @@ const AddComicsPage = () => {
   );
 };
 
-export default AddComicsPage;
+export default EditComicsPage;
