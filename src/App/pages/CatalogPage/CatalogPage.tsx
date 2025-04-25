@@ -13,7 +13,7 @@ const CatalogPage = () => {
     <section>
       <Search />
       <Catalog />
-      {isFiltersOpen && <Filters></Filters>}
+      {isFiltersOpen && <Filters />}
     </section>
   );
 };

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import Loader from 'components/Loader';
+import RatingSetter from 'components/RatingSetter';
 import { Button } from 'components/ui/Button';
 import { routerUrls } from 'config/routerUrls';
 import { AppDispatch, RootState } from 'store';
@@ -65,6 +66,7 @@ const DetailComicsPage: React.FC = () => {
             <strong>Дата публикации:</strong> {new Date(book.published_date).toLocaleDateString()}
           </p>
         </div>
+        <RatingSetter />
         <div className={styles.chaptersList}>
           <h2 className={styles.chaptersTitle}>Главы</h2>
           {chapters.length ? (
