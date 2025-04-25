@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { postBook } from 'actions/bookActions';
 import { getGenres } from 'actions/catalogActions';
+import TagsInput from 'components/TagsInput';
 import BackButton from 'components/ui/BackButton';
 import { Button } from 'components/ui/Button';
 import DropDownForm from 'components/ui/DropDownForm';
@@ -145,6 +146,9 @@ const AddComicsPage = () => {
             onChange={(e) => setUserFormData((data) => ({ ...data, age_rating: e.target.value }))}
           />
           <span className={style.comicForm__error}>{errors?.age_rating?._errors.join(', ')}</span>
+        </div>
+        <div>
+          <TagsInput />
         </div>
 
         <Button type="submit" disabled={!!errors}>
