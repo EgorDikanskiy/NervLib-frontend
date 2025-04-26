@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { postBook } from 'actions/bookActions';
 import { getGenres } from 'actions/catalogActions';
+import ImageInput from 'components/ImageInput';
 import BackButton from 'components/ui/BackButton';
 import { Button } from 'components/ui/Button';
 import DropDownForm from 'components/ui/DropDownForm';
@@ -107,6 +108,9 @@ const AddComicsPage = () => {
       </div>
 
       <form onSubmit={handleSubmit} className={style.comicForm}>
+        <div>
+          <ImageInput />
+        </div>
         <div>
           <Input
             id="title"
