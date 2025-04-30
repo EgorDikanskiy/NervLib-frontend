@@ -1,38 +1,49 @@
 @use "styles/variables.scss" as *;
-@use "styles/mixin.scss";
+@use "styles/mixin.scss" as *;
 
-.detailComicsPage {
+.page {
   max-width: 800px;
   margin-top: 1rem;
   height: calc(100vh - 60px);
   padding: 0 10px;
   overflow-y: auto;
+  @include scrollbar-hidden;
+}
 
-  &::-webkit-scrollbar {
-    display: none;
+.header {
+  height: 40px;
+  @include flex-between;
+  background-color: #fff;
+  gap: 4px;
+  @extend .regular12;
+
+  &__back {
+    @include flex-align-center;
   }
 
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  &__backButton::before {
+    content: "";
+    display: inline-block;
+    background-image: url(../../../assets/Bookmark.svg);
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+    background-repeat: no-repeat;
+  }
+
+  &__bookmark {
+    @extend .regular12;
+    color: $purple-main;
+  }
 }
 
-.descriptionBox {
-  margin-bottom: 1rem;
-}
-
-.title {
-  @extend .regular16;
-}
-
-.posterBox {
+.poster {
   width: 160px;
   height: 250px;
-  border-radius: 8px;
-  overflow: hidden;
-  margin: 10px auto;
-  margin-bottom: 1rem;
+  margin: 10px auto 1rem;
+  @include rounded-box;
 
-  .poster {
+  &__image {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -42,248 +53,199 @@
   }
 }
 
-.description {
-  @extend .regular12;
-}
+.info {
+  &__container {
+    text-align: center;
+  }
 
-.infoBlock {
-  margin-top: 1rem;
-  background: #f9f9f9;
-  padding: 1rem;
-  border-radius: 4px;
-}
+  &__title {
+    @include flex-align-center;
+    position: relative;
+    gap: 8px;
+    justify-content: center;
+    text-align: center;
 
-.infoItem {
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
-}
+    &Text {
+      @extend .medium20;
+      margin-bottom: 0;
+    }
 
-.nav {
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: #fff;
-  gap: 4px;
-  @extend .regular12;
-}
+    &Rating {
+      background-color: $green;
+      border-radius: 4px;
+      height: fit-content;
+      padding: 4px;
+    }
+  }
 
-.backBlock {
-  display: flex;
-  flex-direction: row;
+  &__author {
+    @extend .regular16;
+    border: $black-50 solid 1px;
+    border-radius: 16px;
+    width: 50%;
+    height: 36px;
+    line-height: 36px;
+    @include flex-align-center;
+    margin: 8px auto 0;
 
-  .back::before {
-    content: "";
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    background-repeat: no-repeat;
+    &Avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      margin: 0 2rem 0 1rem;
+    }
+  }
+
+  &__stats {
+    @include flex-align-center;
+    position: relative;
+    gap: 10px;
+    justify-content: center;
+    padding: 10px 0 10px 10px;
+  }
+
+  &__stat {
+    @include flex-align-center;
+    gap: 4px;
+
+    &--likes::before {
+      content: "";
+      display: inline-block;
+      background-image: url(../../../assets/Like.svg);
+      width: 20px;
+      height: 20px;
+      background-repeat: no-repeat;
+    }
+
+    &--favorites::before {
+      content: "";
+      display: inline-block;
+      background-image: url(../../../assets/BookmarkBlack.svg);
+      width: 20px;
+      height: 20px;
+      background-repeat: no-repeat;
+    }
+
+    &--books::before {
+      content: "";
+      display: inline-block;
+      background-image: url(../../../assets/Book.svg);
+      width: 18px;
+      height: 18px;
+      background-repeat: no-repeat;
+    }
+  }
+
+  &__rating {
+    @include center-horizontal;
+  }
+
+  &__description {
+    margin-bottom: 1rem;
+
+    &Title {
+      @extend .regular16;
+    }
+
+    &Text {
+      @extend .regular12;
+    }
+  }
+
+  &__meta {
+    margin-top: 1rem;
+    border-radius: 4px;
+
+    &Item {
+      @include flex-align-center;
+      gap: 16px;
+      margin-bottom: 0.5rem;
+
+      h2 {
+        @extend .regular16;
+      }
+
+      p {
+        @include info-tag($black-20);
+        margin-top: 0.5rem;
+      }
+    }
+  }
+
+  &__tags {
+    @include flex-align-center;
+    gap: 8px;
+    margin-top: 10px;
+
+    h2 {
+      @extend .regular16;
+    }
+
+    &Item {
+      @include info-tag($purple-main);
+      color: white;
+    }
   }
 }
 
-.chaptersList {
+.chapters {
   background: #fff;
   border: 1px solid #e0e0e0;
   border-radius: 4px;
   padding: 1rem;
-  margin-top: 20px;
-  margin-bottom: 10px;
+  margin: 20px 0 10px;
 
-  .chaptersTitle {
+  &__title {
     font-size: 1.5rem;
     margin-bottom: 1rem;
   }
-}
 
-.chapterItems {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.chapterItem {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #777;
-
-  &:hover {
-    background-color: #f8f8f8;
+  &__container {
+    max-height: 100px;
+    overflow-y: auto;
+    @include scrollbar-hidden;
   }
-}
 
-.chapterName {
-  font-weight: bold;
-  font-size: 1rem;
-}
-
-.chapterDate {
-  font-size: 0.9rem;
-  color: #777;
-}
-
-.noChapters {
-  font-size: 1rem;
-  color: #777;
-  text-align: center;
-  padding: 1rem 0;
-}
-
-.scrollContainer { 
-  max-height: 100px;
-  overflow-y: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  
-  &::-webkit-scrollbar {
-    display: none;
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
   }
-}
 
-.bookmark {
-  @extend .regular12;
-  color: $purple-main;
+  &__item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #777;
+    text-decoration: none;
+    color: inherit;
 
-  &::before {
-    content: "";
-    display: inline-block;
-    background-image: url(../../../assets/Bookmark.svg);
-    width: 10px;
-    height: 10px;
-    margin-right: 5px;
-    background-repeat: no-repeat;
+    &:hover {
+      background-color: #f8f8f8;
+    }
+
+    li {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
   }
-}
 
-.rootInfoContainer{
-  text-align: center;
-}
-
-.titleBox {
-  display: flex;
-  position: relative;
-  flex-direction: row;
-  gap: 8px;
-  justify-content: center;
-  text-align: center;
-
-  .title {
-    @extend .medium20;
-    margin-bottom: 0;
+  &__name {
+    font-weight: bold;
+    font-size: 1rem;
   }
-}
 
-.rate {
-  background-color: $green;
-  border-radius: 4px;
-  height: fit-content;
-  padding: 4px;
-}
-
-.setRating {
-  display: flex;
-  justify-content: center;
-}
-
-.authorBox{
-  @extend .regular16;
-  border: $black-50 solid 1px;
-  border-radius: 16px;
-  width: 50%;
-  height: 36px;
-  line-height: 36px;
-  align-items: center;
-  display: flex;
-  margin: 8px auto 0 auto;
-}
-
-.authorAvatar {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  margin: 0 2rem 0 1rem;
-}
-
-.numbers {
-  display: flex;
-  position: relative;
-  flex-direction: row;
-  gap: 10px;
-  justify-content: center;
-  padding: 10px 0 10px 10px;
-}
-
-.likes {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.likes::before {
-  content: "";
-  display: inline-block;
-  background-image: url(../../../assets/Like.svg);
-  width: 20px;
-  height: 20px;
-  background-repeat: no-repeat;
-}
-
-.favorites {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.favorites::before {
-  content: "";
-  display: inline-block;
-  background-image: url(../../../assets/BookmarkBlack.svg);
-  width: 20px;
-  height: 20px;
-  background-repeat: no-repeat;
-}
-
-.books {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-
-.books::before {
-  content: "";
-  display: inline-block;
-  background-image: url(../../../assets/Book.svg);
-  width: 18px;
-  height: 18px;
-  background-repeat: no-repeat;
-}
-
-.info {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-
-  .infoItem {
-    @extend .regular16;
-    background-color: $black-20;
-    padding: 2.5px 8px;
-    border-radius: 8px;
-    margin-top: 0.5rem;
+  &__date {
+    font-size: 0.9rem;
+    color: #777;
   }
-}
 
-.tags {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 10px;
-
-  .tagsItem {
-    @extend .regular16;
-    background-color: $purple-main;
-    padding: 2.5px 8px;
-    border-radius: 8px;
-    color: white;
+  &__empty {
+    font-size: 1rem;
+    color: #777;
+    text-align: center;
+    padding: 1rem 0;
   }
 }

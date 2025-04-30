@@ -56,35 +56,35 @@ const DetailComicsPage: React.FC = () => {
   }
 
   return (
-    <div className={styles.detailComicsPage}>
-      <nav className={styles.nav}>
-        <div className={styles.backBlock}>
+    <div className={styles.page}>
+      <nav className={styles.header}>
+        <div className={styles.header__back}>
           <BackButton onClick={() => navigate(routerUrls.catalog.mask)} />
         </div>
-        <div className={styles.bookmarkBlock}>
-          <p className={styles.bookmark}>Добавить в закладки</p>
+        <div className={styles.header__bookmark}>
+          <p>Добавить в закладки</p>
         </div>
       </nav>
-      <div className={styles.posterBox}>
-        <img className={styles.poster} src={book.poster_url} alt={book.title} />
+      <div className={styles.poster}>
+        <img className={styles.poster__image} src={book.poster_url} alt={book.title} />
       </div>
 
-      <div className={styles.rootInfoContainer}>
-        <section className={styles.titleBox}>
-          <h1 className={styles.title}>{book.title}</h1>
-          <p className={styles.rate}>4.7/5</p>
+      <div className={styles.info__container}>
+        <section className={styles.info__title}>
+          <h1 className={styles.info__titleText}>{book.title}</h1>
+          <p className={styles.info__titleRating}>4.7/5</p>
         </section>
-        <section className={styles.authorBox}>
-          <img src={profile?.avatar} alt="Фото автора" className={styles.authorAvatar} />
+        <section className={styles.info__author}>
+          <img src={profile?.avatar} alt="Фото автора" className={styles.info__authorAvatar} />
           <p>{book.author_name}</p>
         </section>
       </div>
-      <div className={styles.numbers}>
-        <p className={styles.likes}>140</p>
-        <p className={styles.favorites}>{book.favourites_count}</p>
-        <p className={styles.books}>{book.views_count}</p>
+      <div className={styles.info__stats}>
+        <p className={`${styles.info__stat} ${styles['info__stat--likes']}`}>140</p>
+        <p className={`${styles.info__stat} ${styles['info__stat--favorites']}`}>{book.favourites_count}</p>
+        <p className={`${styles.info__stat} ${styles['info__stat--books']}`}>{book.views_count}</p>
       </div>
-      <div className={styles.setRating}>
+      <div className={styles.info__rating}>
         <ReactStars
           count={5}
           isHalf={true}
@@ -100,49 +100,51 @@ const DetailComicsPage: React.FC = () => {
         <Button>Читать</Button>
       </Link>
 
-      <div className={styles.descriptionBox}>
-        <h2 className={styles.title}>Описание:</h2>
-        <p className={styles.description}>{book.description}</p>
+      <div className={styles.info__description}>
+        <h2 className={styles.info__descriptionTitle}>Описание:</h2>
+        <p className={styles.info__descriptionText}>{book.description}</p>
       </div>
 
-      <div>
-        <div className={styles.info}>
-          <h2 className={styles.title}>Дата выхода: </h2>
-          <p className={styles.infoItem}> {new Date(book.published_date).toLocaleDateString()}</p>
+      <div className={styles.info__meta}>
+        <div className={styles.info__metaItem}>
+          <h2>Дата выхода: </h2>
+          <p>{new Date(book.published_date).toLocaleDateString()}</p>
         </div>
-        <div className={styles.info}>
-          <h2 className={styles.title}>Возрастной рейтинг:</h2>
-          <p className={styles.infoItem}>{book.age_rating}</p>
+        <div className={styles.info__metaItem}>
+          <h2>Возрастной рейтинг:</h2>
+          <p>{book.age_rating}</p>
         </div>
-        <div className={styles.tags}>
-          <h2 className={styles.title}>Теги:</h2>
-          <p className={styles.tagsItem}>ниндзя</p>
-          <p className={styles.tagsItem}>герои</p>
-          <p className={styles.tagsItem}>сёнэн</p>
+        <div className={styles.info__tags}>
+          <h2>Теги:</h2>
+          <p className={styles.info__tagsItem}>ниндзя</p>
+          <p className={styles.info__tagsItem}>герои</p>
+          <p className={styles.info__tagsItem}>сёнэн</p>
         </div>
       </div>
 
-      <div className={styles.chaptersList}>
-        <h2 className={styles.chaptersTitle}>Главы</h2>
+      <div className={styles.chapters}>
+        <h2 className={styles.chapters__title}>Главы</h2>
         {chapters.length ? (
-          <div className={styles.scrollContainer}>
-            <ul className={styles.chapterItems}>
+          <div className={styles.chapters__container}>
+            <ul className={styles.chapters__list}>
               {chapters.map((chapter) => (
                 <Link
                   key={chapter.id}
                   to={routerUrls.viewComics.create(book.slug, chapter.id)}
-                  className={styles.chapterLink}
+                  className={styles.chapters__item}
                 >
-                  <li className={styles.chapterItem}>
-                    <span className={styles.chapterName}>{chapter.title}</span>
-                    <span className={styles.chapterDate}>{new Date(chapter.published_date).toLocaleDateString()}</span>
+                  <li>
+                    <span className={styles.chapters__name}>{chapter.title}</span>
+                    <span className={styles.chapters__date}>
+                      {new Date(chapter.published_date).toLocaleDateString()}
+                    </span>
                   </li>
                 </Link>
               ))}
             </ul>
           </div>
         ) : (
-          <p className={styles.noChapters}>Главы не найдены</p>
+          <p className={styles.chapters__empty}>Главы не найдены</p>
         )}
       </div>
     </div>

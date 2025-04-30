@@ -59,7 +59,7 @@ const ViewComicsPage = () => {
       <section className={styles.viewBox}>
         {images.map((image: { id: number; chapter_id: number; url: string }) => (
           <div key={image.id}>
-            <img src={image.url} alt="фото" />
+            <img src={image.url} alt="фото" loading="lazy" />
           </div>
         ))}
       </section>
