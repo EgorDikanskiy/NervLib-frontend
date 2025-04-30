@@ -1,6 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import ReactStars from 'react-rating-stars-component';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { getProfile } from 'actions/profileActions';
 import Loader from 'components/Loader';
 import RatingSetter from 'components/RatingSetter';
 import BackButton from 'components/ui/BackButton';
@@ -15,6 +17,13 @@ const DetailComicsPage: React.FC = () => {
   const navigate = useNavigate();
   const { slug } = useParams<{ slug: string }>();
   const { book, chapters, loading, error } = useSelector((state: RootState) => state.detailBook);
+  const { profile } = useSelector((state: RootState) => state.profile);
+  const [value, setValue] = useState<number | null>(2);
+
+  const ratingChanged = (newRating: number) => {
+    console.log(newRating);
+    setValue(newRating);
+  };
 
   useEffect(() => {
     if (slug) {
@@ -25,6 +34,12 @@ const DetailComicsPage: React.FC = () => {
   useEffect(() => {
     if (book && book.id) {
       dispatch(getChaptersByBookId({ book_id: book.id }));
+    }
+  }, [dispatch, book]);
+
+  useEffect(() => {
+    if (book) {
+      dispatch(getProfile({ username: book.author_name, with_token: false }));
     }
   }, [dispatch, book]);
 
@@ -54,15 +69,31 @@ const DetailComicsPage: React.FC = () => {
         <img className={styles.poster} src={book.poster_url} alt={book.title} />
       </div>
 
-      <div className={styles.titleBox}>
-        <h1 className={styles.title}>{book.title}</h1>
-        <p className={styles.rate}>4.7/5</p>
+      <div className={styles.rootInfoContainer}>
+        <section className={styles.titleBox}>
+          <h1 className={styles.title}>{book.title}</h1>
+          <p className={styles.rate}>4.7/5</p>
+        </section>
+        <section className={styles.authorBox}>
+          <img src={profile?.avatar} alt="Фото автора" className={styles.authorAvatar} />
+          <p>{book.author_name}</p>
+        </section>
       </div>
       <div className={styles.numbers}>
-        <img src="" alt="" />
         <p className={styles.likes}>140</p>
         <p className={styles.favorites}>{book.favourites_count}</p>
-        <p className={styles.books}>700</p>
+        <p className={styles.books}>{book.views_count}</p>
+      </div>
+      <div className={styles.setRating}>
+        <ReactStars
+          count={5}
+          isHalf={true}
+          value={value || 0}
+          onChange={ratingChanged}
+          size={30}
+          activeColor="#a890ff"
+          edit={true}
+        />
       </div>
 
       <Link to={routerUrls.viewComics.create(book.slug, chapters.length ? chapters[0].id : 1)}>
@@ -85,23 +116,31 @@ const DetailComicsPage: React.FC = () => {
         </div>
         <div className={styles.tags}>
           <h2 className={styles.title}>Теги:</h2>
-          <p className={styles.infoItem}>ниндзя</p>
-          <p className={styles.infoItem}>герои</p>
-          <p className={styles.infoItem}>сёнэн</p>
+          <p className={styles.tagsItem}>ниндзя</p>
+          <p className={styles.tagsItem}>герои</p>
+          <p className={styles.tagsItem}>сёнэн</p>
         </div>
       </div>
 
       <div className={styles.chaptersList}>
         <h2 className={styles.chaptersTitle}>Главы</h2>
         {chapters.length ? (
-          <ul className={styles.chapterItems}>
-            {chapters.map((chapter) => (
-              <li key={chapter.id} className={styles.chapterItem}>
-                <span className={styles.chapterName}>{chapter.title}</span>
-                <span className={styles.chapterDate}>{new Date(chapter.published_date).toLocaleDateString()}</span>
-              </li>
-            ))}
-          </ul>
+          <div className={styles.scrollContainer}>
+            <ul className={styles.chapterItems}>
+              {chapters.map((chapter) => (
+                <Link
+                  key={chapter.id}
+                  to={routerUrls.viewComics.create(book.slug, chapter.id)}
+                  className={styles.chapterLink}
+                >
+                  <li className={styles.chapterItem}>
+                    <span className={styles.chapterName}>{chapter.title}</span>
+                    <span className={styles.chapterDate}>{new Date(chapter.published_date).toLocaleDateString()}</span>
+                  </li>
+                </Link>
+              ))}
+            </ul>
+          </div>
         ) : (
           <p className={styles.noChapters}>Главы не найдены</p>
         )}

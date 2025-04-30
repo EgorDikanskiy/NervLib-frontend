@@ -21,8 +21,7 @@
 }
 
 .title {
-  @extend .medium20;
-  margin-bottom: 0.5rem;
+  @extend .regular16;
 }
 
 .posterBox {
@@ -30,7 +29,7 @@
   height: 250px;
   border-radius: 8px;
   overflow: hidden;
-  margin: 0 auto;
+  margin: 10px auto;
   margin-bottom: 1rem;
 
   .poster {
@@ -106,10 +105,10 @@
   display: flex;
   justify-content: space-between;
   padding: 0.5rem 0;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #777;
 
-  &:last-child {
-    border-bottom: none;
+  &:hover {
+    background-color: #f8f8f8;
   }
 }
 
@@ -130,6 +129,17 @@
   padding: 1rem 0;
 }
 
+.scrollContainer { 
+  max-height: 100px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 .bookmark {
   @extend .regular12;
   color: $purple-main;
@@ -143,6 +153,10 @@
     margin-right: 5px;
     background-repeat: no-repeat;
   }
+}
+
+.rootInfoContainer{
+  text-align: center;
 }
 
 .titleBox {
@@ -166,38 +180,82 @@
   padding: 4px;
 }
 
+.setRating {
+  display: flex;
+  justify-content: center;
+}
+
+.authorBox{
+  @extend .regular16;
+  border: $black-50 solid 1px;
+  border-radius: 16px;
+  width: 50%;
+  height: 36px;
+  line-height: 36px;
+  align-items: center;
+  display: flex;
+  margin: 8px auto 0 auto;
+}
+
+.authorAvatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin: 0 2rem 0 1rem;
+}
+
 .numbers {
   display: flex;
   position: relative;
   flex-direction: row;
   gap: 10px;
   justify-content: center;
+  padding: 10px 0 10px 10px;
+}
+
+.likes {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .likes::before {
   content: "";
   display: inline-block;
   background-image: url(../../../assets/Like.svg);
-  width: 12px;
-  height: 12px;
+  width: 20px;
+  height: 20px;
   background-repeat: no-repeat;
+}
+
+.favorites {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .favorites::before {
   content: "";
   display: inline-block;
   background-image: url(../../../assets/BookmarkBlack.svg);
-  width: 12px;
-  height: 12px;
+  width: 20px;
+  height: 20px;
   background-repeat: no-repeat;
 }
+
+.books {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
 
 .books::before {
   content: "";
   display: inline-block;
   background-image: url(../../../assets/Book.svg);
-  width: 12px;
-  height: 12px;
+  width: 18px;
+  height: 18px;
   background-repeat: no-repeat;
 }
 
@@ -207,9 +265,11 @@
   gap: 16px;
 
   .infoItem {
+    @extend .regular16;
     background-color: $black-20;
     padding: 2.5px 8px;
     border-radius: 8px;
+    margin-top: 0.5rem;
   }
 }
 
@@ -217,10 +277,13 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  margin-top: 10px;
 
-  .infoItem {
+  .tagsItem {
+    @extend .regular16;
     background-color: $purple-main;
     padding: 2.5px 8px;
     border-radius: 8px;
+    color: white;
   }
 }
