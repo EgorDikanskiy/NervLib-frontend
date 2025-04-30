@@ -1,0 +1,22 @@
+@use "styles/variables.scss" as *;
+@use "styles/mixin.scss";
+
+.text {
+  @extend .regular16;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  // margin-bottom: 1.5rem;
+}
+.textarea {
+  border-radius: 4px;
+  min-height: 6rem;
+  border: 1px solid $black-20;
+  padding: 0.5rem;
+  resize: vertical;
+  &::placeholder {
+    @extend .regular16;
+  }
+}

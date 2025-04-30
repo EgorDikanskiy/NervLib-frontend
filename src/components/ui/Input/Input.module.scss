@@ -1,0 +1,21 @@
+@use "styles/variables.scss" as *;
+@use "styles/mixin.scss";
+
+.text {
+  @extend .regular16;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  // margin-bottom: 1.5rem;
+}
+.input {
+  border-radius: 12px;
+  height: 2.75rem;
+  border: 1px solid $black-20;
+  padding-left: 0.5rem;
+  &::placeholder {
+    @extend .regular16;
+  }
+}
