@@ -17,7 +17,6 @@ const DetailComicsPage: React.FC = () => {
   const navigate = useNavigate();
   const { slug } = useParams<{ slug: string }>();
   const { book, chapters, loading, error } = useSelector((state: RootState) => state.detailBook);
-  const { profile } = useSelector((state: RootState) => state.profile);
   const [value, setValue] = useState<number | null>(2);
 
   const ratingChanged = (newRating: number) => {
@@ -34,12 +33,6 @@ const DetailComicsPage: React.FC = () => {
   useEffect(() => {
     if (book && book.id) {
       dispatch(getChaptersByBookId({ book_id: book.id }));
-    }
-  }, [dispatch, book]);
-
-  useEffect(() => {
-    if (book) {
-      dispatch(getProfile({ username: book.author_name, with_token: false }));
     }
   }, [dispatch, book]);
 
@@ -75,8 +68,8 @@ const DetailComicsPage: React.FC = () => {
           <p className={styles.info__titleRating}>4.7/5</p>
         </section>
         <section className={styles.info__author}>
-          <img src={profile?.avatar} alt="Фото автора" className={styles.info__authorAvatar} />
-          <p>{book.author_name}</p>
+          <img src={book.author.avatar} alt="Фото автора" className={styles.info__authorAvatar} />
+          <p>{book.author.username}</p>
         </section>
       </div>
       <div className={styles.info__stats}>
@@ -85,15 +78,7 @@ const DetailComicsPage: React.FC = () => {
         <p className={`${styles.info__stat} ${styles['info__stat--books']}`}>{book.views_count}</p>
       </div>
       <div className={styles.info__rating}>
-        <ReactStars
-          count={5}
-          isHalf={true}
-          value={value || 0}
-          onChange={ratingChanged}
-          size={30}
-          activeColor="#a890ff"
-          edit={true}
-        />
+        <ReactStars count={5} value={value || 0} onChange={ratingChanged} size={30} activeColor="#a890ff" edit={true} />
       </div>
 
       <Link to={routerUrls.viewComics.create(book.slug, chapters.length ? chapters[0].id : 1)}>

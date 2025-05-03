@@ -2,17 +2,24 @@ import { createSlice } from '@reduxjs/toolkit';
 import { getBookOnSlug, getChaptersByBookId } from '../actions/detailBookAction';
 
 interface Book {
+  id: number;
+  author: Author;
+  name: string;
   title: string;
   description: string;
-  age_rating: string;
   poster_url: string;
-  id: number;
-  author_name: string;
-  chapter_count: number;
+  age_rating: string;
   views_count: number;
+  chapter_count: number;
   favourites_count: number;
   published_date: string;
   slug: string;
+}
+
+interface Author {
+  id: number;
+  username: string;
+  avatar: string;
 }
 
 interface Chapter {

@@ -3,7 +3,7 @@ import { getBooks } from '../actions/bookActions';
 
 interface Book {
   id: number;
-  author_id: number;
+  author: Author;
   name: string;
   title: string;
   description: string;
@@ -14,6 +14,12 @@ interface Book {
   favourites_count: number;
   published_date: string;
   slug: string;
+}
+
+interface Author {
+  id: number;
+  username: string;
+  avatar: string;
 }
 
 interface BooksState {
