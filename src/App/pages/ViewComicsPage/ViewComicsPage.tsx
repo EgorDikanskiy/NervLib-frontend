@@ -1,24 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import { getBookOnSlug, getChaptersByBookId } from 'actions/detailBookAction';
 import { AppDispatch, RootState } from 'store';
 import { getImagesByChapterId } from '../../../actions/chapterImagesActions';
 import styles from './ViewComicsPage.module.scss';
 
 const ViewComicsPage = () => {
   const navigate = useNavigate();
-  const { chapter } = useParams<{ chapter: string }>();
-  console.log(chapter);
+  const { comicsName, chapter } = useParams<{ comicsName: string; chapter: string }>();
   const [showNav, setShowNav] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const dispatch = useDispatch<AppDispatch>();
   const { images, loading, error } = useSelector((state: RootState) => state.chapterImages);
+  const { book, chapters } = useSelector((state: RootState) => state.detailBook);
 
   useEffect(() => {
     if (chapter) {
+      window.scrollTo(0, 0);
       dispatch(getImagesByChapterId({ chapter_id: Number(chapter) }));
     }
   }, [dispatch, chapter]);
+
+  useEffect(() => {
+    if (comicsName) {
+      dispatch(getBookOnSlug({ slug: comicsName }));
+    }
+  }, [dispatch, comicsName]);
+
+  useEffect(() => {
+    if (book && book.id) {
+      dispatch(getChaptersByBookId({ book_id: book.id }));
+    }
+  }, [dispatch, book]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,12 +48,27 @@ const ViewComicsPage = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
 
-  console.log(images);
+  const getNextChapterId = (chapters, currentChapterId: number): number | null => {
+    const currentIndex = chapters.findIndex((ch) => ch.id === currentChapterId);
+    return currentIndex < chapters.length - 1 ? chapters[currentIndex + 1]?.id : null;
+  };
+
+  const getPrevChapterId = (chapters, currentChapterId: number): number | null => {
+    const currentIndex = chapters.findIndex((ch) => ch.id === currentChapterId);
+    return currentIndex > 0 ? chapters[currentIndex - 1]?.id : null;
+  };
+
+  const currentChapterId = Number(chapter);
+  const nextChapter = getNextChapterId(chapters, currentChapterId);
+  const prevChapter = getPrevChapterId(chapters, currentChapterId);
 
   return (
     <div>
       <section>
-        <span className={`${styles.nav} ${showNav ? styles.visible : styles.hidden}`} onClick={() => navigate(-1)}>
+        <span
+          className={`${styles.nav} ${showNav ? styles.visible : styles.hidden}`}
+          onClick={() => navigate(`/comics/${comicsName}`)}
+        >
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clipPath="url(#clip0_137_888)">
               <path
@@ -63,6 +92,26 @@ const ViewComicsPage = () => {
           </div>
         ))}
       </section>
+      <div className={`${styles.chapterNavigation} ${showNav ? styles.visible : styles.hidden}`}>
+        <button
+          className={styles.navButton}
+          onClick={() => prevChapter && navigate(`/view/${comicsName}/${prevChapter}`)}
+          disabled={!prevChapter}
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M15 6L9 12L15 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        </button>
+        <button
+          className={styles.navButton}
+          onClick={() => nextChapter && navigate(`/view/${comicsName}/${nextChapter}`)}
+          disabled={!nextChapter}
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M9 6L15 12L9 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        </button>
+      </div>
     </div>
   );
 };
