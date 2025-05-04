@@ -56,7 +56,7 @@ jobs:
             docker rm nervlib-frontend || true
             docker run -d \
               --name nervlib-frontend \
-              -p 80:80 \
+              -p 8080:80 \
               --restart unless-stopped \
               --network nervlib-network \
               ${{ secrets.DOCKERHUB_USERNAME }}/nervlib-frontend:latest
