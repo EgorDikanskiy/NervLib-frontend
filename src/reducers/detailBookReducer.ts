@@ -13,7 +13,15 @@ interface Book {
   chapter_count: number;
   favourites_count: number;
   published_date: string;
+  tags: Array<Tag>;
+  ratings_count: number;
+  ratings_average: number;
   slug: string;
+}
+
+interface Tag {
+  id: number;
+  title: string;
 }
 
 interface Author {

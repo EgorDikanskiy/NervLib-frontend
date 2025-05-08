@@ -65,7 +65,7 @@ const DetailComicsPage: React.FC = () => {
       <div className={styles.info__container}>
         <section className={styles.info__title}>
           <h1 className={styles.info__titleText}>{book.title}</h1>
-          <p className={styles.info__titleRating}>4.7/5</p>
+          <p className={styles.info__titleRating}>{book.ratings_average.toFixed(1)}/5</p>
         </section>
         <section className={styles.info__author}>
           <img src={book.author.avatar} alt="Фото автора" className={styles.info__authorAvatar} />
@@ -101,9 +101,11 @@ const DetailComicsPage: React.FC = () => {
         </div>
         <div className={styles.info__tags}>
           <h2>Теги:</h2>
-          <p className={styles.info__tagsItem}>ниндзя</p>
-          <p className={styles.info__tagsItem}>герои</p>
-          <p className={styles.info__tagsItem}>сёнэн</p>
+          {book.tags.map((tag) => (
+            <p key={tag.id} className={styles.info__tagsItem}>
+              {tag.title}
+            </p>
+          ))}
         </div>
       </div>
 
