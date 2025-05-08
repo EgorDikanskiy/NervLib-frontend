@@ -12,4 +12,5 @@ export const apiRoutes = {
   chapters: createApiRoute('/chapters'),
   images: createApiRoute('/images'),
   genres: createApiRoute('/genres'),
+  ratings: createApiRoute('/ratings'),
 };

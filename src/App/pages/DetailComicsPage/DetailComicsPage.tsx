@@ -9,7 +9,7 @@ import BackButton from 'components/ui/BackButton';
 import { Button } from 'components/ui/Button';
 import { routerUrls } from 'config/routerUrls';
 import { AppDispatch, RootState } from 'store';
-import { getBookOnSlug, getChaptersByBookId } from '../../../actions/detailBookAction';
+import { getBookOnSlug, getBookRating, getChaptersByBookId, rateBook } from '../../../actions/detailBookAction';
 import styles from './DetailComicsPage.module.scss';
 
 const DetailComicsPage: React.FC = () => {
@@ -17,12 +17,7 @@ const DetailComicsPage: React.FC = () => {
   const navigate = useNavigate();
   const { slug } = useParams<{ slug: string }>();
   const { book, chapters, loading, error } = useSelector((state: RootState) => state.detailBook);
-  const [value, setValue] = useState<number | null>(2);
-
-  const ratingChanged = (newRating: number) => {
-    console.log(newRating);
-    setValue(newRating);
-  };
+  const [value, setValue] = useState<number | null>(0);
 
   useEffect(() => {
     if (slug) {
@@ -33,6 +28,22 @@ const DetailComicsPage: React.FC = () => {
   useEffect(() => {
     if (book && book.id) {
       dispatch(getChaptersByBookId({ book_id: book.id }));
+    }
+  }, [dispatch, book]);
+
+  useEffect(() => {
+    if (book && book.id) {
+      dispatch(getBookRating(book.id))
+        .unwrap()
+        .then((data) => {
+          if (data && typeof data.score === 'number') {
+            setValue(data.score);
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching rating:', error);
+          setValue((prevValue) => (prevValue === 0 ? 0 : 0));
+        });
     }
   }, [dispatch, book]);
 
@@ -47,6 +58,22 @@ const DetailComicsPage: React.FC = () => {
   if (!book) {
     return <div>Такой книги нет</div>;
   }
+
+  const ratingChanged = (newRating: number) => {
+    console.log(newRating);
+    dispatch(rateBook({ book_id: book.id, score: newRating }))
+      .unwrap()
+      .then(() => {
+        setValue(newRating);
+        // Обновляем данные книги для получения нового среднего рейтинга
+        if (book) {
+          dispatch(getBookOnSlug({ slug: book.slug }));
+        }
+      })
+      .catch((error) => {
+        console.error('Error rating book:', error);
+      });
+  };
 
   return (
     <div className={styles.page}>
@@ -78,7 +105,15 @@ const DetailComicsPage: React.FC = () => {
         <p className={`${styles.info__stat} ${styles['info__stat--books']}`}>{book.views_count}</p>
       </div>
       <div className={styles.info__rating}>
-        <ReactStars count={5} value={value || 0} onChange={ratingChanged} size={30} activeColor="#a890ff" edit={true} />
+        <ReactStars
+          key={`rating_${value}`}
+          count={5}
+          value={value || 0}
+          onChange={ratingChanged}
+          size={30}
+          activeColor="#a890ff"
+          edit={true}
+        />
       </div>
 
       <Link to={routerUrls.viewComics.create(book.slug, chapters.length ? chapters[0].id : 1)}>
