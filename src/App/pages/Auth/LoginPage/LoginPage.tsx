@@ -16,14 +16,17 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { loading, error, user } = useSelector((state: RootState) => state.auth);
-  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+  const accessToken = localStorage.getItem('access_token');
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
-    dispatch(getCurrentUser());
-  }, [dispatch]);
+    if (user) {
+      navigate(routerUrls.profile.mask);
+    }
+  }, [user, navigate]);
 
   useEffect(() => {
     if (error === 'Токен отсутствует') {
@@ -31,17 +34,18 @@ const LoginPage = () => {
     }
   }, [error, dispatch]);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    dispatch(login({ password, login: email }));
+    setIsSubmitted(true);
+    const result = await dispatch(login({ password, login: email }));
+
+    if (login.fulfilled.match(result)) {
+      navigate(routerUrls.profile.mask);
+    }
   };
 
-  if (loading && !user) {
+  if (loading) {
     return <Loader />;
-  }
-
-  if (accessToken || user) {
-    navigate(routerUrls.profile.mask);
   }
 
   return (
@@ -72,10 +76,10 @@ const LoginPage = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <Button className={styles.form__button} type="submit">
+        <Button className={styles.form__button} type="submit" disabled={loading}>
           Войти
         </Button>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {isSubmitted && error && <p style={{ color: 'red' }}>{error}</p>}
       </form>
       <p className={styles.text}>
         Нет аккаунта?{' '}
