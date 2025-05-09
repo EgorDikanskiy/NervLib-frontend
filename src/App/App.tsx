@@ -12,6 +12,7 @@ import MailConfirmation from './pages/Auth/MailConfirmation';
 import ProfilePage from './pages/Auth/ProfilePage';
 import Registration from './pages/Auth/RegistrationPage';
 import ResetPasswordPage from './pages/Auth/ResetPasswordPage';
+import BookmarksPage from './pages/BookmarksPage';
 import CatalogPage from './pages/CatalogPage';
 import DetailComicsPage from './pages/DetailComicsPage';
 import EditComicsPage from './pages/EditComicsPage/EditComicsPage';
@@ -31,7 +32,7 @@ function AppContent() {
         <Route path={routerUrls.catalog.mask} element={<CatalogPage />} />
         <Route path={routerUrls.confirm_mail.mask} element={<MailConfirmation />} />
         <Route path={routerUrls.public_profile.mask} element={<PublicProfilePage />} />
-        <Route path={routerUrls.bookmarks.mask} element={<div>Избранное</div>} />
+        <Route path={routerUrls.bookmarks.mask} element={<BookmarksPage />} />
         <Route path={routerUrls.viewComics.mask} element={<ViewComicsPage />} />
         <Route path={routerUrls.book_detail.mask} element={<DetailComicsPage />} />
         <Route path="*" element={<Navigate to={routerUrls.catalog.mask} replace={true} />} />

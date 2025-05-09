@@ -1,0 +1,44 @@
+@use 'styles/variables.scss';
+@use 'styles/mixin.scss';
+
+.header {
+    @extend .medium20;
+    margin: 20px 16px 20px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.catalog {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .books {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  
+    @media (min-width: 600px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @media (min-width: 800px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    @media (min-width: 1000px) {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  
+    a {
+      text-decoration: none;
+      color: inherit;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+  
+    a:focus,
+    a:active {
+      outline: none;
+    }
+  }
