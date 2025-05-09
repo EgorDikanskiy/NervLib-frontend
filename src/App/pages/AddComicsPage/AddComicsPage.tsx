@@ -1,6 +1,7 @@
 import React, { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { Tag } from 'react-tag-input';
 import { z } from 'zod';
 import { postBook } from 'actions/bookActions';
 import { getGenres } from 'actions/catalogActions';
@@ -21,20 +22,29 @@ const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/web
 type age = '0+' | '6+' | '12+' | '16+' | '18+';
 
 const formDataSchema = z.object({
-  title: z.string().nonempty(),
-  description: z.string().nonempty(),
-  age_rating: z.enum(['0+', '6+', '12+', '16+', '18+']),
-  tags: z.array(z.object({ id: z.number() })),
+  title: z
+    .string()
+    .min(1, 'Название обязательно для заполнения')
+    .max(100, 'Максимальная длина названия - 100 символов'),
+
+  description: z
+    .string()
+    .min(50, 'Минимальная длина описания - 50 символов')
+    .max(2000, 'Максимальная длина описания - 2000 символов'),
+
+  age_rating: z.enum(['0+', '6+', '12+', '16+', '18+'], {
+    errorMap: () => ({ message: 'Выберите возрастной рейтинг' }),
+  }),
+
+  tags: z.array(z.object({ id: z.number() })).min(1, 'Добавьте хотя бы один тег'),
+
   genre: z.object({
-    id: z.number(),
+    id: z.number().min(1, 'Выберите жанр'),
   }),
   // poster: z
-  //   .any()
-  //   .refine((file) => file?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
-  //   .refine(
-  //     (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-  //     'Only .jpg, .jpeg, .png and .webp formats are supported.',
-  //   ),
+  //   .instanceof(File)
+  //   .refine((file) => file.size <= MAX_FILE_SIZE, 'Файл слишком большой')
+  //   .refine((file) => ACCEPTED_IMAGE_TYPES.includes(file.type), 'Недопустимый формат'),
 });
 
 type FormData = z.infer<typeof formDataSchema>;
@@ -75,6 +85,7 @@ const AddComicsPage = () => {
       setIsError(true);
       return;
     }
+    console.log(formData);
     await dispatch(postBook(formData));
   };
 
@@ -164,10 +175,27 @@ const AddComicsPage = () => {
         </div>
         <div>
           <TagsInput
-            suggestions={tags.map((el) => {
-              return { id: el.id.toString(), text: el.title, className: '' };
-            })}
+            suggestions={tags.map((el) => ({
+              id: el.id.toString(),
+              text: el.title,
+              className: '',
+            }))}
+            value={formData.tags?.map((tag) => ({
+              id: tag.id.toString(),
+              text: tags.find((tagServer) => tagServer.id === Number(tag.id))?.title ?? '',
+              className: '',
+            }))}
+            onChange={(newTags: Tag[]) => {
+              const parsedTags = newTags.map((tag) => ({
+                id: Number(tag.id),
+              }));
+              setUserFormData((data) => ({
+                ...data,
+                tags: parsedTags,
+              }));
+            }}
           />
+          <span className={style.comicForm__error}>{errors?.tags?._errors.join(', ')}</span>
         </div>
 
         <Button type="submit" disabled={!!errors}>
