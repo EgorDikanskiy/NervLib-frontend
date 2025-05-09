@@ -1,108 +1,256 @@
-@use 'styles/variables.scss' as *;
-@use 'styles/mixin.scss';
+@use "styles/variables.scss" as *;
+@use "styles/mixin.scss" as *;
 
-.detailComicsPage {
-    max-width: 800px;
-    padding: 1rem;
-    height: calc(100vh - 60px);
-    overflow-y: auto;
-
-    &::-webkit-scrollbar {
-        display: none;
-      }
-    
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  
-  .title {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-  }
-  
-  .poster {
-    width: 100%;
-    max-width: 400px;
-    height: auto;
-    display: block;
-    margin-bottom: 1rem;
-  }
-  
-  .description {
-    font-size: 1.2rem;
-    line-height: 1.4;
-    margin-bottom: 1.5rem;
-  }
-  
-  .infoBlock {
-    margin-top: 1rem;
-    background: #f9f9f9;
-    padding: 1rem;
-    border-radius: 4px;
-  }
-  
-  .infoItem {
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
-  }
-  
-  .nav {
-    height: 40px;
-    display: flex;
-    align-items: center;
-    background-color: #fff;
-    padding: 0 16px;
-    gap: 4px;
-    @extend .regular12;
+.page {
+  max-width: 800px;
+  margin-top: 1rem;
+  height: calc(100vh - 60px);
+  padding: 0 10px;
+  overflow-y: auto;
+  @include scrollbar-hidden;
 }
 
+.header {
+  height: 40px;
+  @include flex-between;
+  background-color: #fff;
+  gap: 4px;
+  @extend .regular12;
 
-.chaptersList {
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    padding: 1rem;
-    margin-top: 20px;
-    margin-bottom: 10px;
+  &__back {
+    @include flex-align-center;
   }
-  
-  .chaptersTitle {
+
+  &__backButton::before {
+    content: "";
+    display: inline-block;
+    background-image: url(../../../assets/Bookmark.svg);
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+    background-repeat: no-repeat;
+  }
+
+  &__bookmark {
+    @extend .regular12;
+    color: $purple-main;
+  }
+}
+
+.poster {
+  width: 160px;
+  height: 250px;
+  margin: 10px auto 1rem;
+  @include rounded-box;
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+    border-radius: 8px;
+  }
+}
+
+.info {
+  &__container {
+    text-align: center;
+  }
+
+  &__title {
+    @include flex-align-center;
+    position: relative;
+    gap: 8px;
+    justify-content: center;
+    text-align: center;
+
+    &Text {
+      @extend .medium20;
+      margin-bottom: 0;
+    }
+
+    &Rating {
+      background-color: $green;
+      border-radius: 4px;
+      height: fit-content;
+      padding: 4px;
+    }
+  }
+
+  &__author {
+    @extend .regular16;
+    border: $black-50 solid 1px;
+    border-radius: 16px;
+    width: 50%;
+    height: 36px;
+    line-height: 36px;
+    @include flex-align-center;
+    margin: 8px auto 0;
+
+    &Avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      margin: 0 2rem 0 1rem;
+    }
+  }
+
+  &__stats {
+    @include flex-align-center;
+    position: relative;
+    gap: 10px;
+    justify-content: center;
+    padding: 10px 0 10px 10px;
+  }
+
+  &__stat {
+    @include flex-align-center;
+    gap: 4px;
+
+    &--likes::before {
+      content: "";
+      display: inline-block;
+      background-image: url(../../../assets/Like.svg);
+      width: 20px;
+      height: 20px;
+      background-repeat: no-repeat;
+    }
+
+    &--favorites::before {
+      content: "";
+      display: inline-block;
+      background-image: url(../../../assets/BookmarkBlack.svg);
+      width: 20px;
+      height: 20px;
+      background-repeat: no-repeat;
+    }
+
+    &--books::before {
+      content: "";
+      display: inline-block;
+      background-image: url(../../../assets/Book.svg);
+      width: 18px;
+      height: 18px;
+      background-repeat: no-repeat;
+    }
+  }
+
+  &__rating {
+    @include center-horizontal;
+  }
+
+  &__description {
+    margin-bottom: 1rem;
+
+    &Title {
+      @extend .regular16;
+    }
+
+    &Text {
+      @extend .regular12;
+    }
+  }
+
+  &__meta {
+    margin-top: 1rem;
+    border-radius: 4px;
+
+    &Item {
+      @include flex-align-center;
+      gap: 16px;
+      margin-bottom: 0.5rem;
+
+      h2 {
+        @extend .regular16;
+      }
+
+      p {
+        @include info-tag($black-20);
+        margin-top: 0.5rem;
+      }
+    }
+  }
+
+  &__tags {
+    @include flex-align-center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+
+    h2 {
+      @extend .regular16;
+    }
+
+    &Item {
+      @include info-tag($purple-main);
+      color: white;
+      display: inline-block;
+      margin-right: 8px;
+      margin-bottom: 4px;
+      word-break: break-word;
+    }
+  }
+}
+
+.chapters {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 1rem;
+  margin: 20px 0 10px;
+
+  &__title {
     font-size: 1.5rem;
     margin-bottom: 1rem;
   }
-  
-  .chapterItems {
+
+  &__container {
+    max-height: 100px;
+    overflow-y: auto;
+    @include scrollbar-hidden;
+  }
+
+  &__list {
     list-style: none;
     padding: 0;
     margin: 0;
   }
-  
-  .chapterItem {
+
+  &__item {
     display: flex;
     justify-content: space-between;
     padding: 0.5rem 0;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid #777;
+    text-decoration: none;
+    color: inherit;
+
+    &:hover {
+      background-color: #f8f8f8;
+    }
+
+    li {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
   }
-  
-  .chapterItem:last-child {
-    border-bottom: none;
-  }
-  
-  .chapterName {
+
+  &__name {
     font-weight: bold;
     font-size: 1rem;
   }
-  
-  .chapterDate {
+
+  &__date {
     font-size: 0.9rem;
     color: #777;
   }
-  
-  .noChapters {
+
+  &__empty {
     font-size: 1rem;
     color: #777;
     text-align: center;
     padding: 1rem 0;
   }
-
-  
+}

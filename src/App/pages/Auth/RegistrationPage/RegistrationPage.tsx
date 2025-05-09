@@ -16,7 +16,7 @@ const Registration = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { loading, error, user } = useSelector((state: RootState) => state.auth);
-  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+  const accessToken = localStorage.getItem('access_token');
 
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
@@ -27,8 +27,16 @@ const Registration = () => {
   const [passwordError, setPasswordError] = useState<string | null>(null);
 
   useEffect(() => {
-    dispatch(getCurrentUser());
-  }, [dispatch]);
+    if (user) {
+      navigate(routerUrls.profile.mask);
+    }
+  }, [user, navigate]);
+
+  useEffect(() => {
+    if (accessToken && !user) {
+      navigate('/confirm_mail');
+    }
+  }, [accessToken, user, navigate]);
 
   useEffect(() => {
     if (error === 'Токен отсутствует') {
@@ -36,28 +44,24 @@ const Registration = () => {
     }
   }, [error, dispatch]);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    // Проверяем, совпадают ли пароли
     if (password !== confirmPassword) {
       setPasswordError('Пароли не совпадают');
       return;
     }
 
-    setPasswordError(null); // Сбрасываем ошибку, если пароли совпадают
-    dispatch(registerUser({ email, username, birthday, gender, password }));
+    setPasswordError(null);
+    const result = await dispatch(registerUser({ email, username, birthday, gender, password }));
+
+    if (registerUser.fulfilled.match(result)) {
+      navigate('/confirm_mail');
+    }
   };
 
   if (loading) {
     return <Loader />;
-  }
-
-  if (user) {
-    navigate(routerUrls.profile.mask);
-  }
-  if (accessToken && !user) {
-    navigate('/confirm_mail');
   }
 
   return (
@@ -100,7 +104,6 @@ const Registration = () => {
         />
 
         <label htmlFor="gender">Пол</label>
-
         <select
           className={styles.form__select}
           name="gender"
@@ -149,6 +152,7 @@ const Registration = () => {
           Создать аккаунт
         </Button>
       </form>
+
       <p className={styles.policy}>
         Регистрируясь, вы соглашаетесь с <span className={styles.policy__colored}>политикой конфиденциальности</span>,
         пользовательским соглашением и даёте согласие на{' '}
