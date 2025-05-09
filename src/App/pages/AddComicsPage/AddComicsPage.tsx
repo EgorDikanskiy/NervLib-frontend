@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { postBook } from 'actions/bookActions';
 import { getGenres } from 'actions/catalogActions';
+import { getTags } from 'actions/tagActions';
 import TagsInput from 'components/TagsInput';
 import BackButton from 'components/ui/BackButton';
 import { Button } from 'components/ui/Button';
@@ -14,14 +15,26 @@ import { routerUrls } from 'config/routerUrls';
 import { AppDispatch, RootState } from 'store';
 import style from './AddComicsPage.module.scss';
 
+const MAX_FILE_SIZE = 5000000;
+const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+
+type age = '0+' | '6+' | '12+' | '16+' | '18+';
+
 const formDataSchema = z.object({
   title: z.string().nonempty(),
   description: z.string().nonempty(),
-  age_rating: z.string().nonempty(),
-  poster_url: z.string().nonempty(),
+  age_rating: z.enum(['0+', '6+', '12+', '16+', '18+']),
+  tags: z.array(z.object({ id: z.number() })),
   genre: z.object({
     id: z.number(),
   }),
+  // poster: z
+  //   .any()
+  //   .refine((file) => file?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
+  //   .refine(
+  //     (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
+  //     'Only .jpg, .jpeg, .png and .webp formats are supported.',
+  //   ),
 });
 
 type FormData = z.infer<typeof formDataSchema>;
@@ -29,23 +42,25 @@ type FormData = z.infer<typeof formDataSchema>;
 const initialFormState: FormData = {
   title: '',
   description: '',
-  age_rating: '',
-  poster_url:
-    'https://yandex-images.clstorage.net/bl95Vd400/a75371s5hd/FI0eXS_5WVBASbFMvF--tUxdCZexd7AJ4x6NpcLx8_ODFI32I1fFMjiizzFuU02cg2FHJTzvjdr6F2sPK7GADFfUUwtrpx5QRV36RvBFsqVZERTUpDWpDeRHgaetmNTX83j3wQ5xtE93oZczPh0H2sMLKWdc7dyC_mQsCDfv2k0DnAtsP90iemdX6GCMZrScUiEhlostiVvjKv3NsabC1_tQ3vcmfIhLZrCBPQIJYc_YOREyRt_RiexPGAkl-dJYJJ0FcyjyBFJVWNpDrWCoolwmCaahALNxzzzR_Zi97cTVUsDZHXCvcmGYjgIDDGz57xc1CkzG-LnLQxQgDej1TRaICX03yy1QaVHMXr9Jg4hxKxGLsiuVUv4X5P-Li8LfwmzS6xZ1mE5KsbMHHCBz8MYyJyxe28uF83YUIA739nIovxhlL-c5bGlz93unS4uyYSodgoMpnlDJM_XziLD74MR34dktZ75VVLmfJgs_Z9vTJgIAefzyr-5KHSkX3-VoF5wBVgrfHkl9StZBl2GwgHY0MLedD7Bw5ArG9Zuv-MT3aerrCny-cne5oT8fMEDf4zIdMG39xKPVaQ8xF9TnWwufJHkI7gRVd0zGTJZ9mZhTHwmDgQ6xeMERweG0ov3m3mvRxgxzpVdGgbQ1OTxs5OQAGSpT38ipwHokJybT0moGoh1PLNw-ekFqxmSyRJG_VwsMh4g3vmzGD_jxgozxwMFtz8ItRb9kaK-IDxkDUfDlGwcVYeDShMpQKCQRz95pA6AFRSnrPFFhaMtaqFWvnU0iCbWvF5hV5S7a8b2u5vHncvLfNkOHbViPgS0pAWPZzDI6BUzlz5j3eggRF9DyaTGeBHAH4hlzfk7XUJdnnLpTKROxjBGtU-0D4NK1gtHT6FPu3Q5Xt0N5l44mLwZKyvsCNABj_sy4_0otHBPLxXIxggR4F-c5T0Fp03GxYLOafzk2tbwys2b8NdLhvKw',
+  age_rating: '0+',
+  tags: [],
   genre: {
     id: 0,
   },
+  // poster: '',
 };
 
 const AddComicsPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { allGenres } = useSelector((state: RootState) => state.catalog);
+  const { tags } = useSelector((state: RootState) => state.tags);
   const [userFormData, setUserFormData] = useState<Partial<FormData>>({});
   const [isError, setIsError] = useState<boolean>(false);
 
   useLayoutEffect(() => {
     dispatch(getGenres());
+    dispatch(getTags());
   }, [dispatch]);
 
   const formData = {
@@ -143,12 +158,16 @@ const AddComicsPage = () => {
             title="Возрастное ограничение"
             options={ageRatings}
             value={formData.age_rating}
-            onChange={(e) => setUserFormData((data) => ({ ...data, age_rating: e.target.value }))}
+            onChange={(e) => setUserFormData((data) => ({ ...data, age_rating: e.target.value as age }))}
           />
           <span className={style.comicForm__error}>{errors?.age_rating?._errors.join(', ')}</span>
         </div>
         <div>
-          <TagsInput />
+          <TagsInput
+            suggestions={tags.map((el) => {
+              return { id: el.id.toString(), text: el.title, className: '' };
+            })}
+          />
         </div>
 
         <Button type="submit" disabled={!!errors}>

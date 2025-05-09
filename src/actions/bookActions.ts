@@ -62,10 +62,12 @@ export const postBook = createAsyncThunk(
     data: {
       title: string;
       description: string;
-      age_rating: string;
-      poster_url: string;
+      age_rating: '0+' | '6+' | '12+' | '16+' | '18+';
+      tags: {
+        id: number;
+      }[];
       genre: {
-        id: number | string;
+        id: number;
       };
     },
     { rejectWithValue },

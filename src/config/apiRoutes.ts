@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:8000/api';
+const API_BASE = 'https://backend-dev.nervlib.ru/api';
 const createApiRoute = (route: string) => `${API_BASE}${route}`;
 
 export const apiRoutes = {
@@ -12,4 +12,5 @@ export const apiRoutes = {
   chapters: createApiRoute('/chapters'),
   images: createApiRoute('/images'),
   genres: createApiRoute('/genres'),
+  tags: createApiRoute('/tags'),
 };

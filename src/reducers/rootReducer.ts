@@ -5,6 +5,7 @@ import catalogReducer from './catalogReducer';
 import chapterImages from './chapterImages';
 import detailBookReducer from './detailBookReducer';
 import profileReducer from './profileReducer';
+import tagReducer from './tagReducer';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   books: booksReducer,
   detailBook: detailBookReducer,
   chapterImages: chapterImages,
+  tags: tagReducer,
 });
 
 export default rootReducer;
