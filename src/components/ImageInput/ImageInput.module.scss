@@ -1,0 +1,83 @@
+@use "styles/variables.scss" as *;
+@use "styles/mixin.scss";
+.card {
+  width: 50%;
+  height: 300px;
+  box-shadow: 0 0 10px #0000004a;
+  border-radius: 16px;
+  position: relative;
+
+  .drag_area {
+    height: 100%;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    user-select: none;
+
+    .visible {
+      font-size: 18px;
+    }
+  }
+
+  .container {
+    width: 100%;
+    height: 100%;
+    background-color: $black-50;
+    color: $white;
+    border-radius: 16px;
+
+    .text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100%;
+      text-align: center;
+      padding: 0 5px;
+    }
+
+    .image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      overflow: hidden;
+
+      img {
+        position: relative;
+        border-radius: 16px;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      span {
+        position: absolute;
+        top: 4px;
+        right: 8px;
+        font-size: 20px;
+        cursor: pointer;
+      }
+    }
+  }
+
+  input {
+    display: none;
+  }
+
+  .drag_area {
+    .on_drop {
+      display: none;
+    }
+    .dragover {
+      .visible {
+        display: none;
+      }
+    }
+  }
+}
+
+.delete {
+  z-index: 1000;
+  color: $black;
+}
