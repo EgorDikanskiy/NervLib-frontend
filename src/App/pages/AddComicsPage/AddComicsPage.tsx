@@ -2,12 +2,12 @@ import React, { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Tag } from 'react-tag-input';
-import { z } from 'zod';
+import { intersection, object, z } from 'zod';
 import { postBook } from 'actions/bookActions';
 import { getGenres } from 'actions/catalogActions';
 import { getTags } from 'actions/tagActions';
-import TagsInput from 'components/TagsInput';
 import ImageInput from 'components/ImageInput';
+import TagsInput from 'components/TagsInput';
 import BackButton from 'components/ui/BackButton';
 import { Button } from 'components/ui/Button';
 import DropDownForm from 'components/ui/DropDownForm';
@@ -42,10 +42,31 @@ const formDataSchema = z.object({
   genre: z.object({
     id: z.number().min(1, 'Выберите жанр'),
   }),
-  // poster: z
-  //   .instanceof(File)
-  //   .refine((file) => file.size <= MAX_FILE_SIZE, 'Файл слишком большой')
-  //   .refine((file) => ACCEPTED_IMAGE_TYPES.includes(file.type), 'Недопустимый формат'),
+
+  poster: z
+    .union([z.instanceof(File), z.null()])
+    .refine((file) => file !== null, {
+      message: 'Загрузите постер',
+    })
+    .refine(
+      (file) => {
+        if (!file) return true;
+        return file.size <= MAX_FILE_SIZE;
+      },
+      {
+        message: 'Файл слишком большой',
+      },
+    )
+    .refine(
+      (file) => {
+        if (!file) return true;
+        return ACCEPTED_IMAGE_TYPES.includes(file.type);
+      },
+      {
+        message: 'Недопустимый формат',
+      },
+    )
+    .nullable(),
 });
 
 type FormData = z.infer<typeof formDataSchema>;
@@ -58,7 +79,7 @@ const initialFormState: FormData = {
   genre: {
     id: 0,
   },
-  // poster: '',
+  poster: null,
 };
 
 const AddComicsPage = () => {
@@ -87,7 +108,7 @@ const AddComicsPage = () => {
       return;
     }
     console.log(formData);
-    await dispatch(postBook(formData));
+    // await dispatch(postBook(formData));
   };
 
   const validate = () => {
@@ -136,7 +157,13 @@ const AddComicsPage = () => {
 
       <form onSubmit={handleSubmit} className={style.comicForm}>
         <div>
-          <ImageInput />
+          <ImageInput
+            onChange={(file) => {
+              setUserFormData((data) => ({ ...data, poster: file }));
+            }}
+            value={formData.poster instanceof File ? formData.poster : null}
+          />
+          <span className={style.comicForm__error}>{errors?.poster?._errors.join(', ')}</span>
         </div>
         <div>
           <Input
