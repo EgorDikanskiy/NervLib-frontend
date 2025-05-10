@@ -3,17 +3,30 @@ import { getBooks } from '../actions/bookActions';
 
 interface Book {
   id: number;
-  author_id: number;
-  name: string;
   title: string;
   description: string;
-  poster_url: string;
   age_rating: string;
-  views_count: number;
   chapter_count: number;
-  favourites_count: number;
+  views_count: number;
+  favorites_count: number;
+  ratings_count: number;
+  ratings_average: number;
   published_date: string;
+  poster_url: string;
   slug: string;
+  author: {
+    id: number;
+    username: string;
+    avatar: string | null;
+  };
+  genre: {
+    id: number;
+    name: string;
+  };
+  tags: Array<{
+    id: number;
+    title: string;
+  }>;
 }
 
 interface BooksState {
@@ -40,7 +53,12 @@ const booksSlice = createSlice({
       })
       .addCase(getBooks.fulfilled, (state, action) => {
         state.loading = false;
-        state.books = action.payload;
+        // Если запрос был по slug, добавляем книгу в массив
+        if (action.meta.arg.slug) {
+          state.books = [action.payload];
+        } else {
+          state.books = action.payload;
+        }
       })
 
       .addCase(getBooks.rejected, (state, action) => {

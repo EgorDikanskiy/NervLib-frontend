@@ -63,22 +63,34 @@ export const postBook = createAsyncThunk(
       title: string;
       description: string;
       age_rating: '0+' | '6+' | '12+' | '16+' | '18+';
-      tags: {
-        id: number;
-      }[];
-      genre: {
-        id: number;
-      };
+      tags: number[];
+      genre_id: number;
+      poster: File | null;
     },
     { rejectWithValue },
   ) => {
     try {
       const url = new URL(apiRoutes.books);
+
+      const formData = new FormData();
+
+      formData.append('title', data.title);
+      formData.append('description', data.description);
+      formData.append('age_rating', data.age_rating);
+      formData.append('genre_id', data.genre_id.toString());
+
+      data.tags.forEach((tag) => {
+        formData.append('tags', tag.toString());
+      });
+
+      if (data.poster) {
+        formData.append('poster', data.poster);
+      }
+
       const accessToken = localStorage.getItem('access_token');
-      const response = await axios.post(url.toString(), data, {
+      const response = await axios.post(url.toString(), formData, {
         headers: {
-          accept: 'application/json',
-          'Content-Type': 'application/json',
+          accept: 'multipart/form-data',
           ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
         },
       });

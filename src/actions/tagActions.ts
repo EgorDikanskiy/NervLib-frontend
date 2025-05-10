@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { apiRoutes } from 'config/apiRoutes';
 
-export const getTags = createAsyncThunk('books/', async (_, { rejectWithValue }) => {
+export const getTags = createAsyncThunk('tags/', async (_, { rejectWithValue }) => {
   try {
     const url = new URL(apiRoutes.tags);
 
