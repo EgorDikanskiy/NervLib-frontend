@@ -14,7 +14,8 @@ import Registration from './pages/Auth/RegistrationPage';
 import ResetPasswordPage from './pages/Auth/ResetPasswordPage';
 import CatalogPage from './pages/CatalogPage';
 import DetailComicsPage from './pages/DetailComicsPage';
-import EditComicsPage from './pages/EditComicsPage/EditComicsPage';
+import EditComicsPage from './pages/EditComicsPage';
+import HomePage from './pages/HomePage';
 import PublicProfilePage from './pages/PublicProfilePage';
 import ViewComicsPage from './pages/ViewComicsPage';
 
@@ -34,11 +35,9 @@ function AppContent() {
         <Route path={routerUrls.bookmarks.mask} element={<div>Избранное</div>} />
         <Route path={routerUrls.viewComics.mask} element={<ViewComicsPage />} />
         <Route path={routerUrls.book_detail.mask} element={<DetailComicsPage />} />
-        <Route path="*" element={<Navigate to={routerUrls.catalog.mask} replace={true} />} />
+        <Route path={routerUrls.home.mask} element={<HomePage />} />
+        <Route path="*" element={<Navigate to={routerUrls.home.mask} replace={true} />} />
 
-        {/*временно тут*/}
-
-        {/**/}
         <Route element={<PrivateRoute />}>
           <Route path={routerUrls.profile.mask} element={<ProfilePage />} />
           <Route path={routerUrls.edit_profile.mask} element={<EditProfilePage />} />

@@ -52,4 +52,7 @@ export const routerUrls = {
     mask: '/comics/edit/:slug',
     create: (slug: string) => `/comics/edit/${slug}`,
   },
+  home: {
+    mask: '/home',
+  },
 };
