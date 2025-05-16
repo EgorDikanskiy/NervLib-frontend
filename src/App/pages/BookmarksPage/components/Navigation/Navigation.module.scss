@@ -1,0 +1,17 @@
+@use 'styles/variables.scss' as *;
+@use 'styles/mixin.scss' as *;
+
+.navigation {
+    display: flex;
+    justify-content: space-around;
+
+    &__item {
+        @extend .regular16;
+        padding-bottom: 4px;
+    }
+
+    &__item:active {
+        color: $purple-main;
+        border-bottom: 1px solid $purple-main;
+    }
+}
