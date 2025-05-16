@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, BrowserRouter, HashRouter, Navigate, useLocation, matchPath } from 'react-router-dom';
+import { Routes, Route, BrowserRouter, Navigate, useLocation, matchPath } from 'react-router-dom';
 import PrivateRoute from 'components/PrivateRoute';
 import RootLayout from 'components/RootLayout';
 import TabBar from 'components/TabBar';
@@ -26,6 +26,8 @@ function AppContent() {
   return (
     <RootLayout>
       <Routes>
+        <Route path="/" element={<Navigate to={routerUrls.home.mask} replace />} />
+
         <Route path={routerUrls.root} element={<CatalogPage />} />
         <Route path={routerUrls.register.mask} element={<Registration />} />
         <Route path={routerUrls.login.mask} element={<Login />} />
@@ -36,7 +38,6 @@ function AppContent() {
         <Route path={routerUrls.viewComics.mask} element={<ViewComicsPage />} />
         <Route path={routerUrls.book_detail.mask} element={<DetailComicsPage />} />
         <Route path={routerUrls.home.mask} element={<HomePage />} />
-        <Route path="*" element={<Navigate to={routerUrls.home.mask} replace={true} />} />
 
         <Route element={<PrivateRoute />}>
           <Route path={routerUrls.profile.mask} element={<ProfilePage />} />
@@ -45,6 +46,8 @@ function AppContent() {
           <Route path={routerUrls.book_add.mask} element={<AddComicsPage />} />
           <Route path={routerUrls.book_edit.mask} element={<EditComicsPage />} />
         </Route>
+
+        <Route path="*" element={<Navigate to={routerUrls.home.mask} replace />} />
       </Routes>
 
       {!isViewComicsPage && <TabBar />}
