@@ -10,7 +10,7 @@ export const getBooks = createAsyncThunk(
       order?: 'asc' | 'desc';
       genreId?: number;
       title?: string;
-      authorId?: string;
+      authorId?: number;
       slug?: string;
     },
     { rejectWithValue },

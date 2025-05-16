@@ -116,7 +116,9 @@ const DetailComicsPage: React.FC = () => {
         </section>
         <section className={styles.info__author}>
           <img src={book.author.avatar} alt="Фото автора" className={styles.info__authorAvatar} />
-          <p>{book.author.username}</p>
+          <p>
+            <Link to={routerUrls.public_profile.create(book.author.username)}>{book.author.username}</Link>
+          </p>
         </section>
       </div>
       <div className={styles.info__stats}>

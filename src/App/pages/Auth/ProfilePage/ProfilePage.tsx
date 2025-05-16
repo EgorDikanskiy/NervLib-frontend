@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { getBooks } from 'actions/bookActions';
 import HorizontalScroll from 'components/HorizontalScroll';
 import Loader from 'components/Loader';
 import MiniCard from 'components/ui/MiniCard';
@@ -16,87 +17,70 @@ const cards = [
   {
     title: 'имя',
     rate: '4.5',
-    imgSrc: './test.png',
   },
   {
     title: 'имя',
     rate: '4.5',
-    imgSrc: './test.png',
   },
   {
     title: 'имя',
     rate: '4.5',
-    imgSrc: './test.png',
   },
   {
     title: 'имя',
     rate: '4.5',
-    imgSrc: './test.png',
   },
   {
     title: 'имя',
     rate: '4.5',
-    imgSrc: './test.png',
   },
   {
     title: 'имя',
     rate: '4.5',
-    imgSrc: './test.png',
   },
   {
     title: 'имя',
     rate: '4.5',
-    imgSrc: './test.png',
   },
   {
     title: 'имя',
     rate: '4.5',
-    imgSrc: './test.png',
   },
   {
     title: 'имя',
     rate: '4.5',
-    imgSrc: './test.png',
   },
   {
     title: 'имя',
     rate: '4.5',
-    imgSrc: './test.png',
   },
   {
     title: 'имя',
     rate: '4.5',
-    imgSrc: './test.png',
   },
   {
     title: 'имя',
     rate: '4.5',
-    imgSrc: './test.png',
   },
   {
     title: 'имя',
     rate: '4.5',
-    imgSrc: './test.png',
   },
   {
     title: 'имя',
     rate: '4.5',
-    imgSrc: './test.png',
   },
   {
     title: 'имя',
     rate: '4.5',
-    imgSrc: './test.png',
   },
   {
     title: 'имя',
     rate: '4.5',
-    imgSrc: './test.png',
   },
   {
     title: 'имя',
     rate: '4.5',
-    imgSrc: './test.png',
   },
 ];
 
@@ -105,6 +89,7 @@ const ProfilePage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { profile, loading, error } = useSelector((state: RootState) => state.profile);
   const { user } = useSelector((state: RootState) => state.auth);
+  const { books } = useSelector((state: RootState) => state.books);
   let gender = 'Не указан';
 
   useEffect(() => {
@@ -112,6 +97,12 @@ const ProfilePage = () => {
       dispatch(getProfile({ username: user.username, with_token: true }));
     }
   }, [dispatch, user]);
+
+  useEffect(() => {
+    if (profile) {
+      dispatch(getBooks({ authorId: profile.id }));
+    }
+  }, [dispatch, profile]);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -223,7 +214,7 @@ const ProfilePage = () => {
         <p className={styles.profile__info__contacts__title}>Контакты:</p>
         <p className={styles.profile__info__contacts__subtitle}>E-mail: pochta99@mail.ru</p>
       </section>
-      {profile.is_author && (
+      {profile.is_author && books.length > 0 && (
         <section className={styles.comicsBlock}>
           <div className={styles.comicsBlock__header}>
             <p>Мои книги:</p>
@@ -231,8 +222,8 @@ const ProfilePage = () => {
           </div>
           <HorizontalScroll>
             <div className={styles.comicsBlock__content}>
-              {cards.map((item, i) => (
-                <MiniCard {...item} key={i} />
+              {books.map((item, i) => (
+                <MiniCard title={item.title} rate={item.ratings_average.toFixed(1)} imgSrc={item.poster_url} key={i} />
               ))}
             </div>
           </HorizontalScroll>
