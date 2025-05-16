@@ -156,7 +156,7 @@ const EditComicsPage = () => {
       <div className={style.menu}>
         <BackButton className={style.menu__back} onClick={() => navigate(routerUrls.profile.mask)} />
         <div className={style.menu__header}>
-          <h2>Добавить комикс</h2>
+          <h2>Изменить комикс</h2>
         </div>
       </div>
 
@@ -245,7 +245,7 @@ const EditComicsPage = () => {
         </div>
 
         <Button type="submit" disabled={!!errors}>
-          Добавить комикс
+          Изменить комикс
         </Button>
       </form>
     </section>

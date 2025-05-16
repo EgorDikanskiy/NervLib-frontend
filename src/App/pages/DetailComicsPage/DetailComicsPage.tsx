@@ -3,9 +3,7 @@ import ReactStars from 'react-rating-stars-component';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { refresh, getCurrentUser } from 'actions/authActions';
-import { getProfile } from 'actions/profileActions';
 import Loader from 'components/Loader';
-import RatingSetter from 'components/RatingSetter';
 import BackButton from 'components/ui/BackButton';
 import { Button } from 'components/ui/Button';
 import { routerUrls } from 'config/routerUrls';
@@ -79,8 +77,6 @@ const DetailComicsPage: React.FC = () => {
     return <div>Такой книги нет</div>;
   }
 
-  console.log(user);
-
   const ratingChanged = (newRating: number) => {
     console.log(newRating);
     dispatch(rateBook({ book_id: book.id, score: newRating }))
@@ -96,6 +92,8 @@ const DetailComicsPage: React.FC = () => {
         console.error('Error rating book:', error);
       });
   };
+
+  console.log(book.author);
 
   return (
     <div className={styles.page}>
