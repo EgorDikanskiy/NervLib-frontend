@@ -96,13 +96,13 @@ const HomePage = () => {
   return (
     <>
       <section>
-        <h2>Главная</h2>
+        <h2 className={styles.title}>Главная</h2>
         <Search />
       </section>
 
       <section>
         <div>
-          <h3>Продолжить читать</h3>
+          <h3 className={styles.text}>Продолжить читать</h3>
           <HorizontalScroll>
             <div style={{ display: 'flex' }}>
               {cards.map((item, i) => (
@@ -112,7 +112,7 @@ const HomePage = () => {
           </HorizontalScroll>
         </div>
         <div>
-          <h3>Новинки</h3>
+          <h3 className={styles.text}>Новинки</h3>
           <HorizontalScroll>
             <div style={{ display: 'flex' }}>
               {cards.map((item, i) => (
@@ -122,7 +122,7 @@ const HomePage = () => {
           </HorizontalScroll>
         </div>
         <div>
-          <h3>Популярное</h3>
+          <h3 className={styles.text}>Популярное</h3>
           <HorizontalScroll>
             <div style={{ display: 'flex' }}>
               {cards.map((item, i) => (
