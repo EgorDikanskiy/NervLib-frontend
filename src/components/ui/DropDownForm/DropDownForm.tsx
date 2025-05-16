@@ -15,6 +15,7 @@ const DropDownForm: React.FC<DropDownFormProps> = ({ title, options, value, onCh
       <option value="" disabled hidden>
         {title}
       </option>
+
       {options.map(({ id, name }) => {
         return (
           <option key={id} value={id} className={style.option}>

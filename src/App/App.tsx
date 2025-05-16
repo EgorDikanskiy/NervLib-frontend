@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, BrowserRouter, HashRouter, Navigate, useLocation, matchPath } from 'react-router-dom';
+import { Routes, Route, BrowserRouter, Navigate, useLocation, matchPath } from 'react-router-dom';
 import PrivateRoute from 'components/PrivateRoute';
 import RootLayout from 'components/RootLayout';
 import TabBar from 'components/TabBar';
@@ -14,7 +14,8 @@ import Registration from './pages/Auth/RegistrationPage';
 import ResetPasswordPage from './pages/Auth/ResetPasswordPage';
 import CatalogPage from './pages/CatalogPage';
 import DetailComicsPage from './pages/DetailComicsPage';
-import EditComicsPage from './pages/EditComicsPage/EditComicsPage';
+import EditComicsPage from './pages/EditComicsPage';
+import HomePage from './pages/HomePage';
 import PublicProfilePage from './pages/PublicProfilePage';
 import ViewComicsPage from './pages/ViewComicsPage';
 
@@ -25,6 +26,8 @@ function AppContent() {
   return (
     <RootLayout>
       <Routes>
+        <Route path="/" element={<Navigate to={routerUrls.home.mask} replace />} />
+
         <Route path={routerUrls.root} element={<CatalogPage />} />
         <Route path={routerUrls.register.mask} element={<Registration />} />
         <Route path={routerUrls.login.mask} element={<Login />} />
@@ -34,11 +37,8 @@ function AppContent() {
         <Route path={routerUrls.bookmarks.mask} element={<div>Избранное</div>} />
         <Route path={routerUrls.viewComics.mask} element={<ViewComicsPage />} />
         <Route path={routerUrls.book_detail.mask} element={<DetailComicsPage />} />
-        <Route path="*" element={<Navigate to={routerUrls.catalog.mask} replace={true} />} />
+        <Route path={routerUrls.home.mask} element={<HomePage />} />
 
-        {/*временно тут*/}
-
-        {/**/}
         <Route element={<PrivateRoute />}>
           <Route path={routerUrls.profile.mask} element={<ProfilePage />} />
           <Route path={routerUrls.edit_profile.mask} element={<EditProfilePage />} />
@@ -46,6 +46,8 @@ function AppContent() {
           <Route path={routerUrls.book_add.mask} element={<AddComicsPage />} />
           <Route path={routerUrls.book_edit.mask} element={<EditComicsPage />} />
         </Route>
+
+        <Route path="*" element={<Navigate to={routerUrls.home.mask} replace />} />
       </Routes>
 
       {!isViewComicsPage && <TabBar />}

@@ -12,8 +12,8 @@ const TabBar = () => {
   return (
     <ul className={styles.tapBar}>
       <li>
-        <a href={routerUrls.root}>
-          <HomeIcon active={location.pathname === routerUrls.root} />
+        <a href={routerUrls.home.mask}>
+          <HomeIcon active={location.pathname === routerUrls.home.mask} />
         </a>
       </li>
       <li>

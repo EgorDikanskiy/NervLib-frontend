@@ -1,0 +1,18 @@
+@use "styles/variables.scss" as *;
+@use "styles/mixin.scss";
+
+.title {
+  @extend .medium20;
+  margin-top: 2rem;
+}
+
+.text {
+  @extend .regular16;
+  margin-bottom: 0.5rem;
+}
+
+.bookSection {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}

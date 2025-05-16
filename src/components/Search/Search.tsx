@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getBooks } from 'actions/bookActions';
 import { getGenres } from 'actions/catalogActions';
 import { AppDispatch, RootState } from 'store';
-import { toggleFilters } from '../../../../../reducers/catalogReducer';
+import { toggleFilters } from '../../reducers/catalogReducer';
 import styles from './Search.module.scss';
 
 const Search = () => {
