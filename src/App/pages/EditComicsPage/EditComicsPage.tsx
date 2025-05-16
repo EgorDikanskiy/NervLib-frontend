@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Tag } from 'react-tag-input';
 import { z } from 'zod';
-import { getBooks, postBook } from 'actions/bookActions';
+import { editBook, getBooks } from 'actions/bookActions';
 import { getGenres } from 'actions/catalogActions';
 import { getTags } from 'actions/tagActions';
 import ImageInput from 'components/ImageInput';
@@ -30,7 +30,7 @@ const formDataSchema = z.object({
 
   description: z
     .string()
-    .min(50, 'Минимальная длина описания - 50 символов')
+    .min(20, 'Минимальная длина описания - 50 символов')
     .max(2000, 'Максимальная длина описания - 2000 символов'),
 
   age_rating: z.enum(['0+', '6+', '12+', '16+', '18+'], {
@@ -87,12 +87,13 @@ const EditComicsPage = () => {
 
   const adaptedServerData = () => {
     return {
+      id: serverFormState?.id,
       title: serverFormState?.title,
       description: serverFormState?.description,
       age_rating: serverFormState?.age_rating as AgeRating,
       genre_id: serverFormState?.genre?.id || 0,
       tags: serverFormState?.tags?.map((tag) => tag.id) || [],
-      poster: null, // Оставляем null, так как с сервера приходит URL
+      poster: null,
     };
   };
 
@@ -113,7 +114,19 @@ const EditComicsPage = () => {
       setIsError(true);
       return;
     }
-    // await dispatch(postBook(formData));
+
+    if (!formData.title || !formData.description || !formData.id) {
+      throw new Error('Поля title, description и id обязательны');
+    }
+
+    await dispatch(
+      editBook({
+        ...formData,
+        title: formData.title,
+        description: formData.description,
+        id: formData.id,
+      }),
+    );
   };
 
   const validate = () => {
@@ -245,7 +258,7 @@ const EditComicsPage = () => {
         </div>
 
         <Button type="submit" disabled={!!errors}>
-          Добавить комикс
+          Сохранить
         </Button>
       </form>
     </section>
