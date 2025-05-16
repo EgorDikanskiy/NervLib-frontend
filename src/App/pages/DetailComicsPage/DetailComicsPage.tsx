@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ReactStars from 'react-rating-stars-component';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { refresh, getCurrentUser } from 'actions/authActions';
 import { getProfile } from 'actions/profileActions';
 import Loader from 'components/Loader';
 import RatingSetter from 'components/RatingSetter';
@@ -18,6 +19,25 @@ const DetailComicsPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const { book, chapters, loading, error } = useSelector((state: RootState) => state.detailBook);
   const [value, setValue] = useState<number | null>(0);
+  const { user } = useSelector((state: RootState) => state.auth);
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken) || localStorage.getItem('access_token');
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!accessToken) return;
+
+      // Получаем данные пользователя и проверяем статус
+      const result = await dispatch(getCurrentUser());
+      // result.meta.requestStatus будет "fulfilled" если запрос успешен
+      if (result.meta.requestStatus !== 'fulfilled' || !result.payload) {
+        // Если данные пользователя не получены, выполняем refresh и пробуем снова
+        await dispatch(refresh());
+        await dispatch(getCurrentUser());
+      }
+    };
+
+    fetchUserData();
+  }, [accessToken, dispatch]);
 
   useEffect(() => {
     if (slug) {
@@ -58,6 +78,8 @@ const DetailComicsPage: React.FC = () => {
   if (!book) {
     return <div>Такой книги нет</div>;
   }
+
+  console.log(user);
 
   const ratingChanged = (newRating: number) => {
     console.log(newRating);
@@ -104,17 +126,19 @@ const DetailComicsPage: React.FC = () => {
         <p className={`${styles.info__stat} ${styles['info__stat--favorites']}`}>{book.favourites_count}</p>
         <p className={`${styles.info__stat} ${styles['info__stat--books']}`}>{book.views_count}</p>
       </div>
-      <div className={styles.info__rating}>
-        <ReactStars
-          key={`rating_${value}`}
-          count={5}
-          value={value || 0}
-          onChange={ratingChanged}
-          size={30}
-          activeColor="#a890ff"
-          edit={true}
-        />
-      </div>
+      {user && (
+        <div className={styles.info__rating}>
+          <ReactStars
+            key={`rating_${value}`}
+            count={5}
+            value={value || 0}
+            onChange={ratingChanged}
+            size={30}
+            activeColor="#a890ff"
+            edit={true}
+          />
+        </div>
+      )}
 
       <Link to={routerUrls.viewComics.create(book.slug, chapters.length ? chapters[0].id : 1)}>
         <Button>Читать</Button>
