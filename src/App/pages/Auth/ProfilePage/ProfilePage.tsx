@@ -109,7 +109,6 @@ const ProfilePage = () => {
     navigate(routerUrls.login.mask);
   };
 
-  console.log(user);
   if (loading) return <Loader />;
   if (error) return <div>Ошибка: {error}</div>;
   if (!profile) return <div>Профиль не найден</div>;

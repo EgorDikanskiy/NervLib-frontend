@@ -18,24 +18,6 @@ const DetailComicsPage: React.FC = () => {
   const { book, chapters, loading, error } = useSelector((state: RootState) => state.detailBook);
   const [value, setValue] = useState<number | null>(0);
   const { user } = useSelector((state: RootState) => state.auth);
-  const accessToken = useSelector((state: RootState) => state.auth.accessToken) || localStorage.getItem('access_token');
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (!accessToken) return;
-
-      // Получаем данные пользователя и проверяем статус
-      const result = await dispatch(getCurrentUser());
-      // result.meta.requestStatus будет "fulfilled" если запрос успешен
-      if (result.meta.requestStatus !== 'fulfilled' || !result.payload) {
-        // Если данные пользователя не получены, выполняем refresh и пробуем снова
-        await dispatch(refresh());
-        await dispatch(getCurrentUser());
-      }
-    };
-
-    fetchUserData();
-  }, [accessToken, dispatch]);
 
   useEffect(() => {
     if (slug) {
@@ -99,7 +81,7 @@ const DetailComicsPage: React.FC = () => {
     <div className={styles.page}>
       <nav className={styles.header}>
         <div className={styles.header__back}>
-          <BackButton onClick={() => navigate(routerUrls.catalog.mask)} />
+          <BackButton onClick={() => navigate(-1)} />
         </div>
         <div className={styles.header__bookmark}>
           <p>Добавить в закладки</p>

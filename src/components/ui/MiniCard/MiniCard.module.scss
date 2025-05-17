@@ -4,9 +4,7 @@
 
 .card {
   @extend .regular12;
-  flex: 1 1 auto;
-  min-width: 100px;
-  min-height: 193px;
+  width: 100px;
   margin-right: 14px;
 
   @media (max-width: 400px) {
@@ -22,5 +20,10 @@
   &__title{
     padding-top: 2px;
     color: black;
+    width: 100px;
+  }
+
+  &__info{
+    width: 100px;
   }
 }
