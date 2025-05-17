@@ -91,7 +91,62 @@ export const postBook = createAsyncThunk(
       const response = await axios.post(url.toString(), formData, {
         headers: {
           accept: 'multipart/form-data',
-          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          return rejectWithValue(error.response.data);
+        }
+        return rejectWithValue(error.message);
+      }
+
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue('Произошла ошибка');
+    }
+  },
+);
+
+export const editBook = createAsyncThunk(
+  'books/:id',
+  async (
+    data: {
+      id: number;
+      title: string;
+      description: string;
+      age_rating: '0+' | '6+' | '12+' | '16+' | '18+';
+      tags: number[];
+      genre_id: number;
+      poster: File | null;
+    },
+    { rejectWithValue },
+  ) => {
+    try {
+      const url = new URL(apiRoutes.books + `/${data.id}`);
+
+      const formData = new FormData();
+
+      formData.append('title', data.title);
+      formData.append('description', data.description);
+      formData.append('age_rating', data.age_rating);
+      formData.append('genre_id', data.genre_id.toString());
+      data.tags.forEach((tag) => {
+        formData.append('tags', tag.toString());
+      });
+
+      if (data.poster) {
+        formData.append('poster', data.poster);
+      }
+
+      const accessToken = localStorage.getItem('access_token');
+      const response = await axios.patch(url.toString(), formData, {
+        headers: {
+          accept: 'multipart/form-data',
+          Authorization: `Bearer ${accessToken}`,
         },
       });
       return response.data;
