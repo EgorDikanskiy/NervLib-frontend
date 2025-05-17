@@ -185,6 +185,11 @@ const DetailComicsPage: React.FC = () => {
                   </li>
                 </Link>
               ))}
+              <Link to={routerUrls.home.mask}>
+                <li className={styles.chapters__new}>
+                  <span>Добавить главу</span>
+                </li>
+              </Link>
             </ul>
           </div>
         ) : (
