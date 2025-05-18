@@ -11,10 +11,10 @@ interface ApiConfigs {
 
 export const API_CONFIG: ApiConfigs = {
   development: {
-    baseURL: 'http://localhost:8000/api',
+    baseURL: 'https://backend-dev.nervlib.ru/api',
   },
   production: {
-    baseURL: 'https://your-production-api.com/api',
+    baseURL: 'https://backend-dev.nervlib.ru/api',
   },
 };
 
