@@ -4,6 +4,7 @@ import PrivateRoute from 'components/PrivateRoute';
 import RootLayout from 'components/RootLayout';
 import TabBar from 'components/TabBar';
 import { routerUrls } from 'config/routerUrls';
+import AddChapterPage from './pages/AddChapterPage';
 import AddComicsPage from './pages/AddComicsPage';
 
 import EditProfilePage from './pages/Auth/EditProfilePage';
@@ -39,6 +40,9 @@ function AppContent() {
         <Route path={routerUrls.viewComics.mask} element={<ViewComicsPage />} />
         <Route path={routerUrls.book_detail.mask} element={<DetailComicsPage />} />
         <Route path={routerUrls.home.mask} element={<HomePage />} />
+
+        {/* потом убрать */}
+        <Route path={routerUrls.chapter_add.mask} element={<AddChapterPage />} />
 
         <Route element={<PrivateRoute />}>
           <Route path={routerUrls.profile.mask} element={<ProfilePage />} />

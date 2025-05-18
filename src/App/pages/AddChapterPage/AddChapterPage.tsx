@@ -1,11 +1,13 @@
-import Input from 'components/ui/Input';
 import React, { useState } from 'react';
-import { z } from 'zod';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { z } from 'zod';
 import ImageInput from 'components/ImageInput';
+import MultipleImagesInput from 'components/MultipleImagesInput';
 import BackButton from 'components/ui/BackButton';
 import { Button } from 'components/ui/Button';
+import Input from 'components/ui/Input';
 import Textarea from 'components/ui/Textarea';
 import { routerUrls } from 'config/routerUrls';
 import { AppDispatch, RootState } from 'store';
@@ -92,6 +94,18 @@ const AddChapterPage = () => {
             onChange={(e) => setUserFormData((prev) => ({ ...prev, description: e.target.value }))}
           />
           {errors?.description && <p className={style.comicForm__error}>{errors.description._errors.join(', ')}</p>}
+        </div>
+        <div>
+          <MultipleImagesInput
+            onChange={(newFiles) => {
+              setUserFormData((prev) => ({
+                ...prev,
+                poster: newFiles ? [...(prev.poster || []), ...newFiles] : [],
+              }));
+            }}
+            value={formData.poster}
+          />
+          {errors?.poster && <span className={style.comicForm__error}>{errors.poster._errors.join(', ')}</span>}
         </div>
       </form>
     </>

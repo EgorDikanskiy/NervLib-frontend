@@ -55,4 +55,8 @@ export const routerUrls = {
   home: {
     mask: '/home',
   },
+  chapter_add: {
+    mask: '/chapter/add/:slug',
+    create: (slug: string) => `/chapter/add/${slug}`,
+  },
 };
