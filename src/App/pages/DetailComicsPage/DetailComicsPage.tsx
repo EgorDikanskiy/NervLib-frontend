@@ -3,6 +3,7 @@ import ReactStars from 'react-rating-stars-component';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { refresh, getCurrentUser } from 'actions/authActions';
+import { addBookmark, deleteBookmark, getBookmarks } from 'actions/bookActions';
 import Loader from 'components/Loader';
 import BackButton from 'components/ui/BackButton';
 import { Button } from 'components/ui/Button';
@@ -17,25 +18,9 @@ const DetailComicsPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const { book, chapters, loading, error } = useSelector((state: RootState) => state.detailBook);
   const [value, setValue] = useState<number | null>(0);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isFavorited, setIsFavorited] = useState(false);
   const { user } = useSelector((state: RootState) => state.auth);
-  const accessToken = useSelector((state: RootState) => state.auth.accessToken) || localStorage.getItem('access_token');
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (!accessToken) return;
-
-      // Получаем данные пользователя и проверяем статус
-      const result = await dispatch(getCurrentUser());
-      // result.meta.requestStatus будет "fulfilled" если запрос успешен
-      if (result.meta.requestStatus !== 'fulfilled' || !result.payload) {
-        // Если данные пользователя не получены, выполняем refresh и пробуем снова
-        await dispatch(refresh());
-        await dispatch(getCurrentUser());
-      }
-    };
-
-    fetchUserData();
-  }, [accessToken, dispatch]);
 
   useEffect(() => {
     if (slug) {
@@ -61,6 +46,24 @@ const DetailComicsPage: React.FC = () => {
         .catch((error) => {
           console.error('Error fetching rating:', error);
           setValue((prevValue) => (prevValue === 0 ? 0 : 0));
+        });
+    }
+  }, [dispatch, book]);
+
+  useEffect(() => {
+    if (book && book.id) {
+      dispatch(getBookmarks({ book_id: book.id }))
+        .unwrap()
+        .then((bookmarks: Array<{ book_id: number; mark: string }>) => {
+          // Проверяем наличие закладок и устанавливаем соответствующие состояния
+          const hasRecommend = bookmarks.some((bookmark) => bookmark.mark === 'Рекомендую');
+          const hasWillRead = bookmarks.some((bookmark) => bookmark.mark === 'Буду читать');
+
+          setIsBookmarked(hasRecommend);
+          setIsFavorited(hasWillRead);
+        })
+        .catch((error) => {
+          console.error('Error fetching bookmarks:', error);
         });
     }
   }, [dispatch, book]);
@@ -93,13 +96,77 @@ const DetailComicsPage: React.FC = () => {
       });
   };
 
-  console.log(book.author);
+  const handleBookmark = () => {
+    if (!user) {
+      alert('Авторизируйтесть!');
+      return;
+    }
+
+    if (book) {
+      if (isBookmarked) {
+        dispatch(deleteBookmark({ book_id: book.id, mark: 'Рекомендую' }))
+          .unwrap()
+          .then(() => {
+            setIsBookmarked(false);
+            // Обновляем данные книги для получения нового количества закладок
+            dispatch(getBookOnSlug({ slug: book.slug }));
+          })
+          .catch((error) => {
+            console.error('Error removing bookmark:', error);
+          });
+      } else {
+        dispatch(addBookmark({ book_id: book.id, mark: 'Рекомендую' }))
+          .unwrap()
+          .then(() => {
+            setIsBookmarked(true);
+            // Обновляем данные книги для получения нового количества закладок
+            dispatch(getBookOnSlug({ slug: book.slug }));
+          })
+          .catch((error) => {
+            console.error('Error adding bookmark:', error);
+          });
+      }
+    }
+  };
+
+  const handleFavorite = () => {
+    if (!user) {
+      alert('Авторизируйтесть!');
+      return;
+    }
+
+    if (book) {
+      if (isFavorited) {
+        dispatch(deleteBookmark({ book_id: book.id, mark: 'Буду читать' }))
+          .unwrap()
+          .then(() => {
+            setIsFavorited(false);
+            // Обновляем данные книги для получения нового количества закладок
+            dispatch(getBookOnSlug({ slug: book.slug }));
+          })
+          .catch((error) => {
+            console.error('Error removing favorite:', error);
+          });
+      } else {
+        dispatch(addBookmark({ book_id: book.id, mark: 'Буду читать' }))
+          .unwrap()
+          .then(() => {
+            setIsFavorited(true);
+            // Обновляем данные книги для получения нового количества закладок
+            dispatch(getBookOnSlug({ slug: book.slug }));
+          })
+          .catch((error) => {
+            console.error('Error adding favorite:', error);
+          });
+      }
+    }
+  };
 
   return (
     <div className={styles.page}>
       <nav className={styles.header}>
         <div className={styles.header__back}>
-          <BackButton onClick={() => navigate(routerUrls.catalog.mask)} />
+          <BackButton onClick={() => navigate(-1)} />
         </div>
         <div className={styles.header__bookmark}>
           <p>Добавить в закладки</p>
@@ -116,12 +183,24 @@ const DetailComicsPage: React.FC = () => {
         </section>
         <section className={styles.info__author}>
           <img src={book.author.avatar} alt="Фото автора" className={styles.info__authorAvatar} />
-          <p>{book.author.username}</p>
+          <p>
+            <Link to={routerUrls.public_profile.create(book.author.username)}>{book.author.username}</Link>
+          </p>
         </section>
       </div>
       <div className={styles.info__stats}>
-        <p className={`${styles.info__stat} ${styles['info__stat--likes']}`}>140</p>
-        <p className={`${styles.info__stat} ${styles['info__stat--favorites']}`}>{book.favourites_count}</p>
+        <p
+          className={`${styles.info__stat} ${styles['info__stat--likes']} ${isBookmarked ? styles.active : ''}`}
+          onClick={handleBookmark}
+        >
+          {book.favourites_count}
+        </p>
+        <p
+          className={`${styles.info__stat} ${styles['info__stat--favorites']} ${isFavorited ? styles.active : ''}`}
+          onClick={handleFavorite}
+        >
+          {book.favourites_count}
+        </p>
         <p className={`${styles.info__stat} ${styles['info__stat--books']}`}>{book.views_count}</p>
       </div>
       {user && (

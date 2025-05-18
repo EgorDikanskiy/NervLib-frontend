@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { apiRoutes } from 'config/apiRoutes';
+import axiosInstance from '../config/axios';
 
 export const getBooks = createAsyncThunk(
   'books/',
@@ -10,7 +11,7 @@ export const getBooks = createAsyncThunk(
       order?: 'asc' | 'desc';
       genreId?: number;
       title?: string;
-      authorId?: string;
+      authorId?: number;
       slug?: string;
     },
     { rejectWithValue },
@@ -26,7 +27,7 @@ export const getBooks = createAsyncThunk(
         if (params.order) searchParams.append('order', params.order);
         if (params.genreId) searchParams.append('genre_id', params.genreId.toString());
         if (params.title) searchParams.append('title', params.title);
-        if (params.authorId) searchParams.append('author_id', params.authorId);
+        if (params.authorId) searchParams.append('author_id', params.authorId.toString());
 
         if (Array.from(searchParams).length > 0) {
           url.search = searchParams.toString();
@@ -165,3 +166,141 @@ export const editBook = createAsyncThunk(
     }
   },
 );
+
+export const addBookmark = createAsyncThunk(
+  'books/addBookmark',
+  async (data: { book_id: number; mark: string }, { rejectWithValue }) => {
+    try {
+      const accessToken = localStorage.getItem('access_token');
+      const response = await axiosInstance.post(apiRoutes.bookmarks, data, {
+        headers: {
+          'Content-Type': 'application/json',
+          accept: 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          return rejectWithValue(error.response.data);
+        }
+        return rejectWithValue(error.message);
+      }
+
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue('Произошла ошибка');
+    }
+  },
+);
+
+export const deleteBookmark = createAsyncThunk(
+  'books/deleteBookmark',
+  async (data: { book_id: number; mark: string }, { rejectWithValue }) => {
+    try {
+      const accessToken = localStorage.getItem('access_token');
+      const response = await axios.delete(apiRoutes.bookmarks, {
+        headers: {
+          'Content-Type': 'application/json',
+          accept: 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        data,
+      });
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          return rejectWithValue(error.response.data);
+        }
+        return rejectWithValue(error.message);
+      }
+
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue('Произошла ошибка');
+    }
+  },
+);
+
+export const getBookmarks = createAsyncThunk(
+  'books/getBookmarks',
+  async ({ book_id }: { book_id: number }, { rejectWithValue }) => {
+    try {
+      const accessToken = localStorage.getItem('access_token');
+      const response = await axiosInstance.get(`/bookmarks/${book_id}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          accept: 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          return rejectWithValue(error.response.data);
+        }
+        return rejectWithValue(error.message);
+      }
+
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue('Произошла ошибка');
+    }
+  },
+);
+
+export const getAllBookmarks = createAsyncThunk('books/getAllBookmarks', async (_, { rejectWithValue }) => {
+  try {
+    const accessToken = localStorage.getItem('access_token');
+    const response = await axiosInstance.get('/bookmarks', {
+      headers: {
+        'Content-Type': 'application/json',
+        accept: 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        return rejectWithValue(error.response.data);
+      }
+      return rejectWithValue(error.message);
+    }
+
+    if (error instanceof Error) {
+      return rejectWithValue(error.message);
+    }
+    return rejectWithValue('Произошла ошибка');
+  }
+});
+
+export const getBookById = createAsyncThunk('books/getBookById', async (book_id: number, { rejectWithValue }) => {
+  try {
+    const response = await axiosInstance.get(`/books/id/${book_id}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        accept: 'application/json',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        return rejectWithValue(error.response.data);
+      }
+      return rejectWithValue(error.message);
+    }
+
+    if (error instanceof Error) {
+      return rejectWithValue(error.message);
+    }
+    return rejectWithValue('Произошла ошибка');
+  }
+});

@@ -11,6 +11,7 @@ import {
 } from '../actions/profileActions';
 
 interface Profile {
+  id: number;
   username: string;
   avatar: string;
   is_author: boolean;

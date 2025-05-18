@@ -16,3 +16,18 @@
   flex-direction: column;
   gap: 2rem;
 }
+
+.bannerSection {
+  margin: 2rem 0;
+}
+
+.bannerWrapper {
+  position: relative;
+  text-align: center;
+}
+
+.bannerImage {
+  width: 100%;
+  border-radius: 18px;
+  object-fit: cover;
+}

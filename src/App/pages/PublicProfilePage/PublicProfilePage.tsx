@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import { getBooks } from 'actions/bookActions';
 import HorizontalScroll from 'components/HorizontalScroll';
 import Loader from 'components/Loader';
 import MiniCard from 'components/ui/MiniCard';
@@ -116,6 +117,7 @@ const PublicProfilePage = () => {
   let gender = 'Не указан';
   const { user } = useSelector((state: RootState) => state.auth);
   const accessToken = useSelector((state: RootState) => state.auth.accessToken) || localStorage.getItem('access_token');
+  const { books } = useSelector((state: RootState) => state.books);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -151,6 +153,12 @@ const PublicProfilePage = () => {
       dispatch(checkFans(username));
     }
   }, [dispatch, username, user]);
+
+  useEffect(() => {
+    if (profile) {
+      dispatch(getBooks({ authorId: profile.id }));
+    }
+  }, [dispatch, profile]);
 
   const is_self = username == user?.username;
 
@@ -319,16 +327,16 @@ const PublicProfilePage = () => {
         <p className={styles.profile__info__contacts__title}>Контакты:</p>
         <p className={styles.profile__info__contacts__subtitle}>E-mail: pochta99@mail.ru</p>
       </section>
-      {profile.is_author && (
+      {profile.is_author && books.length > 0 && (
         <section className={styles.comicsBlock}>
           <div className={styles.comicsBlock__header}>
-            <p>Мои книги:</p>
+            <p>Работы автора:</p>
             <a className={styles.comicsBlock__header__all}>Смотреть всё</a>
           </div>
           <HorizontalScroll>
             <div className={styles.comicsBlock__content}>
-              {cards.map((item, i) => (
-                <MiniCard {...item} key={i} />
+              {books.map((item, i) => (
+                <MiniCard title={item.title} rate={item.ratings_average.toFixed(1)} imgSrc={item.poster_url} key={i} />
               ))}
             </div>
           </HorizontalScroll>

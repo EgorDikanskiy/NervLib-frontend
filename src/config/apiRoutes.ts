@@ -14,4 +14,5 @@ export const apiRoutes = {
   genres: createApiRoute('/genres'),
   ratings: createApiRoute('/ratings'),
   tags: createApiRoute('/tags'),
+  bookmarks: createApiRoute('/bookmarks'),
 };

@@ -4,14 +4,22 @@
 .navigation {
     display: flex;
     justify-content: space-around;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 
     &__item {
         @extend .regular16;
         padding-bottom: 4px;
-    }
+        cursor: pointer;
 
-    &__item:active {
-        color: $purple-main;
-        border-bottom: 1px solid $purple-main;
+        &.active {
+            color: $purple-main;
+            border-bottom: 1px solid $purple-main;
+        }
+
+        p {
+            margin: 0;
+        }
     }
 }
