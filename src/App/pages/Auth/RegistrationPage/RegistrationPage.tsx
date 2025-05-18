@@ -57,6 +57,8 @@ const Registration = () => {
 
     if (registerUser.fulfilled.match(result)) {
       navigate('/confirm_mail');
+    } else if (registerUser.rejected.match(result)) {
+      console.log('Registration failed:', result.payload);
     }
   };
 
@@ -140,11 +142,13 @@ const Registration = () => {
         />
 
         {passwordError && <p style={{ color: 'red' }}>{passwordError}</p>}
-        {error && Array.isArray(error) && (
+        {error && (
           <div style={{ color: 'red' }}>
-            {error.map((msg: string, index: number) => (
-              <p key={index}>{msg}</p>
-            ))}
+            {typeof error === 'string' ? (
+              <p>{error}</p>
+            ) : Array.isArray(error) ? (
+              (error as string[]).map((msg: string, index: number) => <p key={index}>{msg}</p>)
+            ) : null}
           </div>
         )}
 

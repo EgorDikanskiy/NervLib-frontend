@@ -41,6 +41,8 @@ const LoginPage = () => {
 
     if (login.fulfilled.match(result)) {
       navigate(routerUrls.profile.mask);
+    } else if (login.rejected.match(result)) {
+      console.log('Login failed:', result.payload);
     }
   };
 
@@ -79,7 +81,15 @@ const LoginPage = () => {
         <Button className={styles.form__button} type="submit" disabled={loading}>
           Войти
         </Button>
-        {isSubmitted && error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && (
+          <div style={{ color: 'red' }}>
+            {typeof error === 'string' ? (
+              <p>{error}</p>
+            ) : Array.isArray(error) ? (
+              (error as string[]).map((msg: string, index: number) => <p key={index}>{msg}</p>)
+            ) : null}
+          </div>
+        )}
       </form>
       <p className={styles.text}>
         Нет аккаунта?{' '}

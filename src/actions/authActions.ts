@@ -35,7 +35,7 @@ export const registerUser = createAsyncThunk(
       const { access_token } = response.data;
       localStorage.setItem('access_token', access_token);
       return response.data;
-    } catch (error) {
+    } catch (error: unknown) {
       return rejectWithValue(formatError(error as AuthError));
     }
   },
@@ -49,7 +49,7 @@ export const login = createAsyncThunk(
       const { access_token } = response.data;
       localStorage.setItem('access_token', access_token);
       return response.data;
-    } catch (error) {
+    } catch (error: unknown) {
       return rejectWithValue(formatError(error as AuthError));
     }
   },
