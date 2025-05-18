@@ -14,6 +14,7 @@ interface Book {
   description: string;
   poster_url: string;
   age_rating: string;
+  ratings_average: number;
   views_count: number;
   chapter_count: number;
   favourites_count: number;
@@ -41,7 +42,7 @@ const Catalog = () => {
         {books.map((book: Book) => (
           <div key={book.id}>
             <Link to={routerUrls.book_detail.create(book.slug)}>
-              <Card title={book.title} rate={book.favourites_count} imgSrc={book.poster_url} />
+              <Card title={book.title} rate={book.ratings_average} imgSrc={book.poster_url} />
             </Link>
           </div>
         ))}

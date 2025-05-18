@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getBooks, getAllBookmarks, getBookById } from 'actions/bookActions';
 import HorizontalScroll from 'components/HorizontalScroll';
 import Loader from 'components/Loader';
@@ -18,6 +18,7 @@ interface Book {
   title: string;
   ratings_average: number;
   poster_url: string;
+  slug: string;
 }
 
 interface Bookmark {
@@ -281,7 +282,9 @@ const ProfilePage = () => {
           <HorizontalScroll>
             <div className={styles.comicsBlock__content}>
               {books.map((item, i) => (
-                <MiniCard title={item.title} rate={item.ratings_average.toFixed(1)} imgSrc={item.poster_url} key={i} />
+                <Link to={routerUrls.book_detail.create(item.slug)} key={i}>
+                  <MiniCard title={item.title} rate={item.ratings_average.toFixed(1)} imgSrc={item.poster_url} />
+                </Link>
               ))}
             </div>
           </HorizontalScroll>
@@ -297,7 +300,9 @@ const ProfilePage = () => {
         <HorizontalScroll>
           <div className={styles.comicsBlock__content}>
             {recommendedBooks.map((book, i) => (
-              <MiniCard key={i} title={book.title} rate={book.ratings_average.toFixed(1)} imgSrc={book.poster_url} />
+              <Link to={routerUrls.book_detail.create(book.slug)} key={i}>
+                <MiniCard title={book.title} rate={book.ratings_average.toFixed(1)} imgSrc={book.poster_url} />
+              </Link>
             ))}
           </div>
         </HorizontalScroll>
@@ -312,7 +317,9 @@ const ProfilePage = () => {
         <HorizontalScroll>
           <div className={styles.comicsBlock__content}>
             {willReadBooks.map((book, i) => (
-              <MiniCard key={i} title={book.title} rate={book.ratings_average.toFixed(1)} imgSrc={book.poster_url} />
+              <Link to={routerUrls.book_detail.create(book.slug)} key={i}>
+                <MiniCard title={book.title} rate={book.ratings_average.toFixed(1)} imgSrc={book.poster_url} />
+              </Link>
             ))}
           </div>
         </HorizontalScroll>
