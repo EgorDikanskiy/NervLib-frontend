@@ -1,34 +1,77 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { getAllBookmarks, getBookById } from 'actions/bookActions';
+import Loader from 'components/Loader';
 import Card from 'components/ui/Card';
 import { routerUrls } from 'config/routerUrls';
-import Navigation from './components/Navigation';
+import { AppDispatch, RootState } from 'store';
+import Navigation, { BookmarkSection } from './components/Navigation';
 import styles from './BookmarksPage.module.scss';
 
-const books = [
-  {
-    id: 1,
-    title: 'Книга 1',
-    rate: 4.5,
-  },
-  {
-    id: 2,
-    title: 'Книга 2',
-    rate: 4.5,
-  },
-  {
-    id: 3,
-    title: 'Книга 3',
-    rate: 4.5,
-  },
-  {
-    id: 4,
-    title: 'Книга 4',
-    rate: 4.5,
-  },
-];
+interface Book {
+  id: number;
+  title: string;
+  ratings_average: number;
+  poster_url: string;
+  slug: string;
+}
+
+interface Bookmark {
+  book_id: number;
+  mark: string;
+}
 
 const BookMarksPage = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { user } = useSelector((state: RootState) => state.auth);
+  const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
+  const [books, setBooks] = useState<Book[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [activeSection, setActiveSection] = useState<BookmarkSection>('all');
+
+  useEffect(() => {
+    if (user) {
+      dispatch(getAllBookmarks())
+        .unwrap()
+        .then((data: Bookmark[]) => {
+          setBookmarks(data);
+          // Получаем книги для каждой закладки
+          const bookPromises = data.map((bookmark) => dispatch(getBookById(bookmark.book_id)));
+          Promise.all(bookPromises).then((results) => {
+            // Удаляем дубликаты книг, оставляя только уникальные по id
+            const uniqueBooks = results
+              .map((result) => result.payload as Book)
+              .filter((book, index, self) => index === self.findIndex((b) => b.id === book.id));
+            setBooks(uniqueBooks);
+            setLoading(false);
+          });
+        })
+        .catch((error) => {
+          console.error('Error fetching bookmarks:', error);
+          setLoading(false);
+        });
+    }
+  }, [dispatch, user]);
+
+  const getFilteredBooks = () => {
+    if (activeSection === 'all') return books;
+
+    const markMap: Record<Exclude<BookmarkSection, 'all'>, string> = {
+      reading: 'Рекомендую',
+      will_read: 'Буду читать',
+      read: 'Прочитано',
+    };
+
+    return books.filter((book) =>
+      bookmarks.some(
+        (b) => b.book_id === book.id && b.mark === markMap[activeSection as Exclude<BookmarkSection, 'all'>],
+      ),
+    );
+  };
+
+  if (loading) return <Loader />;
+
   return (
     <div>
       <section className={styles.header}>
@@ -41,17 +84,13 @@ const BookMarksPage = () => {
           />
         </svg>
       </section>
-      <Navigation />
+      <Navigation activeSection={activeSection} onSectionChange={setActiveSection} />
       <div className={styles.catalog}>
         <div className={styles.books}>
-          {books.map((book) => (
+          {getFilteredBooks().map((book) => (
             <div key={book.id}>
-              <Link to={routerUrls.book_detail.create(book.id.toString())}>
-                <Card
-                  title={book.title}
-                  rate={book.rate}
-                  imgSrc="https://img.freepik.com/free-photo/smooth-gray-background_53876-108462.jpg?t=st=1746548927~exp=1746552527~hmac=07c7bf0e697ccc8d00ee694e4d9c80858a7e29294106d1ff074dcea6c213d50c"
-                />
+              <Link to={routerUrls.book_detail.create(book.slug)}>
+                <Card title={book.title} rate={Number(book.ratings_average.toFixed(1))} imgSrc={book.poster_url} />
               </Link>
             </div>
           ))}

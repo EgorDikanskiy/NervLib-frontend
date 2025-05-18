@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { apiRoutes } from 'config/apiRoutes';
+import axiosInstance from '../config/axios';
 
 export const getProfile = createAsyncThunk(
   'profile/getProfile',
@@ -9,7 +10,7 @@ export const getProfile = createAsyncThunk(
       let response;
       if (profileData.with_token) {
         const accessToken = localStorage.getItem('access_token');
-        response = await axios.get(`${apiRoutes.profile}/${encodeURIComponent(profileData.username)}`, {
+        response = await axiosInstance.get(`${apiRoutes.profile}/${encodeURIComponent(profileData.username)}`, {
           headers: {
             accept: 'application/json',
             'Content-Type': 'application/json',
@@ -17,7 +18,7 @@ export const getProfile = createAsyncThunk(
           },
         });
       } else {
-        response = await axios.get(`${apiRoutes.profile}/${encodeURIComponent(profileData.username)}`, {
+        response = await axiosInstance.get(`${apiRoutes.profile}/${encodeURIComponent(profileData.username)}`, {
           headers: {
             accept: 'application/json',
           },
@@ -52,7 +53,7 @@ export const updateProfile = createAsyncThunk(
   ) => {
     try {
       const accessToken = localStorage.getItem('access_token');
-      const response = await axios.patch(apiRoutes.profile, payload.data, {
+      const response = await axiosInstance.patch(apiRoutes.profile, payload.data, {
         headers: {
           accept: 'application/json',
           'Content-Type': 'application/json',
@@ -75,12 +76,15 @@ export const checkSubscription = createAsyncThunk(
   async (author_username: string, { rejectWithValue }) => {
     try {
       const accessToken = localStorage.getItem('access_token');
-      const response = await axios.get(`${apiRoutes.profile}/subscribe/${encodeURIComponent(author_username)}`, {
-        headers: {
-          accept: 'application/json',
-          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
+      const response = await axiosInstance.get(
+        `${apiRoutes.profile}/subscribe/${encodeURIComponent(author_username)}`,
+        {
+          headers: {
+            accept: 'application/json',
+            ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
+          },
         },
-      });
+      );
       return response.data;
     } catch (error) {
       if (error.response && error.response.data) {
@@ -97,7 +101,7 @@ export const subscribeToAuthor = createAsyncThunk(
   async (author_username: string, { rejectWithValue }) => {
     try {
       const accessToken = localStorage.getItem('access_token');
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `${apiRoutes.profile}/subscribe/${encodeURIComponent(author_username)}`,
         null, // POST-запрос без тела
         {
@@ -124,12 +128,15 @@ export const unsubscribeFromAuthor = createAsyncThunk(
   async (author_username: string, { rejectWithValue }) => {
     try {
       const accessToken = localStorage.getItem('access_token');
-      const response = await axios.delete(`${apiRoutes.profile}/subscribe/${encodeURIComponent(author_username)}`, {
-        headers: {
-          accept: 'application/json',
-          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
+      const response = await axiosInstance.delete(
+        `${apiRoutes.profile}/subscribe/${encodeURIComponent(author_username)}`,
+        {
+          headers: {
+            accept: 'application/json',
+            ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
+          },
         },
-      });
+      );
       return response.data;
     } catch (error) {
       if (error.response && error.response.data) {
@@ -144,7 +151,7 @@ export const unsubscribeFromAuthor = createAsyncThunk(
 export const checkFans = createAsyncThunk('profile/checkFans', async (author_username: string, { rejectWithValue }) => {
   try {
     const accessToken = localStorage.getItem('access_token');
-    const response = await axios.get(`${apiRoutes.profile}/fans/${encodeURIComponent(author_username)}`, {
+    const response = await axiosInstance.get(`${apiRoutes.profile}/fans/${encodeURIComponent(author_username)}`, {
       headers: {
         accept: 'application/json',
         ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
@@ -165,7 +172,7 @@ export const fansToAuthor = createAsyncThunk(
   async (author_username: string, { rejectWithValue }) => {
     try {
       const accessToken = localStorage.getItem('access_token');
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `${apiRoutes.profile}/fans/${encodeURIComponent(author_username)}`,
         null, // POST-запрос без тела
         {
@@ -192,7 +199,7 @@ export const unfansFromAuthor = createAsyncThunk(
   async (author_username: string, { rejectWithValue }) => {
     try {
       const accessToken = localStorage.getItem('access_token');
-      const response = await axios.delete(`${apiRoutes.profile}/fans/${encodeURIComponent(author_username)}`, {
+      const response = await axiosInstance.delete(`${apiRoutes.profile}/fans/${encodeURIComponent(author_username)}`, {
         headers: {
           accept: 'application/json',
           ...(accessToken && { Authorization: `Bearer ${accessToken}` }),

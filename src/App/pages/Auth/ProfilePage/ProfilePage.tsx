@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { getBooks } from 'actions/bookActions';
+import { getBooks, getAllBookmarks, getBookById } from 'actions/bookActions';
 import HorizontalScroll from 'components/HorizontalScroll';
 import Loader from 'components/Loader';
 import MiniCard from 'components/ui/MiniCard';
@@ -12,6 +12,18 @@ import { getProfile } from '../../../../actions/profileActions';
 import { logout } from '../../../../reducers/authReducer';
 import ProfileInfoItem from '../components/ProfileInfoItem/ProfileInfoItem';
 import styles from './ProfilePage.module.scss';
+
+interface Book {
+  id: number;
+  title: string;
+  ratings_average: number;
+  poster_url: string;
+}
+
+interface Bookmark {
+  book_id: number;
+  mark: string;
+}
 
 const cards = [
   {
@@ -90,6 +102,10 @@ const ProfilePage = () => {
   const { profile, loading, error } = useSelector((state: RootState) => state.profile);
   const { user } = useSelector((state: RootState) => state.auth);
   const { books } = useSelector((state: RootState) => state.books);
+  const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
+  const [recommendedBooks, setRecommendedBooks] = useState<Book[]>([]);
+  const [willReadBooks, setWillReadBooks] = useState<Book[]>([]);
+  const [readBooks, setReadBooks] = useState<Book[]>([]);
   let gender = 'Не указан';
 
   useEffect(() => {
@@ -104,11 +120,55 @@ const ProfilePage = () => {
     }
   }, [dispatch, profile]);
 
+  useEffect(() => {
+    if (user) {
+      dispatch(getAllBookmarks())
+        .unwrap()
+        .then((data: Bookmark[]) => {
+          setBookmarks(data);
+          // Получаем книги для каждой закладки
+          const bookPromises = data.map((bookmark) => dispatch(getBookById(bookmark.book_id)));
+          Promise.all(bookPromises).then((results) => {
+            // Удаляем дубликаты книг, оставляя только уникальные по id
+            const allBooks = results
+              .map((result) => result.payload as Book)
+              .filter((book, index, self) => index === self.findIndex((b) => b.id === book.id));
+
+            console.log('All bookmarks:', data);
+            console.log('All books:', allBooks);
+
+            // Разделяем книги по категориям в соответствии с типом закладки
+            const recommended = allBooks.filter((book) =>
+              data.some((b) => b.book_id === book.id && b.mark === 'Рекомендую'),
+            );
+            const willRead = allBooks.filter((book) =>
+              data.some((b) => b.book_id === book.id && b.mark === 'Буду читать'),
+            );
+            const read = allBooks.filter((book) => data.some((b) => b.book_id === book.id && b.mark === 'Прочитано'));
+
+            console.log('Recommended books:', recommended);
+            console.log('Will read books:', willRead);
+            console.log('Read books:', read);
+
+            setRecommendedBooks(recommended);
+            setWillReadBooks(willRead);
+            setReadBooks(read);
+          });
+        })
+        .catch((error) => {
+          console.error('Error fetching bookmarks:', error);
+        });
+    }
+  }, [dispatch, user]);
+
   const handleLogout = () => {
     dispatch(logout());
     navigate(routerUrls.login.mask);
   };
 
+  if (!user) {
+    navigate('/confirm_mail');
+  }
   if (loading) return <Loader />;
   if (error) return <div>Ошибка: {error}</div>;
   if (!profile) return <div>Профиль не найден</div>;
@@ -118,10 +178,10 @@ const ProfilePage = () => {
       gender = 'Мужской';
       break;
     case 'female':
-      gender = 'Мужской';
+      gender = 'Женский';
       break;
     case 'unspecified':
-      gender = 'не указан';
+      gender = 'Не указан';
       break;
   }
 
@@ -217,7 +277,6 @@ const ProfilePage = () => {
         <section className={styles.comicsBlock}>
           <div className={styles.comicsBlock__header}>
             <p>Мои книги:</p>
-            <a className={styles.comicsBlock__header__all}>Смотреть всё</a>
           </div>
           <HorizontalScroll>
             <div className={styles.comicsBlock__content}>
@@ -230,26 +289,15 @@ const ProfilePage = () => {
       )}
       <section className={styles.comicsBlock}>
         <div className={styles.comicsBlock__header}>
-          <p>Чиитаю сейчас:</p>
-          <a className={styles.comicsBlock__header__all}>Смотреть всё</a>
-        </div>
-        <HorizontalScroll>
-          <div className={styles.comicsBlock__content}>
-            {cards.map((item, i) => (
-              <MiniCard {...item} key={i} />
-            ))}
-          </div>
-        </HorizontalScroll>
-      </section>
-      <section className={styles.comicsBlock}>
-        <div className={styles.comicsBlock__header}>
           <p>Рекомендую: </p>
-          <a className={styles.comicsBlock__header__all}>Смотреть всё</a>
+          <a className={styles.comicsBlock__header__all} onClick={() => navigate(routerUrls.bookmarks.mask)}>
+            Смотреть всё
+          </a>
         </div>
         <HorizontalScroll>
           <div className={styles.comicsBlock__content}>
-            {cards.map((item, i) => (
-              <MiniCard {...item} key={i} />
+            {recommendedBooks.map((book, i) => (
+              <MiniCard key={i} title={book.title} rate={book.ratings_average.toFixed(1)} imgSrc={book.poster_url} />
             ))}
           </div>
         </HorizontalScroll>
@@ -257,25 +305,14 @@ const ProfilePage = () => {
       <section className={styles.comicsBlock}>
         <div className={styles.comicsBlock__header}>
           <p>Закладки: </p>
-          <a className={styles.comicsBlock__header__all}>Смотреть всё</a>
+          <a className={styles.comicsBlock__header__all} onClick={() => navigate(routerUrls.bookmarks.mask)}>
+            Смотреть всё
+          </a>
         </div>
         <HorizontalScroll>
           <div className={styles.comicsBlock__content}>
-            {cards.map((item, i) => (
-              <MiniCard {...item} key={i} />
-            ))}
-          </div>
-        </HorizontalScroll>
-      </section>
-      <section className={styles.comicsBlock}>
-        <div className={styles.comicsBlock__header}>
-          <p>Прочитал: </p>
-          <a className={styles.comicsBlock__header__all}>Смотреть всё</a>
-        </div>
-        <HorizontalScroll>
-          <div className={styles.comicsBlock__content}>
-            {cards.map((item, i) => (
-              <MiniCard {...item} key={i} />
+            {willReadBooks.map((book, i) => (
+              <MiniCard key={i} title={book.title} rate={book.ratings_average.toFixed(1)} imgSrc={book.poster_url} />
             ))}
           </div>
         </HorizontalScroll>

@@ -90,11 +90,6 @@ const cards = [
     rate: '4.5',
     imgSrc: './test.png',
   },
-  {
-    title: 'имя',
-    rate: '4.5',
-    imgSrc: './test.png',
-  },
 ];
 
 const HomePage = () => {
@@ -111,6 +106,13 @@ const HomePage = () => {
         <h2 className={styles.title}>Главная</h2>
         <Search />
       </section>
+      <Link to="/comics/nervlib">
+        <section className={styles.bannerSection}>
+          <div className={styles.bannerWrapper}>
+            <img src="https://i.postimg.cc/HxmzQ0Gk/banner.png" alt="Баннер" className={styles.bannerImage} />
+          </div>
+        </section>
+      </Link>
 
       <section>
         <div>
