@@ -2,67 +2,45 @@ import React, { useState, useRef, useCallback, useEffect } from 'react';
 import styles from './MultipleImagesInput.module.scss';
 
 interface MultipleImagesInputProps {
-  onChange: (files: File[] | null) => void;
-  value?: File[] | null;
+  onChange: (files: File) => void;
 }
-const MultipleImagesInput: React.FC<MultipleImagesInputProps> = ({ onChange, value }) => {
-  // const [files, setFiles] = useState<File[]>(value || []);
-  const [previews, setPreviews] = useState<string[]>(() => {
-    if (value) {
-      return value.map((file) => URL.createObjectURL(file));
-    }
-    return [];
-  });
+const MultipleImagesInput: React.FC<MultipleImagesInputProps> = ({ onChange }) => {
+  const [preview, setPreview] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
 
-  const handleFiles = useCallback(
-    (newFiles: FileList | File[]) => {
-      const filesArray = Array.from(newFiles);
-
-      const newPreviews = filesArray.map((file) => URL.createObjectURL(file));
-      setPreviews(newPreviews);
-      onChange(filesArray);
+  const handleFile = useCallback(
+    (file: File) => {
+      const reader = new FileReader();
+      reader.onload = (e) => setPreview((prev) => [...prev, e.target?.result as string]);
+      reader.readAsDataURL(file);
+      onChange(file);
     },
     [onChange],
   );
+
   const selectFiles = () => {
     fileInputRef.current?.click();
   };
 
-  const deleteImage = (index: number) => {
-    if (!value) return;
-
-    const updatedFiles = value.filter((_, i) => i !== index);
-    const result = updatedFiles.length > 0 ? updatedFiles : null;
-    onChange(result); // Передаём обновлённый массив в родитель
-  };
-
   const onFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    if (files?.length) handleFiles(files);
+    if (!files) return;
+    handleFile(Array.from(files).slice(-1)[0]);
+  };
+
+  const deleteImage = (index: number) => {
+    setPreview((prev) => prev.filter((_, i) => i !== index));
   };
 
   const onDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     setIsDragging(false);
     const files = event.dataTransfer.files;
-    if (files?.length) handleFiles(files);
+    if (!files?.[0]) return;
+    handleFile(files[0]);
   };
 
-  useEffect(() => {
-    if (value) {
-      setPreviews(value.map((file) => URL.createObjectURL(file)));
-    } else {
-      setPreviews([]);
-    }
-  }, [value]);
-
-  useEffect(() => {
-    return () => {
-      previews.forEach((url) => URL.revokeObjectURL(url));
-    };
-  }, [previews]);
   return (
     <>
       <div className={styles.card}>
@@ -77,7 +55,10 @@ const MultipleImagesInput: React.FC<MultipleImagesInputProps> = ({ onChange, val
             e.preventDefault();
             setIsDragging(false);
           }}
-          onDrop={onDrop}
+          onDrop={(e) => {
+            onDrop(e);
+            setIsDragging(false);
+          }}
         >
           <div className={styles.container}>
             <div className={styles.text}>
@@ -99,16 +80,18 @@ const MultipleImagesInput: React.FC<MultipleImagesInputProps> = ({ onChange, val
           />
         </div>
       </div>
-      <div className={styles.preview_container}>
-        {previews.map((previewUrl, index) => (
-          <div className={styles.image} key={index}>
-            <span className={styles.delete} onClick={() => deleteImage(index)}>
-              &times;
-            </span>
-            <img src={previewUrl} alt="Preview" />
-          </div>
-        ))}
-      </div>
+      {preview?.length != 0 && (
+        <div className={styles.preview_container}>
+          {preview?.map((image, index) => (
+            <div className={styles.image} key={index}>
+              <span className={styles.delete} onClick={() => deleteImage(index)}>
+                &times;
+              </span>
+              <img src={image} alt="" />
+            </div>
+          ))}
+        </div>
+      )}
     </>
   );
 };

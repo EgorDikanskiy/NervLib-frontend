@@ -3,10 +3,9 @@ import styles from './ImageInput.module.scss';
 
 interface ImageInputProps {
   onChange: (file: File | null) => void;
-  value?: File | null;
 }
 
-const ImageInput: React.FC<ImageInputProps> = ({ onChange, value }) => {
+const ImageInput: React.FC<ImageInputProps> = ({ onChange }) => {
   const [preview, setPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);

@@ -107,7 +107,7 @@ const AddComicsPage = () => {
 
       <form onSubmit={handleSubmit} className={style.comicForm}>
         <div>
-          <ImageInput onChange={(file) => setFormData((prev) => ({ ...prev, poster: file }))} value={formData.poster} />
+          <ImageInput onChange={(file) => setFormData((prev) => ({ ...prev, poster: file }))} />
           {errors?.poster && <span className={style.comicForm__error}>{errors.poster._errors.join(', ')}</span>}
         </div>
 

@@ -1,78 +1,50 @@
 @use "styles/variables.scss" as *;
 @use "styles/mixin.scss";
+
 .card {
   width: 100%;
-  height: 100px;
+  height: 120px;
   box-shadow: 0 0 10px #0000004a;
   border-radius: 16px;
   position: relative;
 
   .drag_area {
     height: 100%;
-    border-radius: 5px;
-    display: flex;
-    justify-content: center;
-    user-select: none;
-
-    .visible {
-      font-size: 18px;
-    }
-  }
-
-  .container {
-    width: 100%;
-    height: 100%;
-    background-color: $black-50;
-    color: $white;
     border-radius: 16px;
+    display: flex;
+    align-items: center; // Центрируем по вертикали
+    justify-content: center; // Центрируем по горизонтали
+    user-select: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
 
-    .text {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      height: 100%;
-      text-align: center;
-      padding: 0 5px;
+    &:hover {
+      background-color: $black-10;
     }
 
-    .image {
+    .container {
       width: 100%;
       height: 100%;
-      object-fit: cover;
-      display: block;
-      overflow: hidden;
+      background-color: $black-50;
+      color: $white;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 5px;
 
-      img {
-        position: relative;
-        border-radius: 16px;
+      .text {
         width: 100%;
         height: 100%;
-        object-fit: cover;
-        display: block;
-      }
-
-      span {
-        position: absolute;
-        top: 4px;
-        right: 8px;
-        font-size: 20px;
-        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
     }
-  }
 
-  input {
-    display: none;
-  }
-
-  .drag_area {
-    .on_drop {
+    input {
       display: none;
-    }
-    .dragover {
-      .visible {
-        display: none;
-      }
     }
   }
 }
@@ -88,6 +60,8 @@
   position: relative;
   width: 100px;
   height: 100px;
+  border-radius: 4px;
+  overflow: hidden;
 
   img {
     width: 100%;
@@ -95,12 +69,22 @@
     object-fit: cover;
     border-radius: 4px;
   }
-}
 
-.delete {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  font-size: 1.2em;
-  cursor: pointer;
+  .delete {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 1.2em;
+    cursor: pointer;
+    z-index: 1000;
+    color: $black;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+  }
 }

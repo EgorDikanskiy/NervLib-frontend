@@ -37,7 +37,7 @@ const formDataSchema = z.object({
 
 type FormData = z.infer<typeof formDataSchema>;
 
-const initialFormState: Omit<FormData, 'poster'> & { poster: File[] | null } = {
+const initialFormState: Omit<FormData, 'poster'> & { poster: File[] } = {
   title: '',
   description: '',
   poster: [],
@@ -72,10 +72,13 @@ const AddChapterPage = () => {
   };
   return (
     <>
-      <div>
-        <h2>Глава</h2>
+      <div className={style.menu}>
+        <BackButton className={style.menu__back} onClick={() => navigate(routerUrls.profile.mask)} />
+        <div className={style.menu__header}>
+          <h2>Новая глава</h2>
+        </div>
       </div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className={style.chapterForm}>
         <div>
           <Input
             id="title"
@@ -100,13 +103,13 @@ const AddChapterPage = () => {
             onChange={(newFiles) => {
               setUserFormData((prev) => ({
                 ...prev,
-                poster: newFiles ? [...(prev.poster || []), ...newFiles] : [],
+                poster: newFiles ? [...(prev.poster || []), newFiles] : [],
               }));
             }}
-            value={formData.poster}
           />
           {errors?.poster && <span className={style.comicForm__error}>{errors.poster._errors.join(', ')}</span>}
         </div>
+        <Button type="submit">Добавить главу</Button>
       </form>
     </>
   );
