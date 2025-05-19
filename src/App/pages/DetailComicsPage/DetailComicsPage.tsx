@@ -267,8 +267,13 @@ const DetailComicsPage: React.FC = () => {
             </ul>
           </div>
         ) : (
-          <p className={styles.chapters__empty}>Главы не найдены</p>
+          <>
+            <p className={styles.chapters__empty}>Главы не найдены</p>
+          </>
         )}
+        <Link to={routerUrls.chapter_add.create(book.slug)}>
+          <Button>Добавить главу</Button>
+        </Link>
       </div>
     </div>
   );

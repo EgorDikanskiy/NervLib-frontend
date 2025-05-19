@@ -278,6 +278,11 @@
     }
   }
 
+  &__new {
+    text-align: center;
+    background-color: $purple-main;
+  }
+
   &__name {
     font-weight: bold;
     font-size: 1rem;
