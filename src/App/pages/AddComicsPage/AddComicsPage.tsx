@@ -95,6 +95,8 @@ const AddComicsPage = () => {
     { id: '16+', name: '16+' },
     { id: '18+', name: '18+' },
   ];
+  console.log(formData);
+  console.log(allGenres);
 
   return (
     <section className={style.container}>
@@ -136,13 +138,14 @@ const AddComicsPage = () => {
           <DropDownForm
             title="Жанр"
             options={allGenres}
-            value={formData.genre_id.toString()}
-            onChange={(e) =>
+            value={allGenres.filter((genre) => genre.id === formData.genre_id)[0]?.name || ''}
+            onChange={(e) => {
               setFormData((prev) => ({
                 ...prev,
                 genre_id: Number(e.target.value),
-              }))
-            }
+              }));
+              console.log(formData);
+            }}
           />
           {errors?.genre_id && <span className={style.comicForm__error}>{errors.genre_id._errors.join(', ')}</span>}
         </div>

@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { z } from 'zod';
-import ImageInput from 'components/ImageInput';
+import { getBooks } from 'actions/bookActions';
+import { postChapter } from 'actions/chapterActions';
 import MultipleImagesInput from 'components/MultipleImagesInput';
 import BackButton from 'components/ui/BackButton';
 import { Button } from 'components/ui/Button';
@@ -27,53 +28,87 @@ const formDataSchema = z.object({
     .min(50, 'Минимальная длина описания - 50 символов')
     .max(2000, 'Максимальная длина описания - 2000 символов'),
 
-  poster: z.array(
-    z
-      .instanceof(File)
-      .refine((file) => file.size <= MAX_FILE_SIZE, 'Файл слишком большой')
-      .refine((file) => ACCEPTED_IMAGE_TYPES.includes(file.type), 'Недопустимый формат файла'),
-  ),
+  images: z
+    .array(
+      z
+        .instanceof(File)
+        .refine((file) => file.size <= MAX_FILE_SIZE, 'Файл слишком большой')
+        .refine((file) => ACCEPTED_IMAGE_TYPES.includes(file.type), 'Недопустимый формат файла'),
+    )
+    .min(1, 'Должна быть хотя бы одна картинка'),
 });
 
 type FormData = z.infer<typeof formDataSchema>;
 
-const initialFormState: Omit<FormData, 'poster'> & { poster: File[] } = {
+const initialFormState: Omit<FormData, 'images'> & { images: File[] } = {
   title: '',
   description: '',
-  poster: [],
+  images: [],
 };
 
 const AddChapterPage = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const { slug } = useParams<{ slug: string }>();
+  const { books } = useSelector((state: RootState) => state.books);
+  const book = books.find((book) => book.slug === slug);
   const navigate = useNavigate();
-  const [userFromtData, setUserFormData] = useState<Partial<FormData>>({});
-  const [errors, setErrors] = useState<z.ZodFormattedError<FormData> | null>(null);
+  const [userFormtData, setUserFormData] = useState<Partial<FormData>>({});
+  const [isErrors, setIsErrors] = useState<z.ZodFormattedError<FormData> | null>(null);
 
   const formData = {
     ...initialFormState,
-    ...userFromtData,
+    ...userFormtData,
+  };
+
+  const validate = () => {
+    const res = formDataSchema.safeParse(formData);
+
+    if (res.success) {
+      return undefined;
+    }
+
+    return res.error.format();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const validationResult = formDataSchema.safeParse(formData);
-    if (!validationResult.success) {
-      setErrors(validationResult.error.format());
+    const errors = validate();
+    if (errors) {
+      setIsErrors(errors);
       return;
     }
 
     try {
-      //   await dispatch(postBook(formData));
-      navigate(routerUrls.book_detail.create('some-slug'));
+      console.log(formData);
+      if (!book) {
+        console.error('Книга не найдена');
+        return;
+      }
+      // Выполняем запрос
+      await dispatch(postChapter({ book_id: book.id, data: formData }));
+      // Проверяем, что slug определен
+      if (!slug) {
+        console.error('Slug не определен');
+        return;
+      }
+      // Переходим на страницу книги
+      navigate(routerUrls.book_detail.create(slug));
     } catch (error) {
-      console.error('Ошибка при создании комикса:', error);
+      console.error('Ошибка при создании главы:', error);
     }
   };
+
+  useEffect(() => {
+    dispatch(getBooks({ slug: slug }));
+  }, [dispatch, slug]);
+
+  const errors = isErrors ? validate() : undefined;
+
   return (
     <>
       <div className={style.menu}>
-        <BackButton className={style.menu__back} onClick={() => navigate(routerUrls.profile.mask)} />
+        <BackButton className={style.menu__back} onClick={() => navigate(routerUrls.book_detail.create('some-slug'))} />
         <div className={style.menu__header}>
           <h2>Новая глава</h2>
         </div>
@@ -87,7 +122,7 @@ const AddChapterPage = () => {
             value={formData.title}
             onChange={(e) => setUserFormData((prev) => ({ ...prev, title: e.target.value }))}
           />
-          {errors?.title && <span className={style.comicForm__error}>{errors.title._errors.join(', ')}</span>}
+          {errors?.title && <span className={style.chapterForm__error}>{errors.title._errors.join(', ')}</span>}
         </div>
         <div>
           <Textarea
@@ -96,20 +131,22 @@ const AddChapterPage = () => {
             value={formData.description}
             onChange={(e) => setUserFormData((prev) => ({ ...prev, description: e.target.value }))}
           />
-          {errors?.description && <p className={style.comicForm__error}>{errors.description._errors.join(', ')}</p>}
+          {errors?.description && <p className={style.chapterForm__error}>{errors.description._errors.join(', ')}</p>}
         </div>
         <div>
           <MultipleImagesInput
             onChange={(newFiles) => {
               setUserFormData((prev) => ({
                 ...prev,
-                poster: newFiles ? [...(prev.poster || []), newFiles] : [],
+                images: newFiles ? [...(prev.images || []), newFiles] : [],
               }));
             }}
           />
-          {errors?.poster && <span className={style.comicForm__error}>{errors.poster._errors.join(', ')}</span>}
+          {errors?.images && <span className={style.chapterForm__error}>{errors.images._errors.join(', ')}</span>}
         </div>
-        <Button type="submit">Добавить главу</Button>
+        <Button disabled={!!errors} type="submit">
+          Добавить главу
+        </Button>
       </form>
     </>
   );

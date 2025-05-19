@@ -65,7 +65,7 @@ const EditComicsPage = () => {
   const navigate = useNavigate();
   const { allGenres } = useSelector((state: RootState) => state.catalog);
   const { tags } = useSelector((state: RootState) => state.tags);
-  const { books, loading, error } = useSelector((state: RootState) => state.books);
+  const { books } = useSelector((state: RootState) => state.books);
   const serverFormState = books.find((book) => book.slug === slug);
 
   const [userFormData, setUserFormData] = useState<Partial<FormData>>({});
@@ -105,10 +105,7 @@ const EditComicsPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(initialFormState);
-    console.log(serverFormState);
-    console.log(userFormData);
-    console.log(formData);
+
     const errors = validate();
     if (errors) {
       setIsError(true);
@@ -175,10 +172,7 @@ const EditComicsPage = () => {
 
       <form onSubmit={handleSubmit} className={style.comicForm}>
         <div>
-          <ImageInput
-            onChange={(file) => setUserFormData((prev) => ({ ...prev, poster: file as File }))}
-            value={formData.poster}
-          />
+          <ImageInput onChange={(file) => setUserFormData((prev) => ({ ...prev, poster: file as File }))} />
           {errors?.poster && <span className={style.comicForm__error}>{errors.poster._errors.join(', ')}</span>}
         </div>
         <div>
