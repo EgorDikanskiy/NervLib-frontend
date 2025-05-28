@@ -248,9 +248,12 @@
     display: flex;
     justify-content: space-between;
     padding: 0.5rem 0;
-    border-bottom: 1px solid #777;
     text-decoration: none;
     color: inherit;
+
+    &_lined {
+      border-bottom: 1px solid #777;
+    }
 
     &:hover {
       background-color: #f8f8f8;

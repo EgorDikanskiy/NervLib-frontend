@@ -251,7 +251,7 @@ const DetailComicsPage: React.FC = () => {
                 <Link
                   key={chapter.id}
                   to={routerUrls.viewComics.create(book.slug, chapter.id)}
-                  className={styles.chapters__item}
+                  className={chapter.id === chapters.length - 1 ? styles.chapters__item : styles.chapters__item}
                 >
                   <li>
                     <span className={styles.chapters__name}>{chapter.title}</span>
