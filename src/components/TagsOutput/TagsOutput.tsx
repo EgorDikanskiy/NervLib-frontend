@@ -13,11 +13,11 @@ interface TagsOutputProps {
 
 const TagsOutput: React.FC<TagsOutputProps> = ({ tags }) => {
   return (
-    <div className={styles.tags}>
+    <>
       {tags.map((tag) => (
         <Tag title={tag.title} key={tag.id} />
       ))}
-    </div>
+    </>
   );
 };
 

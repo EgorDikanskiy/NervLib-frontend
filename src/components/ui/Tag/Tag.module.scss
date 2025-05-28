@@ -4,4 +4,7 @@
 .tag {
   @include info-tag($purple-main);
   color: white;
+  display: inline-block;
+  margin-left: 0.2rem;
+  margin-bottom: 0.4rem;
 }

@@ -239,12 +239,6 @@ const DetailComicsPage: React.FC = () => {
         <div className={styles.info__tags}>
           <h2>Теги:</h2>
           <TagsOutput tags={book.tags} />
-          {/* {book.tags.map((tag) => (
-            <Tag key={tag.id} name={tag.title} />
-            // <p key={tag.id} className={styles.info__tagsItem}>
-            //   {tag.title}
-            // </p>
-          ))} */}
         </div>
       </div>
 

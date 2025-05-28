@@ -214,22 +214,9 @@
   }
 
   &__tags {
-    @include flex-align-center;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 10px;
-
     h2 {
       @extend .regular16;
-    }
-
-    &Item {
-      @include info-tag($purple-main);
-      color: white;
-      display: inline-block;
-      margin-right: 8px;
-      margin-bottom: 4px;
-      word-break: break-word;
+      display: inline;
     }
   }
 }
