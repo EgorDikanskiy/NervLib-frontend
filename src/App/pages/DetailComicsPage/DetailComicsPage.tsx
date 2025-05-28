@@ -8,6 +8,7 @@ import Loader from 'components/Loader';
 import TagsOutput from 'components/TagsOutput';
 import BackButton from 'components/ui/BackButton';
 import { Button } from 'components/ui/Button';
+import NoImageProfile from 'components/ui/NoImageProfile';
 import { routerUrls } from 'config/routerUrls';
 import { AppDispatch, RootState } from 'store';
 import { getBookOnSlug, getBookRating, getChaptersByBookId, rateBook } from '../../../actions/detailBookAction';
@@ -183,7 +184,12 @@ const DetailComicsPage: React.FC = () => {
           <p className={styles.info__titleRating}>{book.ratings_average.toFixed(1)}/5</p>
         </section>
         <section className={styles.info__author}>
-          <img src={book.author.avatar} alt="Фото автора" className={styles.info__authorAvatar} />
+          {book.author.avatar ? (
+            <img src={book.author.avatar} alt="Фото автора" className={styles.info__authorAvatar} />
+          ) : (
+            <NoImageProfile className={styles.info__authorAvatar} />
+          )}
+
           <p>
             <Link to={routerUrls.public_profile.create(book.author.username)}>{book.author.username}</Link>
           </p>
