@@ -1,0 +1,7 @@
+@use "styles/variables.scss" as *;
+@use "styles/mixin.scss" as *;
+
+.tag {
+  @include info-tag($purple-main);
+  color: white;
+}

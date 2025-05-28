@@ -7,6 +7,7 @@ import { addBookmark, deleteBookmark, getBookmarks } from 'actions/bookActions';
 import Loader from 'components/Loader';
 import BackButton from 'components/ui/BackButton';
 import { Button } from 'components/ui/Button';
+import Tag from 'components/ui/Tag';
 import { routerUrls } from 'config/routerUrls';
 import { AppDispatch, RootState } from 'store';
 import { getBookOnSlug, getBookRating, getChaptersByBookId, rateBook } from '../../../actions/detailBookAction';
@@ -238,9 +239,10 @@ const DetailComicsPage: React.FC = () => {
         <div className={styles.info__tags}>
           <h2>Теги:</h2>
           {book.tags.map((tag) => (
-            <p key={tag.id} className={styles.info__tagsItem}>
-              {tag.title}
-            </p>
+            <Tag key={tag.id} name={tag.title} />
+            // <p key={tag.id} className={styles.info__tagsItem}>
+            //   {tag.title}
+            // </p>
           ))}
         </div>
       </div>
