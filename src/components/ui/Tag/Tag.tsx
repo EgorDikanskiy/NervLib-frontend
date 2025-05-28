@@ -2,10 +2,10 @@ import React from 'react';
 import styles from './Tag.module.scss';
 
 interface TagProps {
-  name: string;
+  title: string;
 }
-const Tag = ({ name }: TagProps) => {
-  return <div className={styles.tag}>{name}</div>;
+const Tag = ({ title }: TagProps) => {
+  return <div className={styles.tag}>{title}</div>;
 };
 
 export default Tag;

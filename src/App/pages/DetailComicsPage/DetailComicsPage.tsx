@@ -5,9 +5,9 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { refresh, getCurrentUser } from 'actions/authActions';
 import { addBookmark, deleteBookmark, getBookmarks } from 'actions/bookActions';
 import Loader from 'components/Loader';
+import TagsOutput from 'components/TagsOutput';
 import BackButton from 'components/ui/BackButton';
 import { Button } from 'components/ui/Button';
-import Tag from 'components/ui/Tag';
 import { routerUrls } from 'config/routerUrls';
 import { AppDispatch, RootState } from 'store';
 import { getBookOnSlug, getBookRating, getChaptersByBookId, rateBook } from '../../../actions/detailBookAction';
@@ -238,12 +238,13 @@ const DetailComicsPage: React.FC = () => {
         </div>
         <div className={styles.info__tags}>
           <h2>Теги:</h2>
-          {book.tags.map((tag) => (
+          <TagsOutput tags={book.tags} />
+          {/* {book.tags.map((tag) => (
             <Tag key={tag.id} name={tag.title} />
             // <p key={tag.id} className={styles.info__tagsItem}>
             //   {tag.title}
             // </p>
-          ))}
+          ))} */}
         </div>
       </div>
 
