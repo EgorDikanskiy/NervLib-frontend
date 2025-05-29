@@ -170,7 +170,7 @@ const DetailComicsPage: React.FC = () => {
         <div className={styles.header__back}>
           <BackButton onClick={() => navigate(-1)} />
         </div>
-        <div className={styles.header__bookmark}>
+        <div className={styles.header__bookmark} onClick={handleFavorite}>
           <p>Добавить в закладки</p>
         </div>
       </nav>
@@ -202,10 +202,7 @@ const DetailComicsPage: React.FC = () => {
         >
           {book.favourites_count}
         </p>
-        <p
-          className={`${styles.info__stat} ${styles['info__stat--favorites']} ${isFavorited ? styles.active : ''}`}
-          onClick={handleFavorite}
-        >
+        <p className={`${styles.info__stat} ${styles['info__stat--favorites']} ${isFavorited ? styles.active : ''}`}>
           {book.favourites_count}
         </p>
         <p className={`${styles.info__stat} ${styles['info__stat--books']}`}>{book.views_count}</p>

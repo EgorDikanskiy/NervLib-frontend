@@ -33,7 +33,10 @@
 
   &__bookmark {
     @extend .regular12;
-    color: $purple-main;
+    color: $white;
+    padding: 10px;
+    background-color: $purple-main;
+    border-radius: 12px;
   }
 }
 
