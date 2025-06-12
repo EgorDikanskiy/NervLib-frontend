@@ -229,7 +229,7 @@ const ProfilePage = () => {
         </span>
       </section>
       <section className={styles.profile__info__root}>
-        <img className={styles.profile__info__root__avatar} src={filterUrlImage(profile.avatar)} alt="аватарка" />
+        <img className={styles.profile__info__root__avatar} src={profile.avatar} alt="аватарка" />
         <div className={styles.profile__info__root__usernameBlock}>
           <p className={styles.profile__info__root__username}>{profile.username}</p>
           {profile.is_author && (

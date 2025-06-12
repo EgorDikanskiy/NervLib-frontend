@@ -166,7 +166,7 @@ const DetailComicsPage: React.FC = () => {
     <div className={styles.page}>
       <nav className={styles.header}>
         <div className={styles.header__back}>
-          <BackButton onClick={() => navigate(-1)} />
+          <BackButton onClick={() => navigate(routerUrls.catalog.mask)} />
         </div>
         <div className={styles.header__bookmark}>
           <p>Добавить в закладки</p>
