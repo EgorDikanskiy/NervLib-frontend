@@ -5,8 +5,10 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { refresh, getCurrentUser } from 'actions/authActions';
 import { addBookmark, deleteBookmark, getBookmarks } from 'actions/bookActions';
 import Loader from 'components/Loader';
+import TagsOutput from 'components/TagsOutput';
 import BackButton from 'components/ui/BackButton';
 import { Button } from 'components/ui/Button';
+import NoImageProfile from 'components/ui/NoImageProfile';
 import { routerUrls } from 'config/routerUrls';
 import { AppDispatch, RootState } from 'store';
 import { getBookOnSlug, getBookRating, getChaptersByBookId, rateBook } from '../../../actions/detailBookAction';
@@ -168,7 +170,7 @@ const DetailComicsPage: React.FC = () => {
         <div className={styles.header__back}>
           <BackButton onClick={() => navigate(routerUrls.catalog.mask)} />
         </div>
-        <div className={styles.header__bookmark}>
+        <div className={styles.header__bookmark} onClick={handleFavorite}>
           <p>Добавить в закладки</p>
         </div>
       </nav>
@@ -182,7 +184,12 @@ const DetailComicsPage: React.FC = () => {
           <p className={styles.info__titleRating}>{book.ratings_average.toFixed(1)}/5</p>
         </section>
         <section className={styles.info__author}>
-          <img src={book.author.avatar} alt="Фото автора" className={styles.info__authorAvatar} />
+          {book.author.avatar ? (
+            <img src={book.author.avatar} alt="Фото автора" className={styles.info__authorAvatar} />
+          ) : (
+            <NoImageProfile className={styles.info__authorAvatar} />
+          )}
+
           <p>
             <Link to={routerUrls.public_profile.create(book.author.username)}>{book.author.username}</Link>
           </p>
@@ -195,10 +202,7 @@ const DetailComicsPage: React.FC = () => {
         >
           {book.favourites_count}
         </p>
-        <p
-          className={`${styles.info__stat} ${styles['info__stat--favorites']} ${isFavorited ? styles.active : ''}`}
-          onClick={handleFavorite}
-        >
+        <p className={`${styles.info__stat} ${styles['info__stat--favorites']} ${isFavorited ? styles.active : ''}`}>
           {book.favourites_count}
         </p>
         <p className={`${styles.info__stat} ${styles['info__stat--books']}`}>{book.views_count}</p>
@@ -237,11 +241,7 @@ const DetailComicsPage: React.FC = () => {
         </div>
         <div className={styles.info__tags}>
           <h2>Теги:</h2>
-          {book.tags.map((tag) => (
-            <p key={tag.id} className={styles.info__tagsItem}>
-              {tag.title}
-            </p>
-          ))}
+          <TagsOutput tags={book.tags} />
         </div>
       </div>
 
@@ -254,7 +254,7 @@ const DetailComicsPage: React.FC = () => {
                 <Link
                   key={chapter.id}
                   to={routerUrls.viewComics.create(book.slug, chapter.id)}
-                  className={styles.chapters__item}
+                  className={chapter.id === chapters.length - 1 ? styles.chapters__item : styles.chapters__item}
                 >
                   <li>
                     <span className={styles.chapters__name}>{chapter.title}</span>
@@ -267,8 +267,13 @@ const DetailComicsPage: React.FC = () => {
             </ul>
           </div>
         ) : (
-          <p className={styles.chapters__empty}>Главы не найдены</p>
+          <>
+            <p className={styles.chapters__empty}>Главы не найдены</p>
+          </>
         )}
+        <Link to={routerUrls.chapter_add.create(book.slug)}>
+          <Button>Добавить главу</Button>
+        </Link>
       </div>
     </div>
   );

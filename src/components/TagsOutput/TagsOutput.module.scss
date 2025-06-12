@@ -1,0 +1,8 @@
+@use "styles/variables.scss" as *;
+@use "styles/mixin.scss" as *;
+
+.tags {
+  @include flex-align-center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
