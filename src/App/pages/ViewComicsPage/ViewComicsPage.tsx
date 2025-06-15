@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getBookOnSlug, getChaptersByBookId } from 'actions/detailBookAction';
+import CanvasImageQueue from 'components/CanvasImageQueue';
 import { AppDispatch, RootState } from 'store';
 import { getImagesByChapterId } from '../../../actions/chapterImagesActions';
 import styles from './ViewComicsPage.module.scss';
@@ -86,11 +87,9 @@ const ViewComicsPage = () => {
         </span>
       </section>
       <section className={styles.viewBox}>
-        {images.map((image: { id: number; chapter_id: number; url: string }) => (
-          <div key={image.id}>
-            <img src={image.url} alt="фото" loading="lazy" />
-          </div>
-        ))}
+        <Suspense fallback={<div>Loading...</div>}>
+          <CanvasImageQueue images={images.map((img) => img.url)} shift={currentChapterId} />
+        </Suspense>
       </section>
       <div className={`${styles.chapterNavigation} ${showNav ? styles.visible : styles.hidden}`}>
         <button
