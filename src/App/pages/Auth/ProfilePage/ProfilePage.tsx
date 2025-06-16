@@ -5,9 +5,9 @@ import { getBooks, getAllBookmarks, getBookById } from 'actions/bookActions';
 import HorizontalScroll from 'components/HorizontalScroll';
 import Loader from 'components/Loader';
 import MiniCard from 'components/ui/MiniCard';
+import NoImageProfile from 'components/ui/NoImageProfile';
 import { routerUrls } from 'config/routerUrls';
 import { AppDispatch, RootState } from 'store';
-import { filterUrlImage } from 'utils/filterUrlImage';
 import { getProfile } from '../../../../actions/profileActions';
 import { logout } from '../../../../reducers/authReducer';
 import ProfileInfoItem from '../components/ProfileInfoItem/ProfileInfoItem';
@@ -229,7 +229,7 @@ const ProfilePage = () => {
         </span>
       </section>
       <section className={styles.profile__info__root}>
-        <img className={styles.profile__info__root__avatar} src={profile.avatar} alt="аватарка" />
+        <NoImageProfile className={styles.info__authorAvatar} />
         <div className={styles.profile__info__root__usernameBlock}>
           <p className={styles.profile__info__root__username}>{profile.username}</p>
           {profile.is_author && (

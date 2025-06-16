@@ -5,9 +5,8 @@ import { getBooks } from 'actions/bookActions';
 import HorizontalScroll from 'components/HorizontalScroll';
 import Loader from 'components/Loader';
 import MiniCard from 'components/ui/MiniCard';
-import { routerUrls } from 'config/routerUrls';
+import NoImageProfile from 'components/ui/NoImageProfile';
 import { AppDispatch, RootState } from 'store';
-import { filterUrlImage } from 'utils/filterUrlImage';
 import { getCurrentUser, refresh } from '../../../actions/authActions';
 import {
   getProfile,
@@ -282,7 +281,7 @@ const PublicProfilePage = () => {
         )}
       </section>
       <section className={styles.profile__info__root}>
-        <img className={styles.profile__info__root__avatar} src={filterUrlImage(profile.avatar)} alt="аватарка" />
+        <NoImageProfile className={styles.info__authorAvatar} />
         <div className={styles.profile__info__root__usernameBlock}>
           <p className={styles.profile__info__root__username}>{profile.username}</p>
           {profile.is_author && (

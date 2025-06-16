@@ -108,7 +108,7 @@ const AddChapterPage = () => {
   return (
     <>
       <div className={style.menu}>
-        <BackButton className={style.menu__back} onClick={() => navigate(routerUrls.book_detail.create('some-slug'))} />
+        <BackButton className={style.menu__back} onClick={() => navigate(routerUrls.book_detail.create(slug!))} />
         <div className={style.menu__header}>
           <h2>Новая глава</h2>
         </div>

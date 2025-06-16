@@ -184,12 +184,7 @@ const DetailComicsPage: React.FC = () => {
           <p className={styles.info__titleRating}>{book.ratings_average.toFixed(1)}/5</p>
         </section>
         <section className={styles.info__author}>
-          {book.author.avatar ? (
-            <img src={book.author.avatar} alt="Фото автора" className={styles.info__authorAvatar} />
-          ) : (
-            <NoImageProfile className={styles.info__authorAvatar} />
-          )}
-
+          <NoImageProfile className={styles.info__authorAvatar} />
           <p>
             <Link to={routerUrls.public_profile.create(book.author.username)}>{book.author.username}</Link>
           </p>
@@ -271,9 +266,11 @@ const DetailComicsPage: React.FC = () => {
             <p className={styles.chapters__empty}>Главы не найдены</p>
           </>
         )}
-        <Link to={routerUrls.chapter_add.create(book.slug)}>
-          <Button>Добавить главу</Button>
-        </Link>
+        {book.author.username === user?.username && (
+          <Link to={routerUrls.chapter_add.create(book.slug)}>
+            <Button>Добавить главу</Button>
+          </Link>
+        )}
       </div>
     </div>
   );
